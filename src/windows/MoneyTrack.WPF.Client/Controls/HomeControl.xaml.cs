@@ -1,7 +1,9 @@
 ﻿using MoneyTrack.WPF.Client.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,20 +16,20 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MoneyTrack.WPF.Client
+namespace MoneyTrack.WPF.Client.Controls
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for HomeControl.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class HomeControl : UserControl
     {
-        public MainWindow()
+        public HomeControl()
         {
             InitializeComponent();
+            Data = new HomeModel();
 
             DataContext = Data;
         }
-
-        public MainModel Data { get; set; }
+        public HomeModel Data { get; set; }
     }
 }

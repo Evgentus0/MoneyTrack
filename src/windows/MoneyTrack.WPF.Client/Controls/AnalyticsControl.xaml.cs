@@ -1,5 +1,4 @@
-﻿using MoneyTrack.WPF.Client.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,20 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MoneyTrack.WPF.Client
+namespace MoneyTrack.WPF.Client.Controls
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for AnalyticsControl.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AnalyticsControl : UserControl
     {
-        public MainWindow()
+        public AnalyticsControl()
         {
             InitializeComponent();
-
-            DataContext = Data;
         }
-
-        public MainModel Data { get; set; }
     }
 }

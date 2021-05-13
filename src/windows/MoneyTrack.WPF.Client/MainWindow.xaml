@@ -3,17 +3,91 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:MoneyTrack.WPF.Client"
         mc:Ignorable="d"
-        Title="MainWindow" d:DesignWidth="786.257" d:DesignHeight="462.96">
-    <Grid>
-        <Menu>
-            <Menu.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel Orientation="Vertical"/>
-                </ItemsPanelTemplate>
-            </Menu.ItemsPanel>
+        Title="MainWindow"
+        Height="600" Width="900"
+        WindowStartupLocation="CenterScreen"
+        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="20"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        >
 
-        </Menu>
+    <Window.Resources>
+        <Style x:Key="NavigationContentStyle" TargetType="ContentControl">
+            <Setter Property="ContentTemplate" Value="{StaticResource HomeViewTemplate}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=NavigationMenuListBox, Path=SelectedItem}"
+                             Value="Analytics">
+                    <Setter Property="ContentTemplate" Value="{StaticResource AnalyticsViewTemplate}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="NavigationHeaderStyle" TargetType="Label">
+            <Setter Property="Content" Value="Home"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=NavigationMenuListBox, Path=SelectedItem}"
+                             Value="Analytics">
+                    <Setter Property="Content" Value="Analytics"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <ListBox x:Name="NavigationMenuListBox" 
+                 Style="{StaticResource NavigationListBoxStyle}"
+                 ItemContainerStyle="{DynamicResource NavigationListBoxItemStyle}"
+                 ItemTemplate="{DynamicResource NavigationDataTemplate}"
+                 ItemsSource="{StaticResource NavigationMenuItems}"/>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="9*"/>
+            </Grid.RowDefinitions>
+
+
+            <Grid Grid.Row="0" Margin="0 5 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Right"
+                   FontSize="40" FontWeight="Bold" 
+                   Style="{StaticResource NavigationHeaderStyle}"
+               />
+
+                <StackPanel Grid.Column="1"
+                        Margin="0 0 20 0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center">
+
+                    <Label FontSize="30" Content="Balance: "/>
+
+                    <Label FontSize="30" Content="{Binding Path=Balance}"/>
+
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <ContentControl Style="{StaticResource NavigationContentStyle}"/>
+            </Grid>
+
+        </Grid>
     </Grid>
 </Window>
