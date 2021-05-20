@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:MoneyTrack.WPF.Client.Controls"
+                    xmlns:views="clr-namespace:MoneyTrack.WPF.Client.Views"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime"
                     
                     >
@@ -93,10 +93,10 @@
     </x:Array>
 
     <DataTemplate x:Key="HomeViewTemplate">
-        <controls:HomeControl/>
+        <views:HomeControl/>
     </DataTemplate>
     <DataTemplate x:Key="AnalyticsViewTemplate">
-        <controls:AnalyticsControl/>
+        <views:AnalyticsControl/>
     </DataTemplate>
 
 </ResourceDictionary>

@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:MoneyTrack.WPF.Client"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="600" Width="900"
+        Height="auto" Width="auto"
         WindowStartupLocation="CenterScreen"
         
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -59,26 +59,21 @@
 
 
             <Grid Grid.Row="0" Margin="0 5 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="0"
+                <Label
                    VerticalAlignment="Center"
-                   HorizontalAlignment="Right"
+                   HorizontalAlignment="Center"
                    FontSize="40" FontWeight="Bold" 
                    Style="{StaticResource NavigationHeaderStyle}"
                />
 
-                <StackPanel Grid.Column="1"
+                <StackPanel
                         Margin="0 0 20 0"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center">
 
                     <Label FontSize="30" Content="Balance: "/>
-
                     <Label FontSize="30" Content="{Binding Path=Balance}"/>
 
                 </StackPanel>
