@@ -28,6 +28,41 @@ namespace MoneyTrack.WPF.Client.Views
         {
             InitializeComponent();
             Data = new HomeModel();
+
+            Data.LastTransactions.AddRange(new List<TransactionModel>() 
+            {
+                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
+                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
+                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
+                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
+                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
+                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
+                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
+                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
+                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
+                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
+                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
+                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
+                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
+                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
+                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
+                 new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
+                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
+                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
+                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
+                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
+                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
+                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
+                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
+                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
+                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
+                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
+                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
+                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
+                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
+                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
+
+            });
             
             DataContext = Data;
 

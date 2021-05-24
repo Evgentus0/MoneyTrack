@@ -20,6 +20,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0"
@@ -34,7 +35,7 @@
                          Text="{Binding Path=Number}"/>
             </StackPanel>
 
-            
+
 
             <StackPanel Orientation="Horizontal" Margin="20">
                 <Label Content="Description: " Target="{Binding ElementName=DescriptionTextBox}"/>
@@ -42,7 +43,7 @@
                          Text="{Binding Path=Description}"/>
             </StackPanel>
 
-            
+
 
         </StackPanel>
 
@@ -50,7 +51,7 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
-            
+
             <StackPanel Orientation="Horizontal" Margin="20">
                 <Label Content="Category: " Target="{Binding ElementName=CategoryComboBox}"/>
                 <ComboBox Name="CategoryComboBox" ItemsSource="{Binding Path=Categories}" Margin="10 0 0 0"
@@ -88,11 +89,8 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal"
-                    Margin="50"
+                    Margin="0 50 0 0"
                     >
-
-            <Label Content="Last transactions: "
-                   Margin="20"/>
 
             <Button Content="Click to see detailed history"
                     Margin="20"
@@ -100,15 +98,37 @@
 
         </StackPanel>
 
-        <Grid Grid.Row="4">
+        <StackPanel Grid.Row="4"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    >
+
+            <Label Content="Last transactions:"/>
+        </StackPanel>
+
+        <Grid Grid.Row="5">
             <Grid.RowDefinitions >
-                
+
             </Grid.RowDefinitions>
-            
-            <DataGrid Name="ListTransactionsDataGrid" AutoGenerateColumns="True"
-                      >
-                
-            </DataGrid>
+
+                <DataGrid Name="ListTransactionsDataGrid" AutoGenerateColumns="False"
+                          ItemsSource="{Binding Path=LastTransactions}"
+                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                          IsReadOnly="True" CanUserReorderColumns="False"
+                          CanUserAddRows="False" CanUserDeleteRows="False"
+                          CanUserSortColumns="False"
+                          Margin="30"
+                          FontSize="15"
+                          >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="How much" Binding="{Binding Path=Quantity}" Width="2*"/>
+                        <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="5*"/>
+                        <DataGridTextColumn Header="Category" Binding="{Binding Path=Category}" Width="3*"/>
+                        <DataGridTextColumn Header="Account" Binding="{Binding Path=Account}" Width="3*"/>
+                        <DataGridTextColumn Header="Added date time" Binding="{Binding Path=AddedDttm}" Width="4*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
         </Grid>
 
     </Grid>

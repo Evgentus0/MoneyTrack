@@ -1,10 +1,10 @@
-﻿using System;
+﻿using MoneyTrack.WPF.Client.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace MoneyTrack.WPF.Client.ViewModels
 {
@@ -14,7 +14,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
         public string Description { get; set; }
         public List<string> Categories { get; set; }
         public List<string> Accounts { get; set; }
-        public List<Transaction> LastTransactions { get; set; }
+        public List<TransactionModel> LastTransactions { get; set; }
 
         public HomeBidirectModel BidirectModel { get; set; }
 
@@ -23,6 +23,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
             Categories = new List<string>();
             Accounts = new List<string>();
             BidirectModel = new HomeBidirectModel();
+            LastTransactions = new List<TransactionModel>();
         }
     }
 

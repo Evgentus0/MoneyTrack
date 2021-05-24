@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoneyTrack.WPF.Client.Models
 {
-    public class Transaction
+    public class TransactionModel
     {
         public decimal Quantity { get; set; }
         public string Description { get; set; }
