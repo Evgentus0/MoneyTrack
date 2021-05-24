@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:MoneyTrack.WPF.Client"
         mc:Ignorable="d"
         Title="MainWindow"
+        MinHeight="800" MinWidth="1100"
         Height="auto" Width="auto"
         WindowStartupLocation="CenterScreen"
         
