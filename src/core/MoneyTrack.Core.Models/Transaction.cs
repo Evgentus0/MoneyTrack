@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.Models
 {
-    public class TransactionModel
+    public class Transaction
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public decimal Quantity { get; set; }
         public string Description { get; set; }

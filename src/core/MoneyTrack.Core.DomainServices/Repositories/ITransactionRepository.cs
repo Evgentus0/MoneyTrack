@@ -9,11 +9,11 @@ namespace MoneyTrack.Core.DomainServices.Repositories
 {
     public interface ITransactionRepository
     {
-        Task Add(TransactionModel transaction);
+        Task Add(Transaction transaction);
 
-        Task<TransactionModel> GetById(Guid id);
+        Task<Transaction> GetById(Guid id);
 
-        Task Update(TransactionModel transaction);
+        Task Update(Transaction transaction);
         Task Remove(Guid id);
     }
 }

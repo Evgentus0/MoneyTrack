@@ -10,8 +10,6 @@ namespace MoneyTrack.WPF.Client.ViewModels
 {
     public class HomeModel
     {
-        public decimal Number { get; set; }
-        public string Description { get; set; }
         public List<string> Categories { get; set; }
         public List<string> Accounts { get; set; }
         public List<TransactionModel> LastTransactions { get; set; }
@@ -29,6 +27,34 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
     public class HomeBidirectModel : INotifyPropertyChanged
     {
+        private decimal _number;
+        public decimal Number
+        {
+            get
+            {
+                return _number;
+            }
+            set
+            {
+                _number = value;
+                OnPropertyChanged(nameof(Number));
+            }
+        }
+
+        private string _description;
+        public string Description
+        {
+            get
+            {
+                return _description;
+            }
+            set
+            {
+                _description = value;
+                OnPropertyChanged(nameof(Description));
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName = "")

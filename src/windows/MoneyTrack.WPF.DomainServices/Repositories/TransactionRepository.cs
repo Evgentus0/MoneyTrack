@@ -10,12 +10,12 @@ namespace MoneyTrack.WPF.DomainServices.Repositories
 {
     public class TransactionRepository : ITransactionRepository
     {
-        public Task Add(TransactionModel transaction)
+        public Task Add(Transaction transaction)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TransactionModel> GetById(Guid id)
+        public Task<Transaction> GetById(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -25,7 +25,7 @@ namespace MoneyTrack.WPF.DomainServices.Repositories
             throw new NotImplementedException();
         }
 
-        public Task Update(TransactionModel transaction)
+        public Task Update(Transaction transaction)
         {
             throw new NotImplementedException();
         }

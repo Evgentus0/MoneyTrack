@@ -16,6 +16,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MoneyTrack.Core.AppServices.Interfaces;
+using MoneyTrack.WPF.Infrastructure.Settings;
+using AutoMapper;
 
 namespace MoneyTrack.WPF.Client.Views
 {
@@ -24,50 +27,42 @@ namespace MoneyTrack.WPF.Client.Views
     /// </summary>
     public partial class HomeControl : UserControl
     {
-        public HomeControl()
+        private readonly IAppService _appService;
+        private readonly AppSettings _appSettings;
+        private readonly IMapper _mapper;
+
+        public HomeControl(IAppService appService, AppSettings appSettings, IMapper mapper)
         {
             InitializeComponent();
-            Data = new HomeModel();
 
-            Data.LastTransactions.AddRange(new List<TransactionModel>() 
-            {
-                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
-                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
-                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
-                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
-                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
-                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
-                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
-                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
-                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
-                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
-                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
-                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
-                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
-                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
-                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
-                 new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
-                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
-                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
-                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
-                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
-                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
-                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
-                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
-                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
-                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
-                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
-                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
-                new TransactionModel{Account="Account1", AddedDttm=DateTime.FromOADate(32123), Category="Category1", Description="Description1", Quantity=1},
-                new TransactionModel{Account="Account2", AddedDttm=DateTime.FromOADate(1238), Category="Category2", Description="Description2", Quantity=2},
-                new TransactionModel{Account="Account4", AddedDttm=DateTime.FromOADate(96741), Category="Category4", Description="Description4", Quantity=4},
-
-            });
+            _appService = appService;
+            _appSettings = appSettings;
+            _mapper = mapper;
+            Initialization = BuildDataModel();
             
-            DataContext = Data;
 
+            DataContext = Data;
         }
+
+        public HomeControl()
+        {}
+
+        public Task Initialization { get; private set; }
+
         public HomeModel Data { get; set; }
+
+        private async Task BuildDataModel()
+        {
+            Task.Delay(10000000).Wait();
+
+            Data =  new HomeModel
+            {
+                Accounts = await _appService.GetAllAccounts(),
+                Categories = await _appService.GetAllCategories(),
+                LastTransactions = _mapper.Map<List<TransactionModel>>(await _appService
+                    .GetLastTransactions(_appSettings.NumberOfLastTransaction))
+            };
+        }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {

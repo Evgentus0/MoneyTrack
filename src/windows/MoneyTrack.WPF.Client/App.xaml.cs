@@ -36,6 +36,10 @@ namespace MoneyTrack.WPF.Client
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
 
+            serviceCollection.AddAutoMapper(config =>
+            {
+            });
+
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();

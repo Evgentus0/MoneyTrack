@@ -13,7 +13,7 @@ namespace MoneyTrack.Core.AppServices.DependencyResolver
     {
         public static void AddAppServices(this IServiceCollection services)
         {
-            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IAppService, AppService>();
         }
     }
 }
