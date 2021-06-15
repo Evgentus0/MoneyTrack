@@ -75,7 +75,7 @@
                         VerticalAlignment="Center">
 
                     <Label FontSize="30" Content="Balance: "/>
-                    <Label FontSize="30" Content="{Binding Path=Balance}"/>
+                    <!--<Label FontSize="30" Content="{Binding Path=Balance}"/>-->
 
                 </StackPanel>
             </Grid>

@@ -27,46 +27,11 @@ namespace MoneyTrack.WPF.Client.Views
     /// </summary>
     public partial class HomeControl : UserControl
     {
-        private readonly IAppService _appService;
-        private readonly AppSettings _appSettings;
-        private readonly IMapper _mapper;
-
-        public HomeControl(IAppService appService, AppSettings appSettings, IMapper mapper)
+        public HomeControl()
         {
             InitializeComponent();
 
-            _appService = appService;
-            _appSettings = appSettings;
-            _mapper = mapper;
-            Initialization = BuildDataModel();
             
-
-            DataContext = Data;
         }
-
-        public HomeControl()
-        {}
-
-        public Task Initialization { get; private set; }
-
-        public HomeModel Data { get; set; }
-
-        private async Task BuildDataModel()
-        {
-            Task.Delay(10000000).Wait();
-
-            Data =  new HomeModel
-            {
-                Accounts = await _appService.GetAllAccounts(),
-                Categories = await _appService.GetAllCategories(),
-                LastTransactions = _mapper.Map<List<TransactionModel>>(await _appService
-                    .GetLastTransactions(_appSettings.NumberOfLastTransaction))
-            };
-        }
-
-        private void AddButton_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
     }
 }

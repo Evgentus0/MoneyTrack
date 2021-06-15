@@ -1,5 +1,6 @@
 ﻿using MoneyTrack.WPF.Client.Models;
 using MoneyTrack.WPF.Client.ViewModels;
+using MoneyTrack.WPF.Client.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +26,6 @@ namespace MoneyTrack.WPF.Client
         public MainWindow()
         {
             InitializeComponent();
-
-            DataContext = Data;
         }
-
-        public MainModel Data { get; set; }
     }
 }

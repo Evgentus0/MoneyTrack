@@ -34,7 +34,7 @@
             <StackPanel Orientation="Horizontal" Margin="20">
                 <Label Content="How much: " Target="{Binding ElementName=NumberTextBox}"/>
                 <TextBox Name="NumberTextBox" Width="80" Margin="10 0 0 0"
-                         Text="{Binding Path=Number}"/>
+                         Text="{Binding Path=NewTransaction.Quantity}"/>
             </StackPanel>
 
 
@@ -42,7 +42,7 @@
             <StackPanel Orientation="Horizontal" Margin="20">
                 <Label Content="Description: " Target="{Binding ElementName=DescriptionTextBox}"/>
                 <TextBox Name="DescriptionTextBox" Width="300" Margin="10 0 0 0"
-                         Text="{Binding Path=Description}"/>
+                         Text="{Binding Path=NewTransaction.Description}"/>
             </StackPanel>
 
 
@@ -57,7 +57,8 @@
             <StackPanel Orientation="Horizontal" Margin="20">
                 <Label Content="Category: " Target="{Binding ElementName=CategoryComboBox}"/>
                 <ComboBox Name="CategoryComboBox" ItemsSource="{Binding Path=Categories}" Margin="10 0 0 0"
-                          Text="Please Select" IsEditable="True" IsReadOnly="True"
+                          Text="Please Select" IsEditable="True" IsReadOnly="True" 
+                          SelectedItem="{Binding Path=NewTransaction.Category}"
                           Width="auto"
                           />
             </StackPanel>
@@ -66,6 +67,7 @@
                 <Label Content="Account: " Target="{Binding ElementName=AccountComboBox}"/>
                 <ComboBox Name="AccountComboBox" ItemsSource="{Binding Path=Accounts}" Margin="10 0 0 0"
                           Text="Please Select" IsEditable="True" IsReadOnly="True"
+                          SelectedItem="{Binding Path=NewTransaction.Account}"
                           Width="auto"
                           />
             </StackPanel>
@@ -78,6 +80,7 @@
                 <DatePicker Name="Date" Width="130" Margin="10 0 0 0"
                             Visibility="{Binding ElementName=SetCurrentDateCheckBox, Path=IsChecked
                             , Converter={StaticResource HideIfCheckedConverter}}"
+                            SelectedDate="{Binding Path=NewTransaction.AddedDttm}"
                             />
             </StackPanel>
         </StackPanel>
@@ -85,7 +88,7 @@
         <Button Grid.Row="2" 
                 Content="Add new row" Width="200"
                 FontSize="18"
-                Click="AddButton_Click"/>
+                />
 
         <StackPanel Grid.Row="3"
                     VerticalAlignment="Center"
