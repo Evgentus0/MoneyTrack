@@ -11,7 +11,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
     {
         public override void Initialize()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

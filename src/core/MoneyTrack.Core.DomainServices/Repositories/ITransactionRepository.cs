@@ -11,9 +11,10 @@ namespace MoneyTrack.Core.DomainServices.Repositories
     {
         Task Add(Transaction transaction);
 
-        Task<Transaction> GetById(Guid id);
+        Task<Transaction> GetById(int id);
 
         Task Update(Transaction transaction);
-        Task Remove(Guid id);
+        Task Remove(int id);
+        List<Transaction> GetLastTransaction(int numberOfLastTransaction);
     }
 }

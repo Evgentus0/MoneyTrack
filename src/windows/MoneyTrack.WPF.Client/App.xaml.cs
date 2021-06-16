@@ -33,12 +33,14 @@ namespace MoneyTrack.WPF.Client
 
             Configuration = builder.Build();
             Settings = Configuration.Get<AppSettings>();
+            Settings.LiteDBConnection = Configuration.GetConnectionString("LiteDB");
 
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
 
             serviceCollection.AddAutoMapper(config =>
             {
+                
             });
 
             ServiceProvider = serviceCollection.BuildServiceProvider();

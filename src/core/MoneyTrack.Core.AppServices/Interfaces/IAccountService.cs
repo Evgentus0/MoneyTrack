@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.AppServices.Interfaces
 {
-    public interface IAppService
+    public interface IAccountService
     {
-        Task<List<string>> GetAllAccounts();
-        Task<List<string>> GetAllCategories();
-        Task<Transaction> GetLastTransactions(int count);
+        List<Account> GetAllAccounts();
     }
 }
