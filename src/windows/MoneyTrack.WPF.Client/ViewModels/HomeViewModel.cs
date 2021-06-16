@@ -42,5 +42,11 @@ namespace MoneyTrack.WPF.Client.ViewModels
             Accounts = new List<string>();
             LastTransactions = new ObservableCollection<TransactionModel>();
         }
+
+        public override void Initialize()
+        {
+            Accounts.Add("acc1");
+            Accounts.Add("acc2");
+        }
     }    
 }

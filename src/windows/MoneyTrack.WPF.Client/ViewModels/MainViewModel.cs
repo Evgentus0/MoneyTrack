@@ -29,5 +29,8 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 OnPropertyChanged(nameof(Balance));
             } 
         }
+
+        public override void Initialize()
+        { }
     }
 }

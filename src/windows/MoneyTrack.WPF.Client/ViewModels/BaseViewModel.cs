@@ -9,6 +9,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
 {
     public abstract class BaseViewModel: INotifyPropertyChanged
     {
+        public abstract void Initialize();
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName = "")
