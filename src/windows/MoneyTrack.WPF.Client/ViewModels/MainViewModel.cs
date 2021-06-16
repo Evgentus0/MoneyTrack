@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MoneyTrack.WPF.Client.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : BaseViewModel
     {
         private decimal _balance;
 
@@ -28,12 +28,6 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 _balance = value;
                 OnPropertyChanged(nameof(Balance));
             } 
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

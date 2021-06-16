@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
-namespace MoneyTrack.WPF.Client.ViewModels
+namespace MoneyTrack.WPF.Client.Views
 {
-    public class AnalyticsViewModel : BaseViewModel
+    public class BaseUserControl:UserControl
     {
-
     }
 }

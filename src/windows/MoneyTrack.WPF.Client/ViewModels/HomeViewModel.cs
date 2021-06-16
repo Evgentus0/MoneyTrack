@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MoneyTrack.WPF.Client.ViewModels
 {
-    public class HomeViewModel : INotifyPropertyChanged
+    public class HomeViewModel : BaseViewModel
     {
         private TransactionModel _newTransaction;
         private bool _setCurrentDttm;
@@ -42,13 +42,5 @@ namespace MoneyTrack.WPF.Client.ViewModels
             Accounts = new List<string>();
             LastTransactions = new ObservableCollection<TransactionModel>();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    
+    }    
 }
