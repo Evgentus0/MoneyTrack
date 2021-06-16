@@ -91,12 +91,4 @@
         <system:String>Home</system:String>
         <system:String>Analytics</system:String>
     </x:Array>
-
-    <DataTemplate x:Key="HomeViewTemplate">
-        <views:HomeControl/>
-    </DataTemplate>
-    <DataTemplate x:Key="AnalyticsViewTemplate">
-        <views:AnalyticsControl/>
-    </DataTemplate>
-
 </ResourceDictionary>

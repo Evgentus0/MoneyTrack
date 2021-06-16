@@ -30,8 +30,7 @@ namespace MoneyTrack.WPF.Client.Views
         public HomeControl()
         {
             InitializeComponent();
-
-            
         }
+        
     }
 }

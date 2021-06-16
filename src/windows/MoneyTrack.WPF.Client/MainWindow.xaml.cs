@@ -27,5 +27,24 @@ namespace MoneyTrack.WPF.Client
         {
             InitializeComponent();
         }
+
+        public void InitializeResources()
+        {
+            var context = (MainViewModel)DataContext;
+
+            var homeTemplate = new FrameworkElementFactory(typeof(HomeControl));
+            homeTemplate.SetValue(DataContextProperty, context.HomeViewModel);
+            Resources["HomeViewTemplate"] = new DataTemplate
+            {
+                VisualTree = homeTemplate
+            };
+
+            var analyticsTemplate = new FrameworkElementFactory(typeof(AnalyticsControl));
+            analyticsTemplate.SetValue(DataContextProperty, context.AnalyticsViewModel);
+            Resources["AnalyticsViewTemplate"] = new DataTemplate
+            {
+                VisualTree = analyticsTemplate
+            };
+        }
     }
 }

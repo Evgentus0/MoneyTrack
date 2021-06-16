@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:MoneyTrack.WPF.Client"
+        xmlns:views="clr-namespace:MoneyTrack.WPF.Client.Views"
         mc:Ignorable="d"
         Title="MainWindow"
         MinHeight="800" MinWidth="1100"
@@ -19,12 +20,13 @@
         >
 
     <Window.Resources>
+
         <Style x:Key="NavigationContentStyle" TargetType="ContentControl">
-            <Setter Property="ContentTemplate" Value="{StaticResource HomeViewTemplate}"/>
+            <Setter Property="ContentTemplate" Value="{DynamicResource HomeViewTemplate}"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ElementName=NavigationMenuListBox, Path=SelectedItem}"
                              Value="Analytics">
-                    <Setter Property="ContentTemplate" Value="{StaticResource AnalyticsViewTemplate}"/>
+                    <Setter Property="ContentTemplate" Value="{DynamicResource AnalyticsViewTemplate}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -38,6 +40,8 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+
+        
     </Window.Resources>
 
     <Grid>
@@ -75,7 +79,7 @@
                         VerticalAlignment="Center">
 
                     <Label FontSize="30" Content="Balance: "/>
-                    <!--<Label FontSize="30" Content="{Binding Path=Balance}"/>-->
+                    <Label FontSize="30" Content="{Binding Path=Balance}"/>
 
                 </StackPanel>
             </Grid>

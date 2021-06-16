@@ -7,20 +7,12 @@
              xmlns:models="clr-namespace:MoneyTrack.WPF.Client.ViewModels"
              mc:Ignorable="d" 
              >
-    
-    <UserControl.DataContext>
-        <models:AnalyticsModel />
-    </UserControl.DataContext>
 
     <Grid>
         <StackPanel Orientation="Vertical"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
-
-
-            <TextBlock FontSize="40" FontWeight="Bold" 
-                       VerticalAlignment="Center" HorizontalAlignment="Center" 
-                       Text="{Binding Name}"/>
+            <TextBlock Text="Analytics"/>
         </StackPanel>
     </Grid>
 </UserControl>

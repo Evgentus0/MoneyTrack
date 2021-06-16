@@ -12,6 +12,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
     public class HomeViewModel : INotifyPropertyChanged
     {
         private TransactionModel _newTransaction;
+        private bool _setCurrentDttm;
 
         public List<string> Categories { get; set; }
         public List<string> Accounts { get; set; }
@@ -25,7 +26,6 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 OnPropertyChanged(nameof(NewTransaction));
             }
         }
-        private bool _setCurrentDttm;
         public bool SetCurrentDttm
         {
             get => _setCurrentDttm;

@@ -11,6 +11,7 @@ using System.Windows;
 using MoneyTrack.Core.AppServices.DependencyResolver;
 using MoneyTrack.WPF.DomainServices.DependencyResolver;
 using MoneyTrack.WPF.Infrastructure.Settings;
+using MoneyTrack.WPF.Client.ViewModels;
 
 namespace MoneyTrack.WPF.Client
 {
@@ -43,6 +44,7 @@ namespace MoneyTrack.WPF.Client
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+
             mainWindow.Show();
         }
 
@@ -52,7 +54,18 @@ namespace MoneyTrack.WPF.Client
             services.AddDomainServices();
 
             services.AddSingleton(Settings);
-            services.AddScoped<MainWindow>();
+            services.AddScoped(provider =>
+            {
+                var mainWindow = new MainWindow();
+                mainWindow.DataContext = provider.GetRequiredService<MainViewModel>();
+                mainWindow.InitializeResources();
+
+                return mainWindow;
+            });
+
+            services.AddScoped<MainViewModel>();
+            services.AddScoped<HomeViewModel>();
+            services.AddScoped<AnalyticsViewModel>();
         }
     }
 }
