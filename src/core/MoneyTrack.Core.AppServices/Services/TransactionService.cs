@@ -3,6 +3,7 @@ using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
+using System;
 using System.Collections.Generic;
 
 namespace MoneyTrack.Core.AppServices.Services
@@ -20,6 +21,9 @@ namespace MoneyTrack.Core.AppServices.Services
 
         public void Add(TransactionDto transaction)
         {
+            if (transaction.SetCurrentDttm)
+                transaction.AddedDttm = DateTimeOffset.Now;
+
             var entity = _mapper.Map<Transaction>(transaction);
             _transactionRepository.Add(entity);
         }

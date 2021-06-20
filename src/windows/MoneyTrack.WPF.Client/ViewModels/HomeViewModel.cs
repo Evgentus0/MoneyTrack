@@ -15,6 +15,9 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         private TransactionModel _newTransaction;
         private RelayCommand _addTransaction;
+        private ObservableCollection<TransactionModel> _lastTransactions;
+        private ObservableCollection<AccountModel> _accounts;
+        private ObservableCollection<CategoryModel> _categories;
         private readonly ITransactionService _transactionService;
         private readonly ICategoryService _categoryService;
         private readonly IAccountService _accountService;
@@ -25,9 +28,33 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         #region Properties
 
-        public ObservableCollection<CategoryModel> Categories { get; set; }
-        public ObservableCollection<AccountModel> Accounts { get; set; }
-        public ObservableCollection<TransactionModel> LastTransactions { get; set; }
+        public ObservableCollection<CategoryModel> Categories
+        {
+            get => _categories;
+            set
+            {
+                _categories = value;
+                OnPropertyChanged(nameof(Categories));
+            }
+        }
+        public ObservableCollection<AccountModel> Accounts
+        {
+            get => _accounts;
+            set
+            {
+                _accounts = value;
+                OnPropertyChanged(nameof(Accounts));
+            }
+        }
+        public ObservableCollection<TransactionModel> LastTransactions
+        {
+            get => _lastTransactions;
+            set
+            {
+                _lastTransactions = value;
+                OnPropertyChanged(nameof(LastTransactions));
+            }
+        }
         public TransactionModel NewTransaction
         {
             get { return _newTransaction; }
@@ -53,28 +80,33 @@ namespace MoneyTrack.WPF.Client.ViewModels
             _accountService = accountService;
             _settings = settings;
             _mapper = mapper;
-
-            LastTransactions = new ObservableCollection<TransactionModel>
-                (_mapper.Map<List<TransactionModel>>(_transactionService.GetLastTransaction(_settings.NumberOfLastTransaction)));
-
-            NewTransaction = new TransactionModel();
-
-            Categories = new ObservableCollection<CategoryModel>
-                (_mapper.Map<List<CategoryModel>>(_categoryService.GetAllCategories()));
-
-            Accounts = new ObservableCollection<AccountModel>
-                (_mapper.Map<List<AccountModel>>(_accountService.GetAllAccounts()));
-            //LastTransactions.CollectionChanged += LastTransactions_CollectionChanged;
-        }
-
-        private void LastTransactions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(LastTransactions));
         }
 
         public override void Initialize()
         {
+            NewTransaction = new TransactionModel();
 
+            SetLastTransactions();
+            SetCategories();
+            SetAccounts();
+        }
+
+        private void SetAccounts()
+        {
+            Accounts = new ObservableCollection<AccountModel>
+                            (_mapper.Map<List<AccountModel>>(_accountService.GetAllAccounts()));
+        }
+
+        private void SetCategories()
+        {
+            Categories = new ObservableCollection<CategoryModel>
+                            (_mapper.Map<List<CategoryModel>>(_categoryService.GetAllCategories()));
+        }
+
+        private void SetLastTransactions()
+        {
+            LastTransactions = new ObservableCollection<TransactionModel>
+                (_mapper.Map<List<TransactionModel>>(_transactionService.GetLastTransaction(_settings.NumberOfLastTransaction)));
         }
 
         public RelayCommand AddTransactionCommand
@@ -85,6 +117,10 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 {
                     var transactionEntity = _mapper.Map<TransactionDto>(NewTransaction);
                     _transactionService.Add(transactionEntity);
+
+                    SetLastTransactions();
+
+                    NewTransaction = new TransactionModel();
                 });
             }
         }

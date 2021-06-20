@@ -1,11 +1,11 @@
 ﻿using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
-using MoneyTrack.WPF.DomainServices.DbProvider;
+using MoneyTrack.WPF.DomainServices.LiteDB.DbProvider;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MoneyTrack.WPF.DomainServices.Repositories
+namespace MoneyTrack.WPF.DomainServices.LiteDB.Repositories
 {
     public class TransactionRepository : ITransactionRepository
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MoneyTrack.Core.DomainServices.Repositories;
-using MoneyTrack.WPF.DomainServices.DbProvider;
-using MoneyTrack.WPF.DomainServices.Repositories;
+using MoneyTrack.WPF.DomainServices.LiteDB.DbProvider;
+using MoneyTrack.WPF.DomainServices.LiteDB.Repositories;
 using MoneyTrack.WPF.Infrastructure.Settings;
 
 namespace MoneyTrack.WPF.DomainServices.DependencyResolver

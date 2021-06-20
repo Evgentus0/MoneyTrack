@@ -2,7 +2,7 @@
 using MoneyTrack.Core.Models;
 using MoneyTrack.WPF.Infrastructure.Settings;
 
-namespace MoneyTrack.WPF.DomainServices.DbProvider
+namespace MoneyTrack.WPF.DomainServices.LiteDB.DbProvider
 {
     public class LiteDbProvider
     {
@@ -16,10 +16,10 @@ namespace MoneyTrack.WPF.DomainServices.DbProvider
         public LiteDatabase GetDb()
         {
             var bsonMapper = new BsonMapper();
-            bsonMapper.Entity<Transaction>().DbRef(x => x.Account, typeof(Account).Name);
-            bsonMapper.Entity<Transaction>().DbRef(x => x.Category, typeof(Account).Name);
+            bsonMapper.Entity<Transaction>().DbRef(x => x.Account, nameof(Account));
+            bsonMapper.Entity<Transaction>().DbRef(x => x.Category, nameof(Category));
 
-            return new LiteDatabase(_settings.LiteDBConnection);
+            return new LiteDatabase(_settings.LiteDBConnection, bsonMapper);
         }
     }
 }

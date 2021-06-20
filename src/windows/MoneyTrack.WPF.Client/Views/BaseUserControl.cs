@@ -12,8 +12,8 @@ namespace MoneyTrack.WPF.Client.Views
 
         private void BaseUserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            var context = (BaseViewModel)DataContext;
-            context.Initialize();
+            if (DataContext is BaseViewModel context)
+                context?.Initialize();
         }
     }
 }

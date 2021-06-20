@@ -1,9 +1,9 @@
 ﻿using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
-using MoneyTrack.WPF.DomainServices.DbProvider;
+using MoneyTrack.WPF.DomainServices.LiteDB.DbProvider;
 using System.Collections.Generic;
 
-namespace MoneyTrack.WPF.DomainServices.Repositories
+namespace MoneyTrack.WPF.DomainServices.LiteDB.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
