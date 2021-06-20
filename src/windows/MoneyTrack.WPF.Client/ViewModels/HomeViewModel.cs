@@ -1,29 +1,32 @@
 ﻿using AutoMapper;
+using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
+using MoneyTrack.WPF.Client.Commands;
 using MoneyTrack.WPF.Client.Models;
 using MoneyTrack.WPF.Infrastructure.Settings;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyTrack.WPF.Client.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
+        #region Fields
+
         private TransactionModel _newTransaction;
-        private bool _setCurrentDttm;
+        private RelayCommand _addTransaction;
         private readonly ITransactionService _transactionService;
         private readonly ICategoryService _categoryService;
         private readonly IAccountService _accountService;
         private readonly AppSettings _settings;
         private readonly IMapper _mapper;
 
-        public ObservableCollection<string> Categories { get; set; }
-        public ObservableCollection<string> Accounts { get; set; }
+        #endregion
+
+        #region Properties
+
+        public ObservableCollection<CategoryModel> Categories { get; set; }
+        public ObservableCollection<AccountModel> Accounts { get; set; }
         public ObservableCollection<TransactionModel> LastTransactions { get; set; }
         public TransactionModel NewTransaction
         {
@@ -34,21 +37,15 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 OnPropertyChanged(nameof(NewTransaction));
             }
         }
-        public bool SetCurrentDttm
-        {
-            get => _setCurrentDttm;
-            set
-            {
-                _setCurrentDttm = value;
-                OnPropertyChanged(nameof(SetCurrentDttm));
-            }
-        }
+
+        #endregion
+
 
         public HomeViewModel(
             ITransactionService transactionService,
             ICategoryService categoryService,
             IAccountService accountService,
-            AppSettings settings, 
+            AppSettings settings,
             IMapper mapper)
         {
             _transactionService = transactionService;
@@ -57,11 +54,16 @@ namespace MoneyTrack.WPF.Client.ViewModels
             _settings = settings;
             _mapper = mapper;
 
-            LastTransactions =new ObservableCollection<TransactionModel>
+            LastTransactions = new ObservableCollection<TransactionModel>
                 (_mapper.Map<List<TransactionModel>>(_transactionService.GetLastTransaction(_settings.NumberOfLastTransaction)));
 
-            Categories = new ObservableCollection<string>(_categoryService.GetAllCategories().Select(x => x.Name).ToList());
-            Accounts = new ObservableCollection<string>(_accountService.GetAllAccounts().Select(x => x.Name).ToList());
+            NewTransaction = new TransactionModel();
+
+            Categories = new ObservableCollection<CategoryModel>
+                (_mapper.Map<List<CategoryModel>>(_categoryService.GetAllCategories()));
+
+            Accounts = new ObservableCollection<AccountModel>
+                (_mapper.Map<List<AccountModel>>(_accountService.GetAllAccounts()));
             //LastTransactions.CollectionChanged += LastTransactions_CollectionChanged;
         }
 
@@ -74,5 +76,19 @@ namespace MoneyTrack.WPF.Client.ViewModels
         {
 
         }
-    }    
+
+        public RelayCommand AddTransactionCommand
+        {
+            get
+            {
+                return _addTransaction ??= new RelayCommand(obj =>
+                {
+                    var transactionEntity = _mapper.Map<TransactionDto>(NewTransaction);
+                    _transactionService.Add(transactionEntity);
+                });
+            }
+        }
+
+
+    }
 }

@@ -56,8 +56,9 @@
             <StackPanel Orientation="Horizontal" Margin="20">
                 <Label Content="Category: " Target="{Binding ElementName=CategoryComboBox}"/>
                 <ComboBox Name="CategoryComboBox" ItemsSource="{Binding Path=Categories}" Margin="10 0 0 0"
+                          DisplayMemberPath="Name" SelectedValuePath="Id"
                           Text="Please Select" IsEditable="True" IsReadOnly="True" 
-                          SelectedItem="{Binding Path=NewTransaction.Category}"
+                          SelectedValue="{Binding Path=NewTransaction.Category.Id}"
                           Width="auto"
                           />
             </StackPanel>
@@ -65,15 +66,16 @@
             <StackPanel Orientation="Horizontal" Margin="20">
                 <Label Content="Account: " Target="{Binding ElementName=AccountComboBox}"/>
                 <ComboBox Name="AccountComboBox" ItemsSource="{Binding Path=Accounts}" Margin="10 0 0 0"
+                          DisplayMemberPath="Name" SelectedValuePath="Id"
                           Text="Please Select" IsEditable="True" IsReadOnly="True"
-                          SelectedItem="{Binding Path=NewTransaction.Account}"
+                          SelectedValue="{Binding Path=NewTransaction.Account.Id}"
                           Width="auto"
                           />
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="20">
                 <Label Content="Set current date: " Target="{Binding ElementName=SetCurrentDateCheckBox}"/>
-                <CheckBox Name="SetCurrentDateCheckBox" IsChecked="True" IsThreeState="False"
+                <CheckBox Name="SetCurrentDateCheckBox" IsChecked="{Binding Path=NewTransaction.SetCurrentDttm}" IsThreeState="False"
                           />
 
                 <DatePicker Name="Date" Width="130" Margin="10 0 0 0"
@@ -85,8 +87,9 @@
         </StackPanel>
 
         <Button Grid.Row="2" 
-                Content="Add new row" Width="200"
+                Content="Add new record" Width="200"
                 FontSize="18"
+                Command="{Binding Path=AddTransactionCommand}"
                 />
 
         <StackPanel Grid.Row="3"
@@ -139,8 +142,8 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="How much" Binding="{Binding Path=Quantity}" Width="2*"/>
                             <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="5*"/>
-                            <DataGridTextColumn Header="Category" Binding="{Binding Path=Category}" Width="3*"/>
-                            <DataGridTextColumn Header="Account" Binding="{Binding Path=Account}" Width="3*"/>
+                            <DataGridTextColumn Header="Category" Binding="{Binding Path=Category.Name}" Width="3*"/>
+                            <DataGridTextColumn Header="Account" Binding="{Binding Path=Account.Name}" Width="3*"/>
                             <DataGridTextColumn Header="Added date time" Binding="{Binding Path=AddedDttm}" Width="4*"/>
                         </DataGrid.Columns>
 

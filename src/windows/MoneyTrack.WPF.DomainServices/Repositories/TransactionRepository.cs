@@ -1,27 +1,27 @@
-﻿using LiteDB;
-using MoneyTrack.Core.DomainServices.Repositories;
+﻿using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
-using MoneyTrack.WPF.Infrastructure.Settings;
+using MoneyTrack.WPF.DomainServices.DbProvider;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MoneyTrack.WPF.DomainServices.Repositories
 {
     public class TransactionRepository : ITransactionRepository
     {
-        private readonly AppSettings _settings;
+        private readonly LiteDbProvider _dbProvider;
 
-        public TransactionRepository(AppSettings settings)
+        public TransactionRepository(LiteDbProvider dbProvider)
         {
-            _settings = settings;
+            _dbProvider = dbProvider;
         }
 
-        public Task Add(Transaction transaction)
+        public void Add(Transaction transaction)
         {
-            throw new NotImplementedException();
+            using var db = _dbProvider.GetDb();
+            var collection = db.GetCollection<Transaction>();
+
+            collection.Insert(transaction);
         }
 
         public Task<Transaction> GetById(int id)
@@ -31,12 +31,14 @@ namespace MoneyTrack.WPF.DomainServices.Repositories
 
         public List<Transaction> GetLastTransaction(int numberOfLastTransaction)
         {
-            using var db = new LiteDatabase(_settings.LiteDBConnection);
-
+            using var db = _dbProvider.GetDb();
             var collection = db.GetCollection<Transaction>();
 
-            return collection.Query().OrderByDescending(x => x.AddedDttm)
-                .ToEnumerable().Take(numberOfLastTransaction).ToList();
+            return collection.Query()
+                .Include(x => x.Account)
+                .Include(x => x.Category)
+                .OrderByDescending(x => x.AddedDttm).Limit(numberOfLastTransaction).ToList();
+
         }
 
         public Task Remove(int id)

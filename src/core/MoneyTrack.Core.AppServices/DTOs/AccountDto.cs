@@ -1,6 +1,6 @@
-﻿namespace MoneyTrack.Core.Models
+﻿namespace MoneyTrack.Core.AppServices.DTOs
 {
-    public class Category
+    public class AccountDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

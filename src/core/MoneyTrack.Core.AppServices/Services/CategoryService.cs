@@ -1,26 +1,25 @@
-﻿using MoneyTrack.Core.AppServices.Interfaces;
+﻿using AutoMapper;
+using MoneyTrack.Core.AppServices.DTOs;
+using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.DomainServices.Repositories;
-using MoneyTrack.Core.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.AppServices.Services
 {
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _mapper = mapper;
         }
 
-        public List<Category> GetAllCategories()
+        public List<CategoryDto> GetAllCategories()
         {
-            return _categoryRepository.GetAllCategories();
+            return _mapper.Map<List<CategoryDto>>(_categoryRepository.GetAllCategories());
         }
     }
 }

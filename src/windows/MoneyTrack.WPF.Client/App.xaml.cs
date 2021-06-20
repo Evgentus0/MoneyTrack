@@ -1,17 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+using MoneyTrack.Core.AppServices.Automapper;
 using MoneyTrack.Core.AppServices.DependencyResolver;
+using MoneyTrack.WPF.Client.Automapper;
+using MoneyTrack.WPF.Client.ViewModels;
 using MoneyTrack.WPF.DomainServices.DependencyResolver;
 using MoneyTrack.WPF.Infrastructure.Settings;
-using MoneyTrack.WPF.Client.ViewModels;
+using System;
+using System.IO;
+using System.Windows;
 
 namespace MoneyTrack.WPF.Client
 {
@@ -40,7 +37,8 @@ namespace MoneyTrack.WPF.Client
 
             serviceCollection.AddAutoMapper(config =>
             {
-                
+                config.AddProfile(new DtoModelsMapperProfile());
+                config.AddProfile(new DomainModelsDtoMapperProfile());
             });
 
             ServiceProvider = serviceCollection.BuildServiceProvider();

@@ -1,26 +1,25 @@
-﻿using MoneyTrack.Core.AppServices.Interfaces;
+﻿using AutoMapper;
+using MoneyTrack.Core.AppServices.DTOs;
+using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.DomainServices.Repositories;
-using MoneyTrack.Core.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.AppServices.Services
 {
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly IMapper _mapper;
 
-        public AccountService(IAccountRepository accountRepository)
+        public AccountService(IAccountRepository accountRepository, IMapper mapper)
         {
             _accountRepository = accountRepository;
+            _mapper = mapper;
         }
 
-        public List<Account> GetAllAccounts()
+        public List<AccountDto> GetAllAccounts()
         {
-            return _accountRepository.GetAllAccounts();
+            return _mapper.Map<List<AccountDto>>(_accountRepository.GetAllAccounts());
         }
     }
 }

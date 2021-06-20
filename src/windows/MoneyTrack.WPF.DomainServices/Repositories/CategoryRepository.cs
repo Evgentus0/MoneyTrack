@@ -1,27 +1,22 @@
-﻿using LiteDB;
-using MoneyTrack.Core.DomainServices.Repositories;
+﻿using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
-using MoneyTrack.WPF.Infrastructure.Settings;
-using System;
+using MoneyTrack.WPF.DomainServices.DbProvider;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyTrack.WPF.DomainServices.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
-        private readonly AppSettings _settings;
+        private readonly LiteDbProvider _dbProvider;
 
-        public CategoryRepository(AppSettings settings)
+        public CategoryRepository(LiteDbProvider dbProvider)
         {
-            _settings = settings;
+            _dbProvider = dbProvider;
         }
 
         public List<Category> GetAllCategories()
         {
-            using var db = new LiteDatabase(_settings.LiteDBConnection);
+            using var db = _dbProvider.GetDb();
 
             var collection = db.GetCollection<Category>();
 

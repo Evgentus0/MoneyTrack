@@ -1,27 +1,22 @@
-﻿using LiteDB;
-using MoneyTrack.Core.DomainServices.Repositories;
+﻿using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
-using MoneyTrack.WPF.Infrastructure.Settings;
-using System;
+using MoneyTrack.WPF.DomainServices.DbProvider;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyTrack.WPF.DomainServices.Repositories
 {
     public class AccountRepository : IAccountRepository
     {
-        private readonly AppSettings _settings;
+        private readonly LiteDbProvider _dbProvider;
 
-        public AccountRepository(AppSettings settings)
+        public AccountRepository(LiteDbProvider dbProvider)
         {
-            _settings = settings;
+            _dbProvider = dbProvider;
         }
 
         public List<Account> GetAllAccounts()
         {
-            using var db = new LiteDatabase(_settings.LiteDBConnection);
+            using var db = _dbProvider.GetDb();
 
             var collection = db.GetCollection<Account>();
 

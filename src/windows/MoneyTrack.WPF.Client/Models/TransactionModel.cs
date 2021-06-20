@@ -1,20 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyTrack.WPF.Client.Models
 {
-    public class TransactionModel : INotifyPropertyChanged
+    public class TransactionModel : BaseModel
     {
+        #region Fields
         private decimal? _quantity;
         private string _description;
-        private string _category;
-        private string _account;
+        private CategoryModel _category;
+        private AccountModel _account;
         private DateTimeOffset? _addedDttm;
+        private bool _setCurrentDttm;
+        #endregion
 
+        #region Properties
+        public int Id { get; set; }
         public decimal? Quantity
         {
             get => _quantity;
@@ -33,7 +33,7 @@ namespace MoneyTrack.WPF.Client.Models
                 OnPropertyChanged(nameof(Description));
             }
         }
-        public string Category
+        public CategoryModel Category
         {
             get => _category;
             set
@@ -42,7 +42,7 @@ namespace MoneyTrack.WPF.Client.Models
                 OnPropertyChanged(nameof(Category));
             }
         }
-        public string Account
+        public AccountModel Account
         {
             get => _account;
             set
@@ -51,7 +51,7 @@ namespace MoneyTrack.WPF.Client.Models
                 OnPropertyChanged(nameof(Account));
             }
         }
-        public DateTimeOffset? AddedDttm 
+        public DateTimeOffset? AddedDttm
         {
             get => _addedDttm;
             set
@@ -60,11 +60,24 @@ namespace MoneyTrack.WPF.Client.Models
                 OnPropertyChanged(nameof(AddedDttm));
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName = "")
+        public bool SetCurrentDttm
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get => _setCurrentDttm;
+            set
+            {
+                _setCurrentDttm = value;
+                OnPropertyChanged(nameof(SetCurrentDttm));
+            }
         }
+        #endregion
+
+        public TransactionModel()
+        {
+            Category = new CategoryModel();
+            Account = new AccountModel();
+            SetCurrentDttm = true;
+        }
+
+        
     }
 }

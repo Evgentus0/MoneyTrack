@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MoneyTrack.WPF.Client.Models;
 
 namespace MoneyTrack.WPF.Client.ViewModels
 {
-    public abstract class BaseViewModel: INotifyPropertyChanged
+    public abstract class BaseViewModel: BaseModel
     {
         public abstract void Initialize();
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

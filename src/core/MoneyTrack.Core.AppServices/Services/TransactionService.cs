@@ -1,26 +1,32 @@
-﻿using MoneyTrack.Core.AppServices.Interfaces;
+﻿using AutoMapper;
+using MoneyTrack.Core.AppServices.DTOs;
+using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.AppServices.Services
 {
     public class TransactionService : ITransactionService
     {
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IMapper _mapper;
 
-        public TransactionService(ITransactionRepository transactionRepository)
+        public TransactionService(ITransactionRepository transactionRepository, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
+            _mapper = mapper;
         }
 
-        public List<Transaction> GetLastTransaction(int numberOfLastTransaction)
+        public void Add(TransactionDto transaction)
         {
-            return _transactionRepository.GetLastTransaction(numberOfLastTransaction);
+            var entity = _mapper.Map<Transaction>(transaction);
+            _transactionRepository.Add(entity);
+        }
+
+        public List<TransactionDto> GetLastTransaction(int numberOfLastTransaction)
+        {
+            return _mapper.Map<List<TransactionDto>>(_transactionRepository.GetLastTransaction(numberOfLastTransaction));
         }
     }
 }
