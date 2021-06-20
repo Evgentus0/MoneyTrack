@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MoneyTrack.WPF.Client.Views"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
-             xmlns:models="clr-namespace:MoneyTrack.WPF.Client.ViewModels"
+             xmlns:viewModels="clr-namespace:MoneyTrack.WPF.Client.ViewModels"
+             xmlns:models="clr-namespace:MoneyTrack.WPF.Client.Models"
              xmlns:converters="clr-namespace:MoneyTrack.WPF.Client.Converters"
              mc:Ignorable="d"
              >
@@ -57,6 +58,7 @@
                 <Label Content="Category: " Target="{Binding ElementName=CategoryComboBox}"/>
                 <ComboBox Name="CategoryComboBox" ItemsSource="{Binding Path=Categories}" Margin="10 0 0 0"
                           DisplayMemberPath="Name" SelectedValuePath="Id"
+                          MinWidth="100"
                           Text="Please Select" IsEditable="True" IsReadOnly="True" 
                           SelectedValue="{Binding Path=NewTransaction.Category.Id}"
                           Width="auto"
@@ -67,6 +69,7 @@
                 <Label Content="Account: " Target="{Binding ElementName=AccountComboBox}"/>
                 <ComboBox Name="AccountComboBox" ItemsSource="{Binding Path=Accounts}" Margin="10 0 0 0"
                           DisplayMemberPath="Name" SelectedValuePath="Id"
+                          MinWidth="100"
                           Text="Please Select" IsEditable="True" IsReadOnly="True"
                           SelectedValue="{Binding Path=NewTransaction.Account.Id}"
                           Width="auto"
