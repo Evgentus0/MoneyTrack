@@ -71,13 +71,18 @@ namespace MoneyTrack.WPF.Client.Models
         }
         #endregion
 
-        public TransactionModel()
+        protected TransactionModel()
         {
             Category = new CategoryModel();
             Account = new AccountModel();
-            SetCurrentDttm = true;
         }
 
-        
+        public static TransactionModel GetWithDefaultValue()
+        {
+            return new TransactionModel()
+            {
+                SetCurrentDttm = true
+            };
+        }
     }
 }

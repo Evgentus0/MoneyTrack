@@ -4,6 +4,7 @@ using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.WPF.Client.Commands;
 using MoneyTrack.WPF.Client.Models;
 using MoneyTrack.WPF.Infrastructure.Settings;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -84,7 +85,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         public override void Initialize()
         {
-            NewTransaction = new TransactionModel();
+            NewTransaction = TransactionModel.GetWithDefaultValue();
 
             SetLastTransactions();
             SetCategories();
@@ -120,11 +121,15 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
                     SetLastTransactions();
 
-                    NewTransaction = new TransactionModel();
+                    ResetCurrentTransaction();
                 });
             }
         }
 
-
+        private void ResetCurrentTransaction()
+        {
+            NewTransaction.Quantity = null;
+            NewTransaction.Description = null;
+        }
     }
 }
