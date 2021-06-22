@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MoneyTrack.WPF.Client.Models
 {
@@ -69,6 +70,7 @@ namespace MoneyTrack.WPF.Client.Models
                 OnPropertyChanged(nameof(SetCurrentDttm));
             }
         }
+
         #endregion
 
         protected TransactionModel()
@@ -81,8 +83,47 @@ namespace MoneyTrack.WPF.Client.Models
         {
             return new TransactionModel()
             {
-                SetCurrentDttm = true
+                SetCurrentDttm = true,
             };
         }
+
+        public override string this[string columnName] => PropertyValidation[columnName]();
+
+        private Dictionary<string, Func<string>> _propertyValidation;
+        private Dictionary<string, Func<string>> PropertyValidation => _propertyValidation ??= new Dictionary<string, Func<string>>
+        {
+            [nameof(Quantity)] = new Func<string>(() => 
+            {
+                var result = string.Empty;
+                var message = $"{nameof(Quantity)} should be greater than 0; ";
+                if (Quantity <= 0)
+                {
+                    result = message;
+                    Error += message;
+                }
+                else
+                {
+                    Error.Replace(message, string.Empty);
+                }
+
+                return result;
+            }),
+            [nameof(Description)] = new Func<string>(() =>
+            {
+  
+                return string.Empty;
+            }),
+            [nameof(AddedDttm)] = new Func<string>(() =>
+            {
+                var result = string.Empty;
+
+                if(!SetCurrentDttm && AddedDttm is null)
+                {
+                    result = $"Date should not be empty";
+                }
+
+                return result;
+            })
+        };
     }
 }

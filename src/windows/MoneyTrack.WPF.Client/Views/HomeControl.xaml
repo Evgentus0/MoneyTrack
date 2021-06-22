@@ -8,11 +8,13 @@
              xmlns:viewModels="clr-namespace:MoneyTrack.WPF.Client.ViewModels"
              xmlns:models="clr-namespace:MoneyTrack.WPF.Client.Models"
              xmlns:converters="clr-namespace:MoneyTrack.WPF.Client.Converters"
+             xmlns:v="clr-namespace:MoneyTrack.WPF.Client.Validation"
              mc:Ignorable="d"
              >
 
     <local:BaseUserControl.Resources>
         <converters:HideIfCheckedConverter x:Key="HideIfCheckedConverter"/>
+        <converters:DateTimeToDateTimeOffsetConverter x:Key="DateTimeToDateTimeOffsetConverter"/>
     </local:BaseUserControl.Resources>
 
     <Grid>
@@ -34,7 +36,18 @@
             <StackPanel Orientation="Horizontal" Margin="20">
                 <Label Content="How much: " Target="{Binding ElementName=NumberTextBox}"/>
                 <TextBox Name="NumberTextBox" Width="80" Margin="10 0 0 0"
-                         Text="{Binding Path=NewTransaction.Quantity}"/>
+                         PreviewTextInput="NumberTextBox_PreviewTextInput"
+                         >
+                    <TextBox.Text>
+                        <Binding Path="NewTransaction.Quantity">
+                            <Binding.ValidationRules>
+                                <ExceptionValidationRule/>
+                                <DataErrorValidationRule/>
+                                <v:RequiredValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </StackPanel>
 
 
@@ -42,7 +55,18 @@
             <StackPanel Orientation="Horizontal" Margin="20">
                 <Label Content="Description: " Target="{Binding ElementName=DescriptionTextBox}"/>
                 <TextBox Name="DescriptionTextBox" Width="300" Margin="10 0 0 0"
-                         Text="{Binding Path=NewTransaction.Description}"/>
+                         >
+                    <TextBox.Text>
+                        <Binding Path="NewTransaction.Description" UpdateSourceTrigger="LostFocus"
+                                 >
+                            <Binding.ValidationRules>
+                                <ExceptionValidationRule/>
+                                <DataErrorValidationRule/>
+                                <v:RequiredValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </StackPanel>
 
 
@@ -60,9 +84,18 @@
                           DisplayMemberPath="Name" SelectedValuePath="Id"
                           MinWidth="100"
                           Text="Please Select" IsEditable="True" IsReadOnly="True" 
-                          SelectedValue="{Binding Path=NewTransaction.Category.Id}"
                           Width="auto"
-                          />
+                          >
+                    <ComboBox.SelectedValue>
+                        <Binding Path="NewTransaction.Category.Id">
+                            <Binding.ValidationRules>
+                                <ExceptionValidationRule/>
+                                <DataErrorValidationRule/>
+                                <v:RequiredValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </ComboBox.SelectedValue>
+                </ComboBox>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="20">
@@ -71,9 +104,17 @@
                           DisplayMemberPath="Name" SelectedValuePath="Id"
                           MinWidth="100"
                           Text="Please Select" IsEditable="True" IsReadOnly="True"
-                          SelectedValue="{Binding Path=NewTransaction.Account.Id}"
                           Width="auto"
-                          />
+                          >
+                    <ComboBox.SelectedValue>
+                        <Binding Path="NewTransaction.Account.Id">
+                            <Binding.ValidationRules>
+                                <ExceptionValidationRule/>
+                                <DataErrorValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </ComboBox.SelectedValue>
+                </ComboBox>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="20">
@@ -84,8 +125,17 @@
                 <DatePicker Name="Date" Width="130" Margin="10 0 0 0"
                             Visibility="{Binding ElementName=SetCurrentDateCheckBox, Path=IsChecked
                             , Converter={StaticResource HideIfCheckedConverter}}"
-                            SelectedDate="{Binding Path=NewTransaction.AddedDttm}"
-                            />
+                            >
+                    <DatePicker.SelectedDate>
+                        <Binding Path="NewTransaction.AddedDttm" Converter="{StaticResource DateTimeToDateTimeOffsetConverter}">
+                            <Binding.ValidationRules>
+                                <ExceptionValidationRule/>
+                                <DataErrorValidationRule/>
+                                <v:RequiredValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </DatePicker.SelectedDate>
+                </DatePicker>
             </StackPanel>
         </StackPanel>
 
@@ -93,7 +143,21 @@
                 Content="Add new record" Width="200"
                 FontSize="18"
                 Command="{Binding Path=AddTransactionCommand}"
-                />
+                >
+            <!--<Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="IsEnabled" Value="True"/>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=(Validation.HasError), ElementName=DescriptionTextBox}" Value="False"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>-->
+        </Button>
 
         <StackPanel Grid.Row="3"
                     VerticalAlignment="Center"

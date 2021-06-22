@@ -10,6 +10,8 @@
             AnalyticsViewModel = analyticsViewModel;
         }
 
+        public override string this[string columnName] => string.Empty;
+
         public HomeViewModel HomeViewModel { get; set; }
         public AnalyticsViewModel AnalyticsViewModel { get; }
 

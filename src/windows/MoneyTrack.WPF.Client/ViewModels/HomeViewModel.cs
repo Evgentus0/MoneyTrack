@@ -19,6 +19,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
         private ObservableCollection<TransactionModel> _lastTransactions;
         private ObservableCollection<AccountModel> _accounts;
         private ObservableCollection<CategoryModel> _categories;
+
         private readonly ITransactionService _transactionService;
         private readonly ICategoryService _categoryService;
         private readonly IAccountService _accountService;
@@ -125,6 +126,8 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 });
             }
         }
+
+        public override string this[string columnName] => string.Empty;
 
         private void ResetCurrentTransaction()
         {

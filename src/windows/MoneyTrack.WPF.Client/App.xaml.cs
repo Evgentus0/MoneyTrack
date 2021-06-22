@@ -7,6 +7,7 @@ using MoneyTrack.WPF.Client.ViewModels;
 using MoneyTrack.WPF.DomainServices.DependencyResolver;
 using MoneyTrack.WPF.Infrastructure.Settings;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Windows;
 
@@ -66,6 +67,15 @@ namespace MoneyTrack.WPF.Client
             services.AddScoped<MainViewModel>();
             services.AddScoped<HomeViewModel>();
             services.AddScoped<AnalyticsViewModel>();
+        }
+
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            if(e.Exception is ValidationException)
+            {
+                e.Handled = true;
+                MessageBox.Show(e.Exception.Message);
+            }
         }
     }
 }
