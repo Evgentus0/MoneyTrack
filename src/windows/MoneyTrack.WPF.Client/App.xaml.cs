@@ -51,10 +51,21 @@ namespace MoneyTrack.WPF.Client
 
         private void ConfigureServices(IServiceCollection services)
         {
+            WindowsSetup(services);
+
             services.AddAppServices();
-            services.AddDomainServices();
+            services.AddWPFDomainServices();
 
             services.AddSingleton(Settings);
+
+            services.AddScoped<MainViewModel>();
+            services.AddScoped<HomeViewModel>();
+            services.AddScoped<AnalyticsViewModel>();
+            services.AddScoped<TransactionListViewModel>();
+        }
+
+        private void WindowsSetup(IServiceCollection services)
+        {
             services.AddScoped(provider =>
             {
                 var mainWindow = new MainWindow();
@@ -63,10 +74,6 @@ namespace MoneyTrack.WPF.Client
 
                 return mainWindow;
             });
-
-            services.AddScoped<MainViewModel>();
-            services.AddScoped<HomeViewModel>();
-            services.AddScoped<AnalyticsViewModel>();
         }
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

@@ -8,7 +8,7 @@ namespace MoneyTrack.WPF.DomainServices.DependencyResolver
 {
     public static class ServiceCollectionExtension
     {
-        public static void AddDomainServices(this IServiceCollection services)
+        public static void AddWPFDomainServices(this IServiceCollection services)
         {
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();

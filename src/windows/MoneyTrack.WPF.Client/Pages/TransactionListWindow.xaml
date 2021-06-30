@@ -1,0 +1,43 @@
+﻿<local:BaseWindow x:Class="MoneyTrack.WPF.Client.Pages.TransactionListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MoneyTrack.WPF.Client.Pages"
+        mc:Ignorable="d"
+        Title="TransactionListWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1"
+                      CanContentScroll="True"
+                      VerticalScrollBarVisibility="Auto">
+            
+            <DataGrid Name="ListTransactionsDataGrid" AutoGenerateColumns="False"
+                              ItemsSource="{Binding Path=TransactionList}"
+                              VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                              IsReadOnly="True" CanUserReorderColumns="False"
+                              CanUserAddRows="False" CanUserDeleteRows="False"
+                              CanUserSortColumns="False"
+                              Margin="5"
+                              FontSize="15"
+                          >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="How much" Binding="{Binding Path=Quantity}" Width="2*"/>
+                    <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="5*"/>
+                    <DataGridTextColumn Header="Category" Binding="{Binding Path=Category.Name}" Width="3*"/>
+                    <DataGridTextColumn Header="Account" Binding="{Binding Path=Account.Name}" Width="3*"/>
+                    <DataGridTextColumn Header="Added date time" Binding="{Binding Path=AddedDttm}" Width="4*"/>
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </ScrollViewer>
+    </Grid>
+</local:BaseWindow>

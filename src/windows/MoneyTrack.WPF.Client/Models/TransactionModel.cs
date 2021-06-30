@@ -95,8 +95,8 @@ namespace MoneyTrack.WPF.Client.Models
             [nameof(Quantity)] = new Func<string>(() => 
             {
                 var result = string.Empty;
-                var message = $"{nameof(Quantity)} should be greater than 0; ";
-                if (Quantity <= 0)
+                var message = $"{nameof(Quantity)} can not be 0; ";
+                if (Quantity == 0)
                 {
                     result = message;
                     Error += message;
@@ -110,7 +110,10 @@ namespace MoneyTrack.WPF.Client.Models
             }),
             [nameof(Description)] = new Func<string>(() =>
             {
-  
+                if(Description != null && string.IsNullOrWhiteSpace(Description))
+                {
+                    return "Description can not be emty";
+                }
                 return string.Empty;
             }),
             [nameof(AddedDttm)] = new Func<string>(() =>
@@ -119,7 +122,7 @@ namespace MoneyTrack.WPF.Client.Models
 
                 if(!SetCurrentDttm && AddedDttm is null)
                 {
-                    result = $"Date should not be empty";
+                    result = $"Date can not be empty";
                 }
 
                 return result;

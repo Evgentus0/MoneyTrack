@@ -4,6 +4,7 @@ using MoneyTrack.WPF.DomainServices.LiteDB.DbProvider;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LiteDB;
 
 namespace MoneyTrack.WPF.DomainServices.LiteDB.Repositories
 {

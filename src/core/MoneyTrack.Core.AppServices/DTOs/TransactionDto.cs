@@ -17,11 +17,11 @@ namespace MoneyTrack.Core.AppServices.DTOs
         {
             var error = string.Empty;
 
-            if(Quantity is null || Quantity <= 0)
+            if(Quantity is null || Quantity == 0)
             {
                 error += "Quantity can not be empty \n";
             }
-            if (string.IsNullOrEmpty(Description))
+            if (string.IsNullOrEmpty(Description) || string.IsNullOrWhiteSpace(Description))
             {
                 error += "Description can not be empty \n";
             }
@@ -37,7 +37,7 @@ namespace MoneyTrack.Core.AppServices.DTOs
 
             if (Category.Id <= 0)
             {
-                error += "Account Id can not be less or equal than 0 \n";
+                error += "Category Id can not be less or equal than 0 \n";
             }
 
             return error;

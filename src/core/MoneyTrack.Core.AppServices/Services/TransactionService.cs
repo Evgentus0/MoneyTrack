@@ -39,5 +39,10 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             return _mapper.Map<List<TransactionDto>>(_transactionRepository.GetLastTransaction(numberOfLastTransaction));
         }
+
+        public List<TransactionDto> GetTransactionFromTo(DateTimeOffset from, DateTimeOffset to)
+        {
+            return null;
+        }
     }
 }

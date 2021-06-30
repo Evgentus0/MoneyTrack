@@ -4,7 +4,8 @@
     {
         private decimal _balance;
 
-        public MainViewModel(HomeViewModel homeViewModel, AnalyticsViewModel analyticsViewModel)
+        public MainViewModel(HomeViewModel homeViewModel, 
+            AnalyticsViewModel analyticsViewModel)
         {
             HomeViewModel = homeViewModel;
             AnalyticsViewModel = analyticsViewModel;

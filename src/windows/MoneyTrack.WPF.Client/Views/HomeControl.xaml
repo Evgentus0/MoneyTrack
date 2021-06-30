@@ -144,19 +144,6 @@
                 FontSize="18"
                 Command="{Binding Path=AddTransactionCommand}"
                 >
-            <!--<Button.Style>
-                <Style TargetType="Button">
-                    <Setter Property="IsEnabled" Value="True"/>
-                    <Style.Triggers>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Path=(Validation.HasError), ElementName=DescriptionTextBox}" Value="False"/>
-                            </MultiDataTrigger.Conditions>
-                            <Setter Property="IsEnabled" Value="False"/>
-                        </MultiDataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>-->
         </Button>
 
         <StackPanel Grid.Row="3"
@@ -167,6 +154,8 @@
                     >
 
             <Button Content="Click to see detailed history"
+                    Name="DetailedHistoryButton"
+                    Click="DetailedHistoryButton_Click"
                     Margin="20"
                     FontSize="18"/>
 

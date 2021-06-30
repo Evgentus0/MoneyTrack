@@ -75,13 +75,16 @@ namespace MoneyTrack.WPF.Client.ViewModels
             ICategoryService categoryService,
             IAccountService accountService,
             AppSettings settings,
-            IMapper mapper)
+            IMapper mapper,
+            
+            TransactionListViewModel transactionListViewModel)
         {
             _transactionService = transactionService;
             _categoryService = categoryService;
             _accountService = accountService;
             _settings = settings;
             _mapper = mapper;
+            TransactionListViewModel = transactionListViewModel;
         }
 
         public override void Initialize()
@@ -126,6 +129,8 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 });
             }
         }
+
+        public TransactionListViewModel TransactionListViewModel { get; }
 
         public override string this[string columnName] => string.Empty;
 
