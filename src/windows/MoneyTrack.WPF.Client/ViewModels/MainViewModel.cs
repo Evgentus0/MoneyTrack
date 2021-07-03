@@ -1,4 +1,6 @@
-﻿namespace MoneyTrack.WPF.Client.ViewModels
+﻿using System.Threading.Tasks;
+
+namespace MoneyTrack.WPF.Client.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
@@ -26,7 +28,9 @@
             } 
         }
 
-        public override void Initialize()
-        { }
+        public override Task Initialize()
+        {
+            return Task.CompletedTask;
+        }
     }
 }

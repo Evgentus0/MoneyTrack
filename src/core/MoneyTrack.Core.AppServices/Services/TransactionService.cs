@@ -3,24 +3,27 @@ using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
+using MoneyTrack.Core.Models.Operational;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.AppServices.Services
 {
     public class TransactionService : ITransactionService
     {
-        private readonly ITransactionRepository _transactionRepository;
+        private readonly TransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
 
-        public TransactionService(ITransactionRepository transactionRepository, IMapper mapper)
+        public TransactionService(TransactionRepository transactionRepository, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
             _mapper = mapper;
         }
 
-        public void Add(TransactionDto transaction)
+        public async Task Add(TransactionDto transaction)
         {
             if (transaction.SetCurrentDttm)
                 transaction.AddedDttm = DateTimeOffset.Now;
@@ -32,17 +35,19 @@ namespace MoneyTrack.Core.AppServices.Services
             }
 
             var entity = _mapper.Map<Transaction>(transaction);
-            _transactionRepository.Add(entity);
+           await  _transactionRepository.Add(entity);
         }
 
-        public List<TransactionDto> GetLastTransaction(int numberOfLastTransaction)
+        public async Task<List<TransactionDto>> GetLastTransaction(int numberOfLastTransaction)
         {
-            return _mapper.Map<List<TransactionDto>>(_transactionRepository.GetLastTransaction(numberOfLastTransaction));
+            return _mapper.Map<List<TransactionDto>>(await _transactionRepository.GetLastTransaction(numberOfLastTransaction));
         }
 
-        public List<TransactionDto> GetTransactionFromTo(DateTimeOffset from, DateTimeOffset to)
+        public async Task<List<TransactionDto>> GetFilteredTransaction(List<Filter> filters)
         {
-            return null;
+            List<Transaction> transactions = await _transactionRepository.GetFilteredTransactions(filters);
+
+            return _mapper.Map<List<TransactionDto>>(transactions);
         }
     }
 }

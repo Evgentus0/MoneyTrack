@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MoneyTrack.Core.AppServices;
 using MoneyTrack.Core.AppServices.Automapper;
-using MoneyTrack.Core.AppServices.DependencyResolver;
+using MoneyTrack.Core.Data.LiteDB;
+using MoneyTrack.Core.DomainServices;
 using MoneyTrack.WPF.Client.Automapper;
 using MoneyTrack.WPF.Client.ViewModels;
-using MoneyTrack.WPF.DomainServices.DependencyResolver;
 using MoneyTrack.WPF.Infrastructure.Settings;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -54,9 +55,10 @@ namespace MoneyTrack.WPF.Client
             WindowsSetup(services);
 
             services.AddAppServices();
-            services.AddWPFDomainServices();
+            services.AddDomainServices();
 
             services.AddSingleton(Settings);
+            services.AddLiteDb(Settings.LiteDBConnection);
 
             services.AddScoped<MainViewModel>();
             services.AddScoped<HomeViewModel>();

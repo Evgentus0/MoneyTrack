@@ -7,6 +7,7 @@ using MoneyTrack.WPF.Infrastructure.Settings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace MoneyTrack.WPF.Client.ViewModels
 {
@@ -15,7 +16,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
         #region Fields
 
         private TransactionModel _newTransaction;
-        private RelayCommand _addTransaction;
+        private AsyncCommand _addTransaction;
         private ObservableCollection<TransactionModel> _lastTransactions;
         private ObservableCollection<AccountModel> _accounts;
         private ObservableCollection<CategoryModel> _categories;
@@ -87,43 +88,43 @@ namespace MoneyTrack.WPF.Client.ViewModels
             TransactionListViewModel = transactionListViewModel;
         }
 
-        public override void Initialize()
+        public async override Task Initialize()
         {
             NewTransaction = TransactionModel.GetWithDefaultValue();
 
-            SetLastTransactions();
-            SetCategories();
-            SetAccounts();
+            await SetLastTransactions();
+            await SetCategories();
+            await SetAccounts();
         }
 
-        private void SetAccounts()
+        private async Task SetAccounts()
         {
             Accounts = new ObservableCollection<AccountModel>
-                            (_mapper.Map<List<AccountModel>>(_accountService.GetAllAccounts()));
+                            (_mapper.Map<List<AccountModel>>(await _accountService.GetAllAccounts()));
         }
 
-        private void SetCategories()
+        private async Task SetCategories()
         {
             Categories = new ObservableCollection<CategoryModel>
-                            (_mapper.Map<List<CategoryModel>>(_categoryService.GetAllCategories()));
+                            (_mapper.Map<List<CategoryModel>>(await _categoryService.GetAllCategories()));
         }
 
-        private void SetLastTransactions()
+        private async Task SetLastTransactions()
         {
             LastTransactions = new ObservableCollection<TransactionModel>
-                (_mapper.Map<List<TransactionModel>>(_transactionService.GetLastTransaction(_settings.NumberOfLastTransaction)));
+                (_mapper.Map<List<TransactionModel>>(await _transactionService.GetLastTransaction(_settings.NumberOfLastTransaction)));
         }
 
-        public RelayCommand AddTransactionCommand
+        public AsyncCommand AddTransactionCommand
         {
             get
             {
-                return _addTransaction ??= new RelayCommand(obj =>
+                return _addTransaction ??= new AsyncCommand(async obj =>
                 {
                     var transactionEntity = _mapper.Map<TransactionDto>(NewTransaction);
-                    _transactionService.Add(transactionEntity);
+                    await _transactionService.Add(transactionEntity);
 
-                    SetLastTransactions();
+                    await SetLastTransactions();
 
                     ResetCurrentTransaction();
                 });

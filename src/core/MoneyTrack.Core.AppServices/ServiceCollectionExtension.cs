@@ -2,7 +2,7 @@
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.AppServices.Services;
 
-namespace MoneyTrack.Core.AppServices.DependencyResolver
+namespace MoneyTrack.Core.AppServices
 {
     public static class ServiceCollectionExtension
     {

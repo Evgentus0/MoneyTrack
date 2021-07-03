@@ -1,4 +1,5 @@
 ﻿using MoneyTrack.WPF.Client.ViewModels;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace MoneyTrack.WPF.Client.Views
@@ -13,7 +14,7 @@ namespace MoneyTrack.WPF.Client.Views
         private void BaseUserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             if (DataContext is BaseViewModel context)
-                context?.Initialize();
+                Task.Run(async () => await context?.Initialize());
         }
     }
 }

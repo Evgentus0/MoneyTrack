@@ -34,10 +34,10 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         public override string this[string columnName] => string.Empty;
 
-        public override void Initialize()
+        public override async Task Initialize()
         {
             TransactionList = new ObservableCollection<TransactionModel>
-                (_mapper.Map<List<TransactionModel>>(_transactionService.GetLastTransaction(20)));
+                (_mapper.Map<List<TransactionModel>>(await _transactionService.GetLastTransaction(20)));
         }
     }
 }

@@ -13,15 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.WPF.Client", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{3A048C41-3088-4642-8B5A-C18BB221879D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTrack.Core.Models", "src\core\MoneyTrack.Core.Models\MoneyTrack.Core.Models.csproj", "{3E83855F-720B-47C4-AC70-2EA97311EACD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.Core.Models", "src\core\MoneyTrack.Core.Models\MoneyTrack.Core.Models.csproj", "{3E83855F-720B-47C4-AC70-2EA97311EACD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTrack.Core.DomainServices", "src\core\MoneyTrack.Core.DomainServices\MoneyTrack.Core.DomainServices.csproj", "{77B12982-8E2C-42AF-8BD3-D71141BF352E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.Core.DomainServices", "src\core\MoneyTrack.Core.DomainServices\MoneyTrack.Core.DomainServices.csproj", "{77B12982-8E2C-42AF-8BD3-D71141BF352E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTrack.WPF.Infrastructure", "src\windows\MoneyTrack.WPF.Infrastructure\MoneyTrack.WPF.Infrastructure.csproj", "{BE732F2A-5B58-47FB-99E8-B3BAD926D566}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.WPF.Infrastructure", "src\windows\MoneyTrack.WPF.Infrastructure\MoneyTrack.WPF.Infrastructure.csproj", "{BE732F2A-5B58-47FB-99E8-B3BAD926D566}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTrack.Core.AppServices", "src\core\MoneyTrack.Core.AppServices\MoneyTrack.Core.AppServices.csproj", "{D7F62276-F275-4184-AD61-79A37CB85154}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.Core.AppServices", "src\core\MoneyTrack.Core.AppServices\MoneyTrack.Core.AppServices.csproj", "{D7F62276-F275-4184-AD61-79A37CB85154}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTrack.WPF.DomainServices", "src\windows\MoneyTrack.WPF.DomainServices\MoneyTrack.WPF.DomainServices.csproj", "{4F2BF6C7-0CD3-4083-B441-AD6995A888F5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{8DD93C0F-3B9D-40A6-BD68-5949B9C1D7E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTrack.Core.Data.LiteDB", "src\core\data\MoneyTrack.Core.Data.LiteDB\MoneyTrack.Core.Data.LiteDB.csproj", "{65528D1D-318A-4DF1-A472-E309504C3C24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +51,10 @@ Global
 		{D7F62276-F275-4184-AD61-79A37CB85154}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7F62276-F275-4184-AD61-79A37CB85154}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7F62276-F275-4184-AD61-79A37CB85154}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4F2BF6C7-0CD3-4083-B441-AD6995A888F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4F2BF6C7-0CD3-4083-B441-AD6995A888F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4F2BF6C7-0CD3-4083-B441-AD6995A888F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4F2BF6C7-0CD3-4083-B441-AD6995A888F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65528D1D-318A-4DF1-A472-E309504C3C24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65528D1D-318A-4DF1-A472-E309504C3C24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65528D1D-318A-4DF1-A472-E309504C3C24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65528D1D-318A-4DF1-A472-E309504C3C24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,7 +67,8 @@ Global
 		{77B12982-8E2C-42AF-8BD3-D71141BF352E} = {3A048C41-3088-4642-8B5A-C18BB221879D}
 		{BE732F2A-5B58-47FB-99E8-B3BAD926D566} = {F4D01D37-07A7-488B-994F-96D9028F5496}
 		{D7F62276-F275-4184-AD61-79A37CB85154} = {3A048C41-3088-4642-8B5A-C18BB221879D}
-		{4F2BF6C7-0CD3-4083-B441-AD6995A888F5} = {F4D01D37-07A7-488B-994F-96D9028F5496}
+		{8DD93C0F-3B9D-40A6-BD68-5949B9C1D7E1} = {3A048C41-3088-4642-8B5A-C18BB221879D}
+		{65528D1D-318A-4DF1-A472-E309504C3C24} = {8DD93C0F-3B9D-40A6-BD68-5949B9C1D7E1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2EE6D594-DE95-4A84-83CA-C707A9266C6A}
