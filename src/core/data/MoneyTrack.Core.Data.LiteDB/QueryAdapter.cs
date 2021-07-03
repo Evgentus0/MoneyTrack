@@ -48,5 +48,10 @@ namespace MoneyTrack.Core.Data.LiteDB
         {
             return new QueryAdapter<T>(_queryable.Where(BsonExpression.Create(filter.ToBsonExpression())));
         }
+
+        public IQueryAdapter<T> Include(string propName)
+        {
+            return new QueryAdapter<T>(_queryable.Include(BsonExpression.Create(propName)));
+        }
     }
 }

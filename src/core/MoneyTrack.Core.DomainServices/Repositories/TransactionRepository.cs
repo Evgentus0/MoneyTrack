@@ -48,13 +48,25 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         }
         public async Task<List<Transaction>> GetLastTransaction(int numberOfLastTransaction)
         {
-            var result =  _dbProvider.Transactions.Query.OrderByDesc(nameof(Transaction.AddedDttm));
+            var result =  _dbProvider.Transactions.Query
+                .Include(nameof(Account))
+                .Include(nameof(Category))
+                .OrderByDesc(nameof(Transaction.AddedDttm));
             return  await result.Take(numberOfLastTransaction).ToList();
         }
 
-        public Task<List<Transaction>> GetFilteredTransactions(List<Filter> filters)
+        public async Task<List<Transaction>> GetFilteredTransactions(List<Filter> filters)
         {
-            throw new NotImplementedException();
+            var result = _dbProvider.Transactions.Query
+                .Include(nameof(Account))
+                .Include(nameof(Category));
+
+            foreach(var filter in filters)
+            {
+                result = result.Where(filter);
+            }
+
+            return await result.ToList();
         }
     }
 }

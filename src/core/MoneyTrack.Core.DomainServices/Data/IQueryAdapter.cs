@@ -13,6 +13,7 @@ namespace MoneyTrack.Core.DomainServices.Data
         IQueryAdapter<T> OrderByDesc(string propName);
         IQueryAdapter<T> OrderBy(string propName);
         IQueryAdapter<T> Take(int number);
+        IQueryAdapter<T> Include(string propName);
         Task<T> First();
         Task<List<T>> ToList();
     }
