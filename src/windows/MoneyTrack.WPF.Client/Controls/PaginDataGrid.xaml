@@ -44,7 +44,8 @@
                                                  Height="40"
                                                  Width="40" />  
                     </Button>
-                    <TextBlock Text="{Binding Path=PagingModel.CurrentPage}"/>
+                    <TextBlock Text="{Binding Path=PagingModel.CurrentPage}"
+                               Margin="10 10 10 0"/>
                     <Button
                           Style="{StaticResource MaterialDesignIconButton}"
                           Background="{DynamicResource MaterialDesignTextFieldBoxBackground}"
@@ -57,7 +58,7 @@
                     </Button>
 
                     <Label Content="Page: "
-                           Margin="10 0 0 0"/>
+                           Margin="10 10 0 0"/>
                     <ComboBox Margin="10 0 0 0"
                               ItemsSource="{Binding Path=Pages}"
                               SelectedItem="{Binding Path=PagingModel.CurrentPage}"
