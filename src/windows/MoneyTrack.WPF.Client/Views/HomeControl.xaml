@@ -180,7 +180,8 @@
                     CanUserAddRows="False" CanUserDeleteRows="False"
                     CanUserSortColumns="False"
                     Margin="5"
-                    Height="300"
+                    MaxHeight="300"
+                    Height="auto"
                     FontSize="15"
                     >
                 <DataGrid.Columns>
@@ -192,7 +193,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </controls:PaginDataGrid>
-        
+
     </Grid>
 
 </local:BaseUserControl>

@@ -18,7 +18,6 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         private TransactionModel _newTransaction;
         private AsyncCommand _addTransaction;
-        private ObservableCollection<TransactionModel> _lastTransactions;
         private ObservableCollection<AccountModel> _accounts;
         private ObservableCollection<CategoryModel> _categories;
         private PagingViewModel _paging;
