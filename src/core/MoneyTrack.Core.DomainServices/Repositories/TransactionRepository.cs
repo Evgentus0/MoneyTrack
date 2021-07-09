@@ -46,13 +46,14 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             await _dbProvider.Transactions.Remove(id);
         }
-        public async Task<List<Transaction>> GetLastTransaction(int numberOfLastTransaction)
+        public async Task<List<Transaction>> GetLastTransactions(Paging paging)
         {
-            var result =  _dbProvider.Transactions.Query
+            var result = _dbProvider.Transactions.Query
                 .Include(nameof(Account))
                 .Include(nameof(Category))
-                .OrderByDesc(nameof(Transaction.AddedDttm));
-            return  await result.Take(numberOfLastTransaction).ToList();
+                .OrderByDesc(nameof(Transaction.AddedDttm))
+                .Skip(paging.PageSize * (paging.CurrentPage - 1));
+            return  await result.Take(paging.PageSize).ToList();
         }
 
         public async Task<List<Transaction>> GetFilteredTransactions(List<Filter> filters)
@@ -67,6 +68,11 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             }
 
             return await result.ToList();
+        }
+
+        public async Task<int> CountTrasactions()
+        {
+            return await _dbProvider.Transactions.Query.Count();
         }
     }
 }

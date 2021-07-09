@@ -53,5 +53,15 @@ namespace MoneyTrack.Core.Data.LiteDB
         {
             return new QueryAdapter<T>(_queryable.Include(BsonExpression.Create(propName)));
         }
+
+        public IQueryAdapter<T> Skip(int count)
+        {
+            return new QueryAdapter<T>((ILiteQueryable<T>)_queryable.Skip(count));
+        }
+
+        public async Task<int> Count()
+        {
+            return await Task.Run(() => _queryable.Count());
+        }
     }
 }

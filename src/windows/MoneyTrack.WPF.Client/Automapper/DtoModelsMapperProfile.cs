@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MoneyTrack.Core.AppServices.DTOs;
+using MoneyTrack.Core.Models.Operational;
 using MoneyTrack.WPF.Client.Models;
 
 namespace MoneyTrack.WPF.Client.Automapper
@@ -15,6 +16,8 @@ namespace MoneyTrack.WPF.Client.Automapper
             CreateMap<CategoryDto, CategoryModel>().ReverseMap();
 
             CreateMap<AccountDto, AccountModel>().ReverseMap();
+
+            CreateMap<PagingModel, Paging>().ReverseMap();
         }
     }
 }

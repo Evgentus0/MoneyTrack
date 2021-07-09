@@ -8,8 +8,9 @@ namespace MoneyTrack.Core.AppServices.Interfaces
 {
     public interface ITransactionService
     {
-        Task<List<TransactionDto>> GetLastTransaction(int numberOfLastTransaction);
+        Task<List<TransactionDto>> GetLastTransactions(Paging paging);
         Task Add(TransactionDto transaction);
         Task<List<TransactionDto>> GetFilteredTransaction(List<Filter> filters);
+        Task<int> CountTransactions();
     }
 }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using MoneyTrack.Core.Models.Operational;
 
 namespace MoneyTrack.WPF.Client.ViewModels
 {
@@ -20,7 +21,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
         private ObservableCollection<TransactionModel> _lastTransactions;
         private ObservableCollection<AccountModel> _accounts;
         private ObservableCollection<CategoryModel> _categories;
-
+        private PagingViewModel _paging;
         private readonly ITransactionService _transactionService;
         private readonly ICategoryService _categoryService;
         private readonly IAccountService _accountService;
@@ -49,24 +50,27 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 OnPropertyChanged(nameof(Accounts));
             }
         }
-        public ObservableCollection<TransactionModel> LastTransactions
-        {
-            get => _lastTransactions;
-            set
-            {
-                _lastTransactions = value;
-                OnPropertyChanged(nameof(LastTransactions));
-            }
-        }
         public TransactionModel NewTransaction
         {
-            get { return _newTransaction; }
+            get => _newTransaction;
             set
             {
                 _newTransaction = value;
                 OnPropertyChanged(nameof(NewTransaction));
             }
         }
+
+        public PagingViewModel Paging 
+        { 
+            get => _paging;
+            set
+            {
+                _paging = value;
+                OnPropertyChanged(nameof(Paging));
+            }
+        }
+
+        public TransactionListViewModel TransactionListViewModel { get; }
 
         #endregion
 
@@ -77,7 +81,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
             IAccountService accountService,
             AppSettings settings,
             IMapper mapper,
-            
+
             TransactionListViewModel transactionListViewModel)
         {
             _transactionService = transactionService;
@@ -92,9 +96,19 @@ namespace MoneyTrack.WPF.Client.ViewModels
         {
             NewTransaction = TransactionModel.GetWithDefaultValue();
 
+            Paging = new PagingViewModel(await _transactionService.CountTransactions(), _settings.NumberOfLastTransaction);
+            Paging.PagingModel.CurrentPageChanged += PagingModel_CurrentPageChanged;
+
             await SetLastTransactions();
             await SetCategories();
             await SetAccounts();
+        }
+
+        private void PagingModel_CurrentPageChanged(object sender, int e)
+        {
+            var pagingModel = (PagingModel)sender;
+
+            Task.Run(async () => await SetLastTransactions(pagingModel));
         }
 
         private async Task SetAccounts()
@@ -109,10 +123,22 @@ namespace MoneyTrack.WPF.Client.ViewModels
                             (_mapper.Map<List<CategoryModel>>(await _categoryService.GetAllCategories()));
         }
 
-        private async Task SetLastTransactions()
+        private async Task SetLastTransactions(PagingModel paging = null)
         {
-            LastTransactions = new ObservableCollection<TransactionModel>
-                (_mapper.Map<List<TransactionModel>>(await _transactionService.GetLastTransaction(_settings.NumberOfLastTransaction)));
+            if(paging == null)
+            {
+                paging = new PagingModel
+                {
+                    CurrentPage = 1,
+                    PageSize = _settings.NumberOfLastTransaction,
+                    TotalItems = await _transactionService.CountTransactions()
+                };
+            }
+
+            var pagingModel = _mapper.Map<Paging>(paging);
+
+            Paging.Items = new ObservableCollection<TransactionModel>
+                (_mapper.Map<List<TransactionModel>>(await _transactionService.GetLastTransactions(pagingModel)));
         }
 
         public AsyncCommand AddTransactionCommand
@@ -130,8 +156,6 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 });
             }
         }
-
-        public TransactionListViewModel TransactionListViewModel { get; }
 
         public override string this[string columnName] => string.Empty;
 

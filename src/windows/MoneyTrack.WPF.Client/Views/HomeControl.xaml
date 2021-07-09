@@ -8,6 +8,7 @@
              xmlns:viewModels="clr-namespace:MoneyTrack.WPF.Client.ViewModels"
              xmlns:models="clr-namespace:MoneyTrack.WPF.Client.Models"
              xmlns:converters="clr-namespace:MoneyTrack.WPF.Client.Converters"
+             xmlns:controls="clr-namespace:MoneyTrack.WPF.Client.Controls"
              xmlns:v="clr-namespace:MoneyTrack.WPF.Client.Validation"
              mc:Ignorable="d"
              >
@@ -170,44 +171,28 @@
             <Label Content="Last transactions:"/>
         </StackPanel>
 
-        <Grid Grid.Row="5">
-            <Grid.RowDefinitions >
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
 
-            <ScrollViewer Grid.Row="1"
-                          CanContentScroll="True"
-                          VerticalScrollBarVisibility="Auto">
-
-                <Border Background="Silver"
-                        BorderBrush="Silver" BorderThickness="1"
-                        CornerRadius="5"
-                        Margin="30 30 30 90"
-                        >
-                    <DataGrid Name="ListTransactionsDataGrid" AutoGenerateColumns="False"
-                              ItemsSource="{Binding Path=LastTransactions}"
-                              VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                              IsReadOnly="True" CanUserReorderColumns="False"
-                              CanUserAddRows="False" CanUserDeleteRows="False"
-                              CanUserSortColumns="False"
-                              Margin="5"
-                              Height="300"
-                              FontSize="15"
-                          >
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="How much" Binding="{Binding Path=Quantity}" Width="2*"/>
-                            <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="5*"/>
-                            <DataGridTextColumn Header="Category" Binding="{Binding Path=Category.Name}" Width="3*"/>
-                            <DataGridTextColumn Header="Account" Binding="{Binding Path=Account.Name}" Width="3*"/>
-                            <DataGridTextColumn Header="Added date time" Binding="{Binding Path=AddedDttm}" Width="4*"/>
-                        </DataGrid.Columns>
-
-                    </DataGrid>
-                </Border>
-                
-            </ScrollViewer>
-        </Grid>
-
+        <controls:PaginDataGrid Grid.Row="5" DataContext="{Binding Path=Paging}">
+            <DataGrid AutoGenerateColumns="False"
+                    ItemsSource="{Binding Path=Items}"
+                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                    IsReadOnly="True" CanUserReorderColumns="False"
+                    CanUserAddRows="False" CanUserDeleteRows="False"
+                    CanUserSortColumns="False"
+                    Margin="5"
+                    Height="300"
+                    FontSize="15"
+                    >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="How much" Binding="{Binding Path=Quantity}" Width="2*"/>
+                    <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="5*"/>
+                    <DataGridTextColumn Header="Category" Binding="{Binding Path=Category.Name}" Width="3*"/>
+                    <DataGridTextColumn Header="Account" Binding="{Binding Path=Account.Name}" Width="3*"/>
+                    <DataGridTextColumn Header="Added date time" Binding="{Binding Path=AddedDttm}" Width="4*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </controls:PaginDataGrid>
+        
     </Grid>
+
 </local:BaseUserControl>
