@@ -18,7 +18,7 @@ namespace MoneyTrack.WPF.Client.Pages
         private void BaseWindow_Loaded(object sender, RoutedEventArgs e)
         {
             if (DataContext is BaseViewModel context)
-                context?.Initialize();
+                Task.Run(async () => await context?.Initialize());
         }
     }
 }

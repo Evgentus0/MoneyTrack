@@ -3,6 +3,7 @@ using MoneyTrack.Core.Models;
 using MoneyTrack.Core.Models.Operational;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.DomainServices.Repositories
@@ -53,26 +54,59 @@ namespace MoneyTrack.Core.DomainServices.Repositories
                 .Include(nameof(Category))
                 .OrderByDesc(nameof(Transaction.AddedDttm))
                 .Skip(paging.PageSize * (paging.CurrentPage - 1));
+
+
             return  await result.Take(paging.PageSize).ToList();
         }
 
-        public async Task<List<Transaction>> GetFilteredTransactions(List<Filter> filters)
+        public async Task<List<Transaction>> GetFilteredTransactions(DbQueryRequest request)
         {
             var result = _dbProvider.Transactions.Query
                 .Include(nameof(Account))
                 .Include(nameof(Category));
 
-            foreach(var filter in filters)
+            if(request.Filters is not null)
+            {
+                foreach (var filter in request.Filters)
+                {
+                    result = result.Where(filter);
+                }
+            }
+
+            if(request.Sorting is not null)
+            {
+                switch (request.Sorting.Direction)
+                {
+                    case SortDirect.Asc:
+                        result = result.OrderBy(request.Sorting.PropName);
+                        break;
+                    case SortDirect.Desc:
+                        result = result.OrderByDesc(request.Sorting.PropName);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if(request.Paging is not null)
+            {
+                result = result.Skip(request.Paging.PageSize * (request.Paging.CurrentPage - 1)).Take(request.Paging.PageSize);
+            }
+
+            Thread.Sleep(10000);
+            return await result.ToList();
+        }
+
+        public async Task<int> CountTrasactions(List<Filter> filters)
+        {
+            var result = _dbProvider.Transactions.Query;
+
+            foreach (var filter in filters)
             {
                 result = result.Where(filter);
             }
 
-            return await result.ToList();
-        }
-
-        public async Task<int> CountTrasactions()
-        {
-            return await _dbProvider.Transactions.Query.Count();
+            return await result.Count();
         }
     }
 }

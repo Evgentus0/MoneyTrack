@@ -43,16 +43,16 @@ namespace MoneyTrack.Core.AppServices.Services
             return _mapper.Map<List<TransactionDto>>(await _transactionRepository.GetLastTransactions(paging));
         }
 
-        public async Task<List<TransactionDto>> GetFilteredTransaction(List<Filter> filters)
+        public async Task<List<TransactionDto>> GetQueryTransactions(DbQueryRequest request)
         {
-            List<Transaction> transactions = await _transactionRepository.GetFilteredTransactions(filters);
+            List<Transaction> transactions = await _transactionRepository.GetFilteredTransactions(request);
 
             return _mapper.Map<List<TransactionDto>>(transactions);
         }
 
-        public async Task<int> CountTransactions()
+        public async Task<int> CountTransactions(List<Filter> filters = null)
         {
-            return await _transactionRepository.CountTrasactions();
+            return await _transactionRepository.CountTrasactions(filters ?? new List<Filter>());
         }
     }
 }

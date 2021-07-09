@@ -35,7 +35,7 @@
                     VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                     IsReadOnly="True" CanUserReorderColumns="False"
                     CanUserAddRows="False" CanUserDeleteRows="False"
-                    CanUserSortColumns="False"
+                    CanUserSortColumns="True" Sorting="DataGrid_Sorting"
                     Margin="5"
                     Height="auto"
                     MaxHeight="600"

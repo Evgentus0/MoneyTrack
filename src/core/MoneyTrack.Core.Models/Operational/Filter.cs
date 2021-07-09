@@ -20,6 +20,7 @@ namespace MoneyTrack.Core.Models.Operational
         Less, 
         EqOrLess, 
         Greater, 
-        EqOrGreater
+        EqOrGreater,
+        Like
     }
 }

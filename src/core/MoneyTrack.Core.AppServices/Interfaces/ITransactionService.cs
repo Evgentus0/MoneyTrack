@@ -10,7 +10,7 @@ namespace MoneyTrack.Core.AppServices.Interfaces
     {
         Task<List<TransactionDto>> GetLastTransactions(Paging paging);
         Task Add(TransactionDto transaction);
-        Task<List<TransactionDto>> GetFilteredTransaction(List<Filter> filters);
-        Task<int> CountTransactions();
+        Task<List<TransactionDto>> GetQueryTransactions(DbQueryRequest request);
+        Task<int> CountTransactions(List<Filter> filters = null);
     }
 }
