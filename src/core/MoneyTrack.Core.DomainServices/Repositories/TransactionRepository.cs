@@ -93,7 +93,6 @@ namespace MoneyTrack.Core.DomainServices.Repositories
                 result = result.Skip(request.Paging.PageSize * (request.Paging.CurrentPage - 1)).Take(request.Paging.PageSize);
             }
 
-            Thread.Sleep(10000);
             return await result.ToList();
         }
 
