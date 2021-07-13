@@ -9,6 +9,7 @@
                   Title="TransactionListWindow"
                   xmlns:controls="clr-namespace:MoneyTrack.WPF.Client.Controls"
                   MinHeight="950"
+                  MinWidth="600"
                   
         
                   

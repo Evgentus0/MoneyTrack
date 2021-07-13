@@ -17,6 +17,8 @@ namespace MoneyTrack.WPF.Client.ViewModels
     {
         private PagingViewModel _paging;
 
+        private DbQueryRequest _dbRequest;
+
         private readonly ITransactionService _transactionService;
         private readonly IMapper _mapper;
         private readonly AppSettings _settings;
@@ -38,18 +40,17 @@ namespace MoneyTrack.WPF.Client.ViewModels
             _transactionService = transactionService;
             _mapper = mapper;
             _settings = settings;
+
+            _dbRequest = new DbQueryRequest();
         }
 
         public override string this[string columnName] => string.Empty;
 
-        private async Task SetTransactions(
-            PagingModel paging = null, 
-            Sorting sorting = null,
-            List<Filter> filters = null)
+        private async Task SetTransactions()
         {
-            if (paging == null)
+            if (_dbRequest.Paging== null)
             {
-                paging = new PagingModel
+                _dbRequest.Paging = new Paging
                 {
                     CurrentPage = 1,
                     PageSize = _settings.NumberOfLastTransaction,
@@ -57,17 +58,8 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 };
             }
 
-            var pagingModel = _mapper.Map<Paging>(paging);
-
-            var request = new DbQueryRequest
-            {
-                Paging = pagingModel,
-                Sorting = sorting,
-                Filters = filters
-            };
-
             Paging.Items = new ObservableCollection<TransactionModel>
-                (_mapper.Map<List<TransactionModel>>(await _transactionService.GetQueryTransactions(request)));
+                (_mapper.Map<List<TransactionModel>>(await _transactionService.GetQueryTransactions(_dbRequest)));
         }
 
         public override async Task Initialize()
@@ -102,8 +94,9 @@ namespace MoneyTrack.WPF.Client.ViewModels
         private void PagingModel_CurrentPageChanged(object sender, int e)
         {
             var pagingModel = (PagingModel)sender;
+            _dbRequest.Paging = _mapper.Map<Paging>(pagingModel);
 
-            Task.Run(async () => await SetTransactions(pagingModel));
+            Task.Run(async () => await SetTransactions());
         }
 
         public void SortTransactions(Sorting sorting)
@@ -111,7 +104,9 @@ namespace MoneyTrack.WPF.Client.ViewModels
             sorting.Direction = _propSortingDirect[sorting.PropName] ? SortDirect.Asc : SortDirect.Desc;
             _propSortingDirect[sorting.PropName] = !_propSortingDirect[sorting.PropName];
 
-            Task.Run(async () => await SetTransactions(sorting: sorting));
+            _dbRequest.Sorting = sorting;
+
+            Task.Run(async () => await SetTransactions());
         }
     }
 }
