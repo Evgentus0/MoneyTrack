@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using MaterialDesignThemes.Wpf;
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.Models.Operational;
+using MoneyTrack.WPF.Client.Commands;
+using MoneyTrack.WPF.Client.Dialogs;
 using MoneyTrack.WPF.Client.Models;
 using MoneyTrack.WPF.Infrastructure.Settings;
 using System;
@@ -33,7 +36,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
             }
         }
 
-        public ObservableCollection<FilterModel> Filters 
+        public ObservableCollection<FilterModel> Filters
         {
             get => _filters;
             set
@@ -44,6 +47,50 @@ namespace MoneyTrack.WPF.Client.ViewModels
         }
 
         public List<string> PropertiesList { get; private set; }
+
+        public AsyncCommand AddFilterDialogCommand 
+        {
+            get => _addFilterDialogCommand ??= new AsyncCommand(async obj =>
+            {
+                var dialogViewModel = new FilterViewModel(PropertiesList, Enum.GetNames(typeof(Operations)).ToList());
+
+                var view = new AddNewFilterDialog
+                {
+                    DataContext = dialogViewModel
+                };
+
+                var result = await DialogHost.Show(view, "RootDialog", HandleCloseDialog);
+
+                if(bool.TryParse(result?.ToString(), out bool doAdd))
+                {
+                    if (doAdd)
+                    {
+                        Filters.Add(dialogViewModel.FilterModel);
+                    }
+                }
+            });
+        }
+
+        private void HandleCloseDialog(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if (eventArgs.Parameter is bool isAccept)
+                if (!isAccept)
+                    return;
+
+            var dialog = (AddNewFilterDialog)eventArgs.Session.Content;
+            var dialogViewModel = (FilterViewModel)dialog.DataContext;
+
+            var validateResult = dialogViewModel.FilterModel.ValidateModel();
+            if (string.IsNullOrEmpty(validateResult))
+            {
+                return;
+            }
+            else
+            {
+                dialogViewModel.Errors = validateResult;
+                eventArgs.Cancel();
+            }
+        }
 
         public TransactionListViewModel(ITransactionService transactionService,
             IMapper mapper,
@@ -96,7 +143,19 @@ namespace MoneyTrack.WPF.Client.ViewModels
                     PropName="prop2",
                     Operation = Operations.Less,
                     Value = "val2"
-                }
+                },
+                new FilterModel
+                {
+                    PropName = "prop1",
+                    Operation = Operations.Eq,
+                    Value = "val1"
+                },
+                new FilterModel
+                {
+                    PropName = "prop1prop1prop1prop1prop1prop1prop1prop1",
+                    Operation = Operations.Eq,
+                    Value = "val1prop1prop1prop1prop1prop1prop1prop1"
+                },
             };
 
             await SetTransactions();
@@ -104,6 +163,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         private Dictionary<string, bool> _propSortingDirect;
         private ObservableCollection<FilterModel> _filters;
+        private AsyncCommand _addFilterDialogCommand;
 
         private void InitPropLists()
         {

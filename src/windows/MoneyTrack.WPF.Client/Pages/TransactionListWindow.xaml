@@ -20,40 +20,78 @@
                   TextElement.FontWeight="Medium"
                   TextElement.FontSize="20"
                   FontFamily="{materialDesign:MaterialDesignFont}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="8*"/>
-        </Grid.RowDefinitions>
+    <materialDesign:DialogHost Identifier="RootDialog">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="8*"/>
+            </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0">
-            <Grid>
+            <Grid Grid.Row="0" Margin="5">
 
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <GroupBox Grid.Column="0" Header="Filters" 
+                          Margin="2" Padding="3">
+                    <ScrollViewer Grid.Row="0" >
+                        <ItemsControl ItemsSource="{Binding Path=Filters}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button Grid.Column="0" Content="Delete" Margin="5">
+
+                                        </Button>
+
+                                        <TextBlock Grid.Column="1" Text="{Binding Path=PropName}" Margin="3"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Path=Operation}" Margin="3"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding Path=Value}" Margin="3"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </GroupBox>
+
+                <StackPanel Grid.Column="1" Margin="2">
+                    <Button Content="Add filter"
+                            Command="{Binding Path=AddFilterDialogCommand}">
+
+                    </Button>
+                </StackPanel>
             </Grid>
-        </StackPanel>
 
-        <controls:PaginDataGrid Grid.Row="1" DataContext="{Binding Path=Paging}">
-            <DataGrid AutoGenerateColumns="False"
-                    ItemsSource="{Binding Path=Items}"
-                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                    IsReadOnly="True" CanUserReorderColumns="False"
-                    CanUserAddRows="False" CanUserDeleteRows="False"
-                    CanUserSortColumns="True" Sorting="DataGrid_Sorting"
-                    Margin="5"
-                    Height="auto"
-                    MaxHeight="600"
-                    FontSize="15"
-                    >
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="How much" Binding="{Binding Path=Quantity}" Width="2*"/>
-                    <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="5*"/>
-                    <DataGridTextColumn Header="Category" Binding="{Binding Path=Category.Name}" Width="3*"/>
-                    <DataGridTextColumn Header="Account" Binding="{Binding Path=Account.Name}" Width="3*"/>
-                    <DataGridTextColumn Header="Added date time" Binding="{Binding Path=AddedDttm}" Width="4*"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </controls:PaginDataGrid>
+            <controls:PaginDataGrid Grid.Row="1" DataContext="{Binding Path=Paging}">
+                <DataGrid AutoGenerateColumns="False"
+                        ItemsSource="{Binding Path=Items}"
+                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                        IsReadOnly="True" CanUserReorderColumns="False"
+                        CanUserAddRows="False" CanUserDeleteRows="False"
+                        CanUserSortColumns="True" Sorting="DataGrid_Sorting"
+                        Margin="5"
+                        Height="auto"
+                        MaxHeight="600"
+                        FontSize="15"
+                        >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="How much" Binding="{Binding Path=Quantity}" Width="2*"/>
+                        <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="5*"/>
+                        <DataGridTextColumn Header="Category" Binding="{Binding Path=Category.Name}" Width="3*"/>
+                        <DataGridTextColumn Header="Account" Binding="{Binding Path=Account.Name}" Width="3*"/>
+                        <DataGridTextColumn Header="Added date time" Binding="{Binding Path=AddedDttm}" Width="4*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </controls:PaginDataGrid>
 
-
-    </Grid>
+        </Grid>
+    </materialDesign:DialogHost>
 </local:BaseWindow>

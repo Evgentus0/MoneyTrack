@@ -10,6 +10,7 @@
              xmlns:converters="clr-namespace:MoneyTrack.WPF.Client.Converters"
              xmlns:controls="clr-namespace:MoneyTrack.WPF.Client.Controls"
              xmlns:v="clr-namespace:MoneyTrack.WPF.Client.Validation"
+             xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              mc:Ignorable="d"
              >
 
@@ -35,9 +36,9 @@
                     >
 
             <StackPanel Orientation="Horizontal" Margin="20">
-                <Label Content="How much: " Target="{Binding ElementName=NumberTextBox}"/>
-                <TextBox Name="NumberTextBox" Width="80" Margin="10 0 0 0"
-                         PreviewTextInput="NumberTextBox_PreviewTextInput"
+                <TextBox Name="NumberTextBox" Width="100" Margin="10 0 0 0"
+                         PreviewTextInput="NumberTextBox_PreviewTextInput" 
+                         wpf:HintAssist.Hint="How much" Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                          >
                     <TextBox.Text>
                         <Binding Path="NewTransaction.Quantity">
@@ -54,8 +55,8 @@
 
 
             <StackPanel Orientation="Horizontal" Margin="20">
-                <Label Content="Description: " Target="{Binding ElementName=DescriptionTextBox}"/>
-                <TextBox Name="DescriptionTextBox" Width="300" Margin="10 0 0 0"
+                <TextBox Name="DescriptionTextBox" Width="300" Margin="10 0 0 0" 
+                         wpf:HintAssist.Hint="Description" Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                          >
                     <TextBox.Text>
                         <Binding Path="NewTransaction.Description" UpdateSourceTrigger="LostFocus"

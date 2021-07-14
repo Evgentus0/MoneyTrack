@@ -1,19 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
 namespace MoneyTrack.WPF.Client.Converters
 {
-    public class HideIfCheckedConverter : IValueConverter
+    public class CollapseIfEmptyConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is bool isChecked)
+            if(value is string strValue)
             {
-                return isChecked ? Visibility.Hidden : Visibility.Visible;
+                if (string.IsNullOrEmpty(strValue))
+                {
+                    return Visibility.Collapsed;
+                }
+                return Visibility.Visible;
             }
-            throw new ArgumentException("Value should be bool!");
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
