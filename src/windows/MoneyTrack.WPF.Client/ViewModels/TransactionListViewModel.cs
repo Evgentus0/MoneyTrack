@@ -33,7 +33,19 @@ namespace MoneyTrack.WPF.Client.ViewModels
             }
         }
 
-        public TransactionListViewModel(ITransactionService transactionService, 
+        public ObservableCollection<FilterModel> Filters 
+        {
+            get => _filters;
+            set
+            {
+                _filters = value;
+                OnPropertyChanged(nameof(Filters));
+            }
+        }
+
+        public List<string> PropertiesList { get; private set; }
+
+        public TransactionListViewModel(ITransactionService transactionService,
             IMapper mapper,
             AppSettings settings)
         {
@@ -48,12 +60,12 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         private async Task SetTransactions()
         {
-            if (_dbRequest.Paging== null)
+            if (_dbRequest.Paging == null)
             {
                 _dbRequest.Paging = new Paging
                 {
                     CurrentPage = 1,
-                    PageSize = _settings.NumberOfLastTransaction,
+                    PageSize = _settings.TransactionPageSize,
                     TotalItems = await _transactionService.CountTransactions()
                 };
             }
@@ -64,30 +76,50 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         public override async Task Initialize()
         {
-            Paging = new PagingViewModel(await _transactionService.CountTransactions(), _settings.NumberOfLastTransaction);
+            Paging = new PagingViewModel(await _transactionService.CountTransactions(), _settings.TransactionPageSize);
+            _dbRequest.Paging = _mapper.Map<Paging>(Paging.PagingModel);
+
             Paging.PagingModel.CurrentPageChanged += PagingModel_CurrentPageChanged;
 
-            InitPropSortingDirect();
+            InitPropLists();
+
+            Filters = new ObservableCollection<FilterModel>()
+            {
+                new FilterModel
+                {
+                    PropName = "prop1",
+                    Operation = Operations.Eq,
+                    Value = "val1"
+                },
+                new FilterModel
+                {
+                    PropName="prop2",
+                    Operation = Operations.Less,
+                    Value = "val2"
+                }
+            };
 
             await SetTransactions();
         }
 
         private Dictionary<string, bool> _propSortingDirect;
-        private void InitPropSortingDirect()
+        private ObservableCollection<FilterModel> _filters;
+
+        private void InitPropLists()
         {
-            var properties = typeof(TransactionModel).GetProperties();
-            _propSortingDirect = new Dictionary<string, bool>();
-            foreach(var propInfo in properties)
+            PropertiesList = new List<string>
             {
-                if(propInfo.PropertyType.IsClass)
-                {
-                    var objProps = propInfo.PropertyType.GetProperties();
-                    foreach (var objPropInfo in objProps)
-                    {
-                        _propSortingDirect.Add($"{propInfo.Name}.{objPropInfo.Name}", true);
-                    }
-                }
-                _propSortingDirect.Add(propInfo.Name, true);
+                nameof(TransactionModel.Quantity),
+                nameof(TransactionModel.Description),
+                nameof(TransactionModel.Category) + "." + nameof(TransactionModel.Category.Name),
+                nameof(TransactionModel.Account) + "." + nameof(TransactionModel.Account.Name),
+                nameof(TransactionModel.AddedDttm),
+            };
+
+            _propSortingDirect = new Dictionary<string, bool>();
+            foreach (var item in PropertiesList)
+            {
+                _propSortingDirect.Add(item, true);
             }
         }
 

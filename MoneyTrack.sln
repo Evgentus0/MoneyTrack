@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.Core.AppServices
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{8DD93C0F-3B9D-40A6-BD68-5949B9C1D7E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTrack.Core.Data.LiteDB", "src\core\data\MoneyTrack.Core.Data.LiteDB\MoneyTrack.Core.Data.LiteDB.csproj", "{65528D1D-318A-4DF1-A472-E309504C3C24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.Core.Data.LiteDB", "src\core\data\MoneyTrack.Core.Data.LiteDB\MoneyTrack.Core.Data.LiteDB.csproj", "{65528D1D-318A-4DF1-A472-E309504C3C24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

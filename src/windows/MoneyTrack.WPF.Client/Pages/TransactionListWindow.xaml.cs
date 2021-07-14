@@ -36,8 +36,6 @@ namespace MoneyTrack.WPF.Client.Pages
             DataGridColumn column = e.Column;
             e.Handled = true;
 
-            //var direction = column.SortDirection ??= ListSortDirection.Ascending;
-            //column.SortDirection = direction;
             var sorting = new Sorting
             {
                 PropName = column.SortMemberPath
@@ -45,28 +43,6 @@ namespace MoneyTrack.WPF.Client.Pages
 
             
             viewModel.SortTransactions(sorting);
-            //CollectionViewSource.
-
-            //i do some custom checking based on column to get the right comparer
-            //i have different comparers for different columns. I also handle the sort direction
-            //in my comparer
-
-            // prevent the built-in sort from sorting
-
-
-
-            //set the sort order on the column
-
-
-            //use a ListCollectionView to do the sort.
-
-
-            //this is my custom sorter it just derives from IComparer and has a few properties
-            //you could just apply the comparer but i needed to do a few extra bits and pieces
-
-
-            //apply the sort
-            //lcv.CustomSort = comparer;
         }
     }
 }
