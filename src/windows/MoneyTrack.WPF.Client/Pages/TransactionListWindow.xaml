@@ -28,21 +28,7 @@
 
         <StackPanel Grid.Row="0">
             <Grid>
-                <ListBox ItemsSource="{Binding Path=Filters}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Path=PropName}"/>
-                                <TextBlock Text="{Binding Path=Operation}"/>
-                                <TextBlock Text="{Binding Path=Value}"/>
 
-                                <Button Content="Delete">
-                                    
-                                </Button>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
             </Grid>
         </StackPanel>
 
