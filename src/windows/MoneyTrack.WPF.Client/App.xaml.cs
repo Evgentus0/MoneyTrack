@@ -26,13 +26,7 @@ namespace MoneyTrack.WPF.Client
 
         protected void OnStartup(object sender, StartupEventArgs e)
         {
-            var builder = new ConfigurationBuilder()
-                 .SetBasePath(Directory.GetCurrentDirectory())
-                 .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true);
-
-            Configuration = builder.Build();
-            Settings = Configuration.Get<AppSettings>();
-            Settings.LiteDBConnection = Configuration.GetConnectionString("LiteDB");
+            Settings = AppSettings.GetWithDefaultValues();
 
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
