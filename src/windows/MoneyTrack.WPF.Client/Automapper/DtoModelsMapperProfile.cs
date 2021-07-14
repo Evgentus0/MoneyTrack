@@ -18,6 +18,8 @@ namespace MoneyTrack.WPF.Client.Automapper
             CreateMap<AccountDto, AccountModel>().ReverseMap();
 
             CreateMap<PagingModel, Paging>().ReverseMap();
+
+            CreateMap<FilterModel, Filter>().ReverseMap();
         }
     }
 }

@@ -46,9 +46,20 @@ namespace MoneyTrack.WPF.Client.ViewModels
             }
         }
 
+        public FilterModel FilterToDelete 
+        {
+            get => _filterToDelete;
+            set
+            {
+                _filterToDelete = value;
+                Filters.Remove(value);
+                OnPropertyChanged(nameof(FilterToDelete));
+            }
+        }
+
         public List<string> PropertiesList { get; private set; }
 
-        public AsyncCommand AddFilterDialogCommand 
+        public AsyncCommand AddFilterDialogCommand
         {
             get => _addFilterDialogCommand ??= new AsyncCommand(async obj =>
             {
@@ -61,7 +72,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
                 var result = await DialogHost.Show(view, "RootDialog", HandleCloseDialog);
 
-                if(bool.TryParse(result?.ToString(), out bool doAdd))
+                if (bool.TryParse(result?.ToString(), out bool doAdd))
                 {
                     if (doAdd)
                     {
@@ -117,6 +128,8 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 };
             }
 
+            _dbRequest.Filters = _mapper.Map<List<Filter>>(Filters.ToList());
+
             Paging.Items = new ObservableCollection<TransactionModel>
                 (_mapper.Map<List<TransactionModel>>(await _transactionService.GetQueryTransactions(_dbRequest)));
         }
@@ -131,13 +144,20 @@ namespace MoneyTrack.WPF.Client.ViewModels
             InitPropLists();
 
             Filters = new ObservableCollection<FilterModel>();
+            Filters.CollectionChanged += Filters_CollectionChanged;
 
             await SetTransactions();
+        }
+
+        private void Filters_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Task.Run(async () => await SetTransactions());
         }
 
         private Dictionary<string, bool> _propSortingDirect;
         private ObservableCollection<FilterModel> _filters;
         private AsyncCommand _addFilterDialogCommand;
+        private FilterModel _filterToDelete;
 
         private void InitPropLists()
         {
