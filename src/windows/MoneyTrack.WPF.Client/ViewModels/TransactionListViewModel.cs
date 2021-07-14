@@ -130,33 +130,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
             InitPropLists();
 
-            Filters = new ObservableCollection<FilterModel>()
-            {
-                new FilterModel
-                {
-                    PropName = "prop1",
-                    Operation = Operations.Eq,
-                    Value = "val1"
-                },
-                new FilterModel
-                {
-                    PropName="prop2",
-                    Operation = Operations.Less,
-                    Value = "val2"
-                },
-                new FilterModel
-                {
-                    PropName = "prop1",
-                    Operation = Operations.Eq,
-                    Value = "val1"
-                },
-                new FilterModel
-                {
-                    PropName = "prop1prop1prop1prop1prop1prop1prop1prop1",
-                    Operation = Operations.Eq,
-                    Value = "val1prop1prop1prop1prop1prop1prop1prop1"
-                },
-            };
+            Filters = new ObservableCollection<FilterModel>();
 
             await SetTransactions();
         }
