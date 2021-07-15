@@ -7,5 +7,6 @@ namespace MoneyTrack.Core.AppServices.Interfaces
     public interface ICategoryService
     {
         Task<List<CategoryDto>> GetAllCategories();
+        Task AddCategory(CategoryDto category);
     }
 }

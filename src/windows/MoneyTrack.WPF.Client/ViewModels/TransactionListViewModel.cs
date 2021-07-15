@@ -85,8 +85,12 @@ namespace MoneyTrack.WPF.Client.ViewModels
         private void HandleCloseDialog(object sender, DialogClosingEventArgs eventArgs)
         {
             if (eventArgs.Parameter is bool isAccept)
+            {
                 if (!isAccept)
                     return;
+            }
+            else
+                return;
 
             var dialog = (AddNewFilterDialog)eventArgs.Session.Content;
             var dialogViewModel = (FilterViewModel)dialog.DataContext;

@@ -28,6 +28,10 @@
                              Value="Analytics">
                     <Setter Property="ContentTemplate" Value="{DynamicResource AnalyticsViewTemplate}"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=NavigationMenuListBox, Path=SelectedItem}"
+                             Value="Managing">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource ManagingViewTemplate}"/>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
 
@@ -37,6 +41,10 @@
                 <DataTrigger Binding="{Binding ElementName=NavigationMenuListBox, Path=SelectedItem}"
                              Value="Analytics">
                     <Setter Property="Content" Value="Analytics"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=NavigationMenuListBox, Path=SelectedItem}"
+                             Value="Managing">
+                    <Setter Property="Content" Value="Managing"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>

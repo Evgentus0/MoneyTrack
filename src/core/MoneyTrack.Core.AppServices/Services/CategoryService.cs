@@ -2,6 +2,7 @@
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.DomainServices.Repositories;
+using MoneyTrack.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,6 +17,12 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
+        }
+
+        public async Task AddCategory(CategoryDto category)
+        {
+            var categoryEntity = _mapper.Map<Category>(category);
+            await _categoryRepository.AddCategory(categoryEntity);
         }
 
         public async Task<List<CategoryDto>> GetAllCategories()

@@ -19,5 +19,10 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             return await _dbProvider.Accounts.Query.ToList();
         }
+
+        public async Task Add(Account account)
+        {
+            await _dbProvider.Accounts.Add(account);
+        }
     }
 }

@@ -54,10 +54,16 @@ namespace MoneyTrack.WPF.Client
             services.AddSingleton(Settings);
             services.AddLiteDb(Settings.LiteDBConnection);
 
+            ConfigureViewModels(services);
+        }
+
+        private static void ConfigureViewModels(IServiceCollection services)
+        {
             services.AddScoped<MainViewModel>();
             services.AddScoped<HomeViewModel>();
             services.AddScoped<AnalyticsViewModel>();
             services.AddScoped<TransactionListViewModel>();
+            services.AddScoped<ManagingViewModel>();
         }
 
         private void WindowsSetup(IServiceCollection services)

@@ -6,16 +6,20 @@ namespace MoneyTrack.WPF.Client.ViewModels
     {
         private decimal _balance;
 
-        public MainViewModel(HomeViewModel homeViewModel, 
+        public MainViewModel(
+            HomeViewModel homeViewModel,
+            ManagingViewModel managingViewModel,
             AnalyticsViewModel analyticsViewModel)
         {
             HomeViewModel = homeViewModel;
+            ManagingViewModel = managingViewModel;
             AnalyticsViewModel = analyticsViewModel;
         }
 
         public override string this[string columnName] => string.Empty;
 
         public HomeViewModel HomeViewModel { get; set; }
+        public ManagingViewModel ManagingViewModel { get; }
         public AnalyticsViewModel AnalyticsViewModel { get; }
 
         public decimal Balance 

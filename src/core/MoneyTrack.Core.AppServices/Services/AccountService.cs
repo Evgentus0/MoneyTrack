@@ -2,6 +2,7 @@
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.DomainServices.Repositories;
+using MoneyTrack.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,6 +17,13 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             _accountRepository = accountRepository;
             _mapper = mapper;
+        }
+
+        public async Task AddAccount(AccountDto account)
+        {
+            var accountEntity = _mapper.Map<Account>(account);
+
+            await _accountRepository.Add(accountEntity);
         }
 
         public async Task<List<AccountDto>> GetAllAccounts()

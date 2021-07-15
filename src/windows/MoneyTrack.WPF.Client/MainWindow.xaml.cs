@@ -25,6 +25,13 @@ namespace MoneyTrack.WPF.Client
                 VisualTree = homeTemplate
             };
 
+            var managingTemplate = new FrameworkElementFactory(typeof(ManagingView));
+            managingTemplate.SetValue(DataContextProperty, context.ManagingViewModel);
+            Resources["ManagingViewTemplate"] = new DataTemplate
+            {
+                VisualTree = managingTemplate
+            };
+
             var analyticsTemplate = new FrameworkElementFactory(typeof(AnalyticsControl));
             analyticsTemplate.SetValue(DataContextProperty, context.AnalyticsViewModel);
             Resources["AnalyticsViewTemplate"] = new DataTemplate
