@@ -21,6 +21,16 @@ namespace MoneyTrack.WPF.Client.Converters
                 }
                 return Visibility.Visible;
             }
+
+            else if(value is int intValue)
+            {
+                if(intValue <= 0)
+                {
+                    return Visibility.Collapsed;
+                }
+                return Visibility.Visible;
+            }
+
             return Visibility.Collapsed;
         }
 

@@ -181,7 +181,6 @@ namespace MoneyTrack.WPF.Client.ViewModels
         {
             var pagingModel = (PagingModel)sender;
             _dbRequest.Paging = _mapper.Map<Paging>(pagingModel);
-
             Task.Run(async () => await SetTransactions());
         }
 
