@@ -6,6 +6,7 @@
                   xmlns:local="clr-namespace:MoneyTrack.WPF.Client.Pages"
                   mc:Ignorable="d"
                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                  xmlns:converters="clr-namespace:MoneyTrack.WPF.Client.Converters"
                   Title="TransactionListWindow"
                   xmlns:controls="clr-namespace:MoneyTrack.WPF.Client.Controls"
                   MinHeight="950"
@@ -20,40 +21,81 @@
                   TextElement.FontWeight="Medium"
                   TextElement.FontSize="20"
                   FontFamily="{materialDesign:MaterialDesignFont}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="8*"/>
-        </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0">
-            <Grid>
+    <local:BaseWindow.Resources>
+        <converters:CollapseIfEmptyConverter x:Key="CollapseIfEmptyConverter"/>
+    </local:BaseWindow.Resources>
+    
+    <materialDesign:DialogHost Identifier="RootDialog">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="8*"/>
+            </Grid.RowDefinitions>
 
+            <Grid Grid.Row="0" Margin="5" >
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="2" Grid.Column="0">
+                    <Button Content="Add filter"
+                            Command="{Binding Path=AddFilterDialogCommand}">
+
+                    </Button>
+                </StackPanel>
+
+                <GroupBox Header="Filters" Grid.Column="1"
+                          Margin="2" Padding="3"
+                          Visibility="{Binding Path=Filters.Count, Converter={StaticResource CollapseIfEmptyConverter}}">
+                    <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto">
+                        <ListBox ItemsSource="{Binding Path=Filters}"
+                                 SelectedItem="{Binding Path=FilterToDelete}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" Text="{Binding Path=PropName}" Margin="3"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Path=Operation}" Margin="3"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Path=Value}" Margin="3"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+                </GroupBox>
             </Grid>
-        </StackPanel>
 
-        <controls:PaginDataGrid Grid.Row="1" DataContext="{Binding Path=Paging}">
-            <DataGrid AutoGenerateColumns="False"
-                    ItemsSource="{Binding Path=Items}"
-                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                    IsReadOnly="True" CanUserReorderColumns="False"
-                    CanUserAddRows="False" CanUserDeleteRows="False"
-                    CanUserSortColumns="True" Sorting="DataGrid_Sorting"
-                    Margin="5"
-                    Height="auto"
-                    MaxHeight="600"
-                    FontSize="15"
-                    >
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="How much" Binding="{Binding Path=Quantity}" Width="2*"/>
-                    <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="5*"/>
-                    <DataGridTextColumn Header="Category" Binding="{Binding Path=Category.Name}" Width="3*"/>
-                    <DataGridTextColumn Header="Account" Binding="{Binding Path=Account.Name}" Width="3*"/>
-                    <DataGridTextColumn Header="Added date time" Binding="{Binding Path=AddedDttm}" Width="4*"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </controls:PaginDataGrid>
+            <controls:PaginDataGrid Grid.Row="1" DataContext="{Binding Path=Paging}">
+                <DataGrid AutoGenerateColumns="False"
+                        ItemsSource="{Binding Path=Items}"
+                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                        IsReadOnly="True" CanUserReorderColumns="False"
+                        CanUserAddRows="False" CanUserDeleteRows="False"
+                        CanUserSortColumns="True" Sorting="DataGrid_Sorting"
+                        Margin="5"
+                        Height="auto"
+                        MaxHeight="600"
+                        FontSize="15"
+                        >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="How much" Binding="{Binding Path=Quantity}" Width="2*"/>
+                        <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="5*"/>
+                        <DataGridTextColumn Header="Category" Binding="{Binding Path=Category.Name}" Width="3*"/>
+                        <DataGridTextColumn Header="Account" Binding="{Binding Path=Account.Name}" Width="3*"/>
+                        <DataGridTextColumn Header="Added date time" Binding="{Binding Path=AddedDttm}" Width="4*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </controls:PaginDataGrid>
 
-
-    </Grid>
+        </Grid>
+    </materialDesign:DialogHost>
 </local:BaseWindow>

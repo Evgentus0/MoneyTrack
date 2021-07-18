@@ -26,7 +26,7 @@ namespace MoneyTrack.WPF.Client.Models
             [nameof(Id)] = new Func<string>(() =>
             {
                 var result = string.Empty;
-                var message = "Incorrect Value";
+                var message = "Incorrect Id Value";
 
                 if (Id < 0)
                 {
@@ -39,7 +39,29 @@ namespace MoneyTrack.WPF.Client.Models
                 }
 
                 return result;
+            }),
+            [nameof(Name)] = new Func<string>(() =>
+            {
+                var result = string.Empty;
+                var message = "Incorrect Name Value";
+
+                if (string.IsNullOrEmpty(Name))
+                {
+                    result = message;
+                    Error += message;
+                }
+                else
+                {
+                    Error.Replace(message, string.Empty);
+                }
+
+                return result;
             })
         };
+
+        public string ValidateModel()
+        {
+            return PropertyValidation[nameof(Name)]();
+        }
     }
 }

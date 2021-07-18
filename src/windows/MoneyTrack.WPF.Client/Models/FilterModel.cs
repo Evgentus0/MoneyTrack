@@ -42,5 +42,22 @@ namespace MoneyTrack.WPF.Client.Models
                 OnPropertyChanged(nameof(Operation));
             }
         }
+
+        public string ValidateModel()
+        {
+            var result = string.Empty;
+
+            if (string.IsNullOrEmpty(PropName))
+            {
+                result += "Property should not be empty \n";
+            }
+
+            if (string.IsNullOrEmpty(Value))
+            {
+                result += "Value should not be empty \n";
+            }
+
+            return result;
+        }
     }
 }

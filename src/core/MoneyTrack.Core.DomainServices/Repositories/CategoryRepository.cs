@@ -19,5 +19,35 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             return await _dbProvider.Categories.Query.ToList();
         }
+
+        public async Task AddCategory(Category categoryEntity)
+        {
+            await _dbProvider.Categories.Add(categoryEntity);
+        }
+
+        public async Task Delete(int id)
+        {
+            await _dbProvider.Categories.Remove(id);
+        }
+
+        public async Task Update(Category category)
+        {
+            var existingCategory = await _dbProvider.Categories.Query.Where(new Models.Operational.Filter
+            {
+                PropName = nameof(category.Id),
+                Operation = Models.Operational.Operations.Eq,
+                Value = category.Id.ToString()
+            }).First();
+
+            if(existingCategory is not null)
+            {
+                if (!string.IsNullOrEmpty(category.Name))
+                {
+                    existingCategory.Name = category.Name;
+                }
+
+                await _dbProvider.Categories.Update(existingCategory);
+            }
+        }
     }
 }

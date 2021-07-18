@@ -26,7 +26,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             var filter = new Filter
             {
-                Operations = Operations.Eq,
+                Operation = Operations.Eq,
                 PropName = nameof(Transaction.Id),
                 Value = id.ToString()
             };

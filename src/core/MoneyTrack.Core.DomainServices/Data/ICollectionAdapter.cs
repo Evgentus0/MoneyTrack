@@ -10,7 +10,7 @@ namespace MoneyTrack.Core.DomainServices.Data
 {
     public interface ICollectionAdapter<T>
     {
-        Task Add(T transaction);
+        Task Add(T item);
         Task Update(T item);
         Task Remove(int id);
         IQueryAdapter<T> Query { get; }

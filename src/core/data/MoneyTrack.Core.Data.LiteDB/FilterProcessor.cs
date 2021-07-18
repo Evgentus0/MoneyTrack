@@ -11,7 +11,13 @@ namespace MoneyTrack.Core.Data.LiteDB
     {
         public static string ToBsonExpression(this Filter filter)
         {
-            var result = $"{filter.PropName} {MapOperations[filter.Operations]} {filter.Value}";
+            var propName = filter.PropName;
+            if(string.Equals("id", filter.PropName, StringComparison.OrdinalIgnoreCase))
+            {
+                propName = "_id";
+            }
+
+            var result = $"{propName} {MapOperations[filter.Operation]} {filter.Value}";
 
             return result;
         }

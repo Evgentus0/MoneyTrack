@@ -10,7 +10,7 @@ namespace MoneyTrack.Core.Models.Operational
     {
         public string PropName { get; set; }
         public string Value { get; set; }
-        public Operations Operations { get; set; }
+        public Operations Operation { get; set; }
     }
 
     public enum Operations
