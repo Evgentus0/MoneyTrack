@@ -26,9 +26,22 @@ namespace MoneyTrack.Core.AppServices.Services
             await _accountRepository.Add(accountEntity);
         }
 
+        public async Task Delete(int id)
+        {
+            await _accountRepository.Delete(id);
+        }
+
         public async Task<List<AccountDto>> GetAllAccounts()
         {
             return _mapper.Map<List<AccountDto>>(await _accountRepository.GetAllAccounts());
+        }
+
+        public async Task Update(AccountDto accountDto)
+        {
+            var account = _mapper.Map<Account>(accountDto);
+
+
+            await _accountRepository.Update(account);
         }
     }
 }

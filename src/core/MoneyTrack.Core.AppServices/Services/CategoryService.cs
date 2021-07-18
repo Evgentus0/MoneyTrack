@@ -25,9 +25,21 @@ namespace MoneyTrack.Core.AppServices.Services
             await _categoryRepository.AddCategory(categoryEntity);
         }
 
+        public async Task Delete(int id)
+        {
+            await _categoryRepository.Delete(id);
+        }
+
         public async Task<List<CategoryDto>> GetAllCategories()
         {
             return _mapper.Map<List<CategoryDto>>(await _categoryRepository.GetAllCategories());
+        }
+
+        public async Task Update(CategoryDto categoryDto)
+        {
+            var category = _mapper.Map<Category>(categoryDto);
+
+            await _categoryRepository.Update(category);
         }
     }
 }

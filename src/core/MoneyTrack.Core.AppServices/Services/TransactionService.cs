@@ -38,6 +38,7 @@ namespace MoneyTrack.Core.AppServices.Services
            await  _transactionRepository.Add(entity);
         }
 
+        [Obsolete("Use GetQueryTransaction with appropriate parameters")]
         public async Task<List<TransactionDto>> GetLastTransactions(Paging paging)
         {
             return _mapper.Map<List<TransactionDto>>(await _transactionRepository.GetLastTransactions(paging));

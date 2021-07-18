@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MoneyTrack.WPF.Client.ViewModels
 {
@@ -53,8 +54,46 @@ namespace MoneyTrack.WPF.Client.ViewModels
             set
             {
                 _selectedCategory = value;
+                SelectCategory();
                 OnPropertyChanged(nameof(SelectedCategory));
             }
+        }
+
+        private async Task SelectCategory()
+        {
+            if (SelectedCategory is null)
+                return;
+
+            var dialogViewModel = new CategoryViewModel();
+            dialogViewModel.CategoryModel = SelectedCategory;
+
+            var view = new EditCategoryDialog
+            {
+                DataContext = dialogViewModel
+            };
+
+            var result = await DialogHost.Show(view, "CategoryRootDialog", HandleCloseCategoryDialog);
+
+            if (Enum.TryParse(result?.ToString(), out CloseDialogResult operation))
+            {
+                switch (operation)
+                {
+                    case CloseDialogResult.Update:
+                        var categoryDto = _mapper.Map<CategoryDto>(dialogViewModel.CategoryModel);
+                        await _categoryService.Update(categoryDto);
+                        break;
+                    case CloseDialogResult.Delete:
+                        await _categoryService.Delete(dialogViewModel.CategoryModel.Id);
+                        Categories.Remove(dialogViewModel.CategoryModel);
+                        break;
+                    case CloseDialogResult.Done:
+                    case CloseDialogResult.Cancel:
+                    default:
+                        break;
+                }
+            }
+
+            SelectedCategory = null;
         }
 
         public AccountModel SelectedAccount
@@ -63,8 +102,47 @@ namespace MoneyTrack.WPF.Client.ViewModels
             set
             {
                 _selectedAccount = value;
+                SelectAccount();
                 OnPropertyChanged(nameof(SelectedAccount));
             }
+        }
+
+        private async Task SelectAccount()
+        {
+            if (SelectedAccount is null)
+                return;
+
+            var dialogViewModel = new AccountViewModel();
+            dialogViewModel.AccountModel = SelectedAccount;
+
+            var view = new EditAccountDialog
+            {
+                DataContext = dialogViewModel
+            };
+
+            var result = await DialogHost.Show(view, "AccountRootDialog", HandleCloseAccountDialog);
+
+            if (Enum.TryParse(result?.ToString(), out CloseDialogResult operation))
+            {
+                switch (operation)
+                {
+                    case CloseDialogResult.Cancel:
+                        break;
+                    case CloseDialogResult.Update:
+                        var accountDto = _mapper.Map<AccountDto>(dialogViewModel.AccountModel);
+                        await _accountService.Update(accountDto);
+                        break;
+                    case CloseDialogResult.Delete:
+                        await _accountService.Delete(dialogViewModel.AccountModel.Id);
+                        Accounts.Remove(dialogViewModel.AccountModel);
+                        break;
+                    case CloseDialogResult.Done:
+                    default:
+                        break;
+                }
+            }
+
+            SelectedAccount = null;
         }
 
         public AsyncCommand AddCategoryCommand 
@@ -78,7 +156,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
                     DataContext = dialogViewModel
                 };
 
-                var result = await DialogHost.Show(view, "CategoryRootDialog", HandleCloseCategoryAddDialog);
+                var result = await DialogHost.Show(view, "CategoryRootDialog", HandleCloseCategoryDialog);
 
                 if (Enum.TryParse(result?.ToString(), out CloseDialogResult doAdd))
                 {
@@ -92,18 +170,19 @@ namespace MoneyTrack.WPF.Client.ViewModels
             });
         }
 
-        private void HandleCloseCategoryAddDialog(object sender, DialogClosingEventArgs eventArgs)
+        private void HandleCloseCategoryDialog(object sender, DialogClosingEventArgs eventArgs)
         {
 
             if (Enum.TryParse(eventArgs.Parameter?.ToString(), out CloseDialogResult doAdd))
             {
-                if (doAdd != CloseDialogResult.Done)
+                if (doAdd == CloseDialogResult.Cancel ||
+                    doAdd == CloseDialogResult.Delete)
                     return;
             }
             else return;
                    
 
-            var dialog = (AddCategoryDialog)eventArgs.Session.Content;
+            var dialog = (UserControl)eventArgs.Session.Content;
             var dialogViewModel = (CategoryViewModel)dialog.DataContext;
 
             var validateResult = dialogViewModel.CategoryModel.ValidateModel();
@@ -129,7 +208,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
                     DataContext = dialogViewModel
                 };
 
-                var result = await DialogHost.Show(view, "AccountRootDialog", HandleCloseAccountAddDialog);
+                var result = await DialogHost.Show(view, "AccountRootDialog", HandleCloseAccountDialog);
 
                 if (Enum.TryParse(result?.ToString(), out CloseDialogResult doAdd))
                 {
@@ -143,18 +222,19 @@ namespace MoneyTrack.WPF.Client.ViewModels
             });
         }
 
-        private void HandleCloseAccountAddDialog(object sender, DialogClosingEventArgs eventArgs)
+        private void HandleCloseAccountDialog(object sender, DialogClosingEventArgs eventArgs)
         {
 
             if (Enum.TryParse(eventArgs.Parameter?.ToString(), out CloseDialogResult doAdd))
             {
-                if (doAdd != CloseDialogResult.Done)
+                if (doAdd == CloseDialogResult.Cancel ||
+                    doAdd == CloseDialogResult.Delete)
                     return;
             }
             else return;
 
 
-            var dialog = (AddAccountDialog)eventArgs.Session.Content;
+            var dialog = (UserControl)eventArgs.Session.Content;
             var dialogViewModel = (AccountViewModel)dialog.DataContext;
 
             var validateResult = dialogViewModel.AccountModel.ValidateModel();
