@@ -18,9 +18,7 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <ScrollViewer Grid.Row="1"
-                          CanContentScroll="True"
-                          VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Row="1">
                     
                     <Border Background="Silver"
                             BorderBrush="Silver" 

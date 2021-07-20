@@ -8,8 +8,8 @@
         xmlns:views="clr-namespace:MoneyTrack.WPF.Client.Views"
         mc:Ignorable="d"
         Title="MainWindow"
-        MinHeight="900" MinWidth="1100"
-        Height="auto" Width="auto"
+        MinHeight="500" MinWidth="500"
+        Height="900" Width="auto"
         WindowStartupLocation="CenterScreen"
         
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -93,7 +93,9 @@
             </Grid>
 
             <Grid Grid.Row="1">
-                <ContentControl Style="{StaticResource NavigationContentStyle}"/>
+                <ScrollViewer>
+                    <ContentControl Style="{StaticResource NavigationContentStyle}"/>
+                </ScrollViewer>
             </Grid>
 
         </Grid>
