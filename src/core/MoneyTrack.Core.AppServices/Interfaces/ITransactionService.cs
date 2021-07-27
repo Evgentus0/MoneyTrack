@@ -12,5 +12,6 @@ namespace MoneyTrack.Core.AppServices.Interfaces
         Task Add(TransactionDto transaction);
         Task<List<TransactionDto>> GetQueryTransactions(DbQueryRequest request);
         Task<int> CountTransactions(List<Filter> filters = null);
+        Task Delete(int id);
     }
 }

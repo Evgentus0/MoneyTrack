@@ -142,18 +142,15 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         public AsyncCommand AddTransactionCommand
         {
-            get
-            {
-                return _addTransaction ??= new AsyncCommand(async obj =>
-                {
-                    var transactionEntity = _mapper.Map<TransactionDto>(NewTransaction);
-                    await _transactionService.Add(transactionEntity);
+            get => _addTransaction ??= new AsyncCommand(async obj =>
+                    {
+                        var transactionEntity = _mapper.Map<TransactionDto>(NewTransaction);
+                        await _transactionService.Add(transactionEntity);
 
-                    await SetLastTransactions();
+                        await SetLastTransactions();
 
-                    ResetCurrentTransaction();
-                });
-            }
+                        ResetCurrentTransaction();
+                    });
         }
 
         public override string this[string columnName] => string.Empty;

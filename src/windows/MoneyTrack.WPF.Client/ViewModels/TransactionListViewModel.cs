@@ -150,7 +150,18 @@ namespace MoneyTrack.WPF.Client.ViewModels
             Filters = new ObservableCollection<FilterModel>();
             Filters.CollectionChanged += Filters_CollectionChanged;
 
+            TransactionModel.TransactionDeleted += TransactionModel_TransactionDeleted;
+
             await SetTransactions();
+        }
+
+        private void TransactionModel_TransactionDeleted(object sender, int e)
+        {
+            var items = (ObservableCollection<TransactionModel>)Paging.Items;
+
+            items.Remove(items.First(x => x.Id == e));
+
+            Task.Run(async () => await _transactionService.Delete(e));
         }
 
         private void Filters_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

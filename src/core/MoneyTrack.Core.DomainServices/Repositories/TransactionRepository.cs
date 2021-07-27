@@ -10,6 +10,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
 {
     public class TransactionRepository
     {
+
         private readonly IDbProvider _dbProvider;
 
         public TransactionRepository(IDbProvider dbProvider)
@@ -41,25 +42,41 @@ namespace MoneyTrack.Core.DomainServices.Repositories
 
         public async Task Update(Transaction transaction)
         {
-            await _dbProvider.Transactions.Update(transaction);
+            var transactionToUpdate = await _dbProvider.Transactions.Query.Where(new Filter
+            {
+                PropName = nameof(transaction.Id),
+                Operation = Operations.Eq,
+                Value = transaction.Id.ToString()
+
+            }).First();
+
+            if(transactionToUpdate is not null)
+            {
+                if (transaction.Quantity != 0)
+                    transactionToUpdate.Quantity = transaction.Quantity;
+
+                if (!string.IsNullOrEmpty(transaction.Description))
+                    transactionToUpdate.Description = transaction.Description;
+
+                if (transaction.Category is not null && transaction.Category.Id > 0)
+                    transactionToUpdate.Category.Id = transaction.Category.Id;
+
+                if (transaction.Account is not null && transaction.Account.Id > 0)
+                    transactionToUpdate.Account.Id = transaction.Account.Id;
+
+                if (transaction.AddedDttm > Transaction.CutOffDate)
+                    transactionToUpdate.AddedDttm = transaction.AddedDttm;
+
+                await _dbProvider.Transactions.Update(transactionToUpdate);
+            }
+
         }
         public async Task Remove(int id)
         {
             await _dbProvider.Transactions.Remove(id);
         }
-        public async Task<List<Transaction>> GetLastTransactions(Paging paging)
-        {
-            var result = _dbProvider.Transactions.Query
-                .Include(nameof(Account))
-                .Include(nameof(Category))
-                .OrderByDesc(nameof(Transaction.AddedDttm))
-                .Skip(paging.PageSize * (paging.CurrentPage - 1));
 
-
-            return  await result.Take(paging.PageSize).ToList();
-        }
-
-        public async Task<List<Transaction>> GetFilteredTransactions(DbQueryRequest request)
+        public async Task<List<Transaction>> GetQueriedTransactiones(DbQueryRequest request)
         {
             var result = _dbProvider.Transactions.Query
                 .Include(nameof(Account))

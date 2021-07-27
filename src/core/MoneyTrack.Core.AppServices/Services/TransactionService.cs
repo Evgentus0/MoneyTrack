@@ -38,15 +38,19 @@ namespace MoneyTrack.Core.AppServices.Services
            await  _transactionRepository.Add(entity);
         }
 
-        [Obsolete("Use GetQueryTransaction with appropriate parameters")]
         public async Task<List<TransactionDto>> GetLastTransactions(Paging paging)
         {
-            return _mapper.Map<List<TransactionDto>>(await _transactionRepository.GetLastTransactions(paging));
+            var result = await _transactionRepository.GetQueriedTransactiones(new DbQueryRequest
+            {
+                Paging = paging
+            });
+
+            return _mapper.Map<List<TransactionDto>>(result);
         }
 
         public async Task<List<TransactionDto>> GetQueryTransactions(DbQueryRequest request)
         {
-            List<Transaction> transactions = await _transactionRepository.GetFilteredTransactions(request);
+            List<Transaction> transactions = await _transactionRepository.GetQueriedTransactiones(request);
 
             return _mapper.Map<List<TransactionDto>>(transactions);
         }
@@ -54,6 +58,16 @@ namespace MoneyTrack.Core.AppServices.Services
         public async Task<int> CountTransactions(List<Filter> filters = null)
         {
             return await _transactionRepository.CountTrasactions(filters ?? new List<Filter>());
+        }
+
+        public async Task UpdateTransaction(TransactionDto transaction)
+        {
+            await _transactionRepository.Update(_mapper.Map<Transaction>(transaction));
+        }
+
+        public async Task Delete(int id)
+        {
+            await _transactionRepository.Remove(id);
         }
     }
 }

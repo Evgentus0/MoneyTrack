@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoneyTrack.WPF.Client.Commands;
+using System;
 using System.Collections.Generic;
 
 namespace MoneyTrack.WPF.Client.Models
@@ -12,6 +13,8 @@ namespace MoneyTrack.WPF.Client.Models
         private AccountModel _account;
         private DateTimeOffset? _addedDttm;
         private bool _setCurrentDttm;
+
+        private RelayCommand _deleteTransactionCommand;
         #endregion
 
         #region Properties
@@ -128,5 +131,17 @@ namespace MoneyTrack.WPF.Client.Models
                 return result;
             })
         };
+
+        public RelayCommand DeleteTransactionCommand
+        {
+            get => _deleteTransactionCommand ??= new RelayCommand( obj =>
+            {
+                var transaction = (TransactionModel)obj;
+
+                TransactionDeleted?.Invoke(this, transaction.Id);
+            });
+        }
+
+        public static event EventHandler<int> TransactionDeleted;
     }
 }
