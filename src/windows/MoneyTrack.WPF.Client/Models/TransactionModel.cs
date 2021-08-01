@@ -15,6 +15,7 @@ namespace MoneyTrack.WPF.Client.Models
         private bool _setCurrentDttm;
 
         private RelayCommand _deleteTransactionCommand;
+        private RelayCommand _updateTransactionCommand;
         #endregion
 
         #region Properties
@@ -115,7 +116,7 @@ namespace MoneyTrack.WPF.Client.Models
             {
                 if(Description != null && string.IsNullOrWhiteSpace(Description))
                 {
-                    return "Description can not be emty";
+                    return "Description can not be empty";
                 }
                 return string.Empty;
             }),
@@ -143,5 +144,31 @@ namespace MoneyTrack.WPF.Client.Models
         }
 
         public static event EventHandler<int> TransactionDeleted;
+
+        public RelayCommand UpdateTransactionCommand
+        {
+            get => _updateTransactionCommand ??= new RelayCommand(obj =>
+            {
+                TransactionUpdated?.Invoke(this, EventArgs.Empty);
+            });
+        }
+
+        public static event EventHandler TransactionUpdated;
+
+        internal string ValidateModel()
+        {
+            var result = string.Empty;
+
+            foreach (var prop in PropertyValidation.Values)
+            {
+                var message = prop();
+                if (!string.IsNullOrEmpty(message))
+                {
+                    result += message + Environment.NewLine;
+                }
+            }
+
+            return result;
+        }
     }
 }

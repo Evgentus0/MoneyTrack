@@ -98,7 +98,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
             Paging = new PagingViewModel(await _transactionService.CountTransactions(), _settings.NumberOfLastTransaction);
             Paging.PagingModel.CurrentPageChanged += PagingModel_CurrentPageChanged;
 
-            await SetLastTransactions();
+            await SetTransactions();
             await SetCategories();
             await SetAccounts();
         }
@@ -107,7 +107,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
         {
             var pagingModel = (PagingModel)sender;
 
-            Task.Run(async () => await SetLastTransactions(pagingModel));
+            Task.Run(async () => await SetTransactions(pagingModel));
         }
 
         private async Task SetAccounts()
@@ -122,7 +122,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
                             (_mapper.Map<List<CategoryModel>>(await _categoryService.GetAllCategories()));
         }
 
-        private async Task SetLastTransactions(PagingModel paging = null)
+        public async Task SetTransactions(PagingModel paging = null)
         {
             if(paging == null)
             {
@@ -147,7 +147,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
                         var transactionEntity = _mapper.Map<TransactionDto>(NewTransaction);
                         await _transactionService.Add(transactionEntity);
 
-                        await SetLastTransactions();
+                        await SetTransactions();
 
                         ResetCurrentTransaction();
                     });

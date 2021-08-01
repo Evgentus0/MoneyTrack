@@ -27,7 +27,7 @@
         
 
         <ContextMenu  x:Key="RowMenu">
-            <MenuItem Header="Edit" Command="{Binding EditCommand}" CommandParameter="{Binding}"/>
+            <MenuItem Header="Edit" Command="{Binding Path=UpdateTransactionCommand}" CommandParameter="{Binding}"/>
             <MenuItem Header="Delete" Command="{Binding Path=DeleteTransactionCommand}" CommandParameter="{Binding}"/>
         </ContextMenu>
         <Style x:Key="DefaultRowStyle" TargetType="{x:Type DataGridRow}">

@@ -1,6 +1,7 @@
 ﻿using MoneyTrack.WPF.Client.Pages;
 using MoneyTrack.WPF.Client.ViewModels;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace MoneyTrack.WPF.Client.Views
 {
@@ -27,6 +28,8 @@ namespace MoneyTrack.WPF.Client.Views
             window.DataContext = ((HomeViewModel)DataContext).TransactionListViewModel;
 
             window.ShowDialog();
+
+            ((HomeViewModel)DataContext).SetTransactions();
         }
     }
 }

@@ -42,7 +42,12 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             var result = await _transactionRepository.GetQueriedTransactiones(new DbQueryRequest
             {
-                Paging = paging
+                Paging = paging,
+                Sorting = new Sorting
+                {
+                    Direction = SortDirect.Desc,
+                    PropName = nameof(Transaction.AddedDttm)
+                }
             });
 
             return _mapper.Map<List<TransactionDto>>(result);
@@ -60,7 +65,7 @@ namespace MoneyTrack.Core.AppServices.Services
             return await _transactionRepository.CountTrasactions(filters ?? new List<Filter>());
         }
 
-        public async Task UpdateTransaction(TransactionDto transaction)
+        public async Task Update(TransactionDto transaction)
         {
             await _transactionRepository.Update(_mapper.Map<Transaction>(transaction));
         }
