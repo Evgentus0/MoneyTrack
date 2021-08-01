@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using MaterialDesignThemes.Wpf;
+using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.Models.Operational;
 using MoneyTrack.WPF.Client.Commands;
 using MoneyTrack.WPF.Client.Dialogs;
 using MoneyTrack.WPF.Client.Models;
+using MoneyTrack.WPF.Client.Models.Operational;
 using MoneyTrack.WPF.Infrastructure.Settings;
 using System;
 using System.Collections.Generic;
@@ -24,7 +26,12 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         private readonly ITransactionService _transactionService;
         private readonly IMapper _mapper;
+        private readonly ICategoryService _categoryService;
+        private readonly IAccountService _accountService;
         private readonly AppSettings _settings;
+
+        private ObservableCollection<AccountModel> _accounts;
+        private ObservableCollection<CategoryModel> _categories;
 
         public PagingViewModel Paging
         {
@@ -46,7 +53,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
             }
         }
 
-        public FilterModel FilterToDelete 
+        public FilterModel FilterToDelete
         {
             get => _filterToDelete;
             set
@@ -54,6 +61,16 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 _filterToDelete = value;
                 Filters.Remove(value);
                 OnPropertyChanged(nameof(FilterToDelete));
+            }
+        }
+
+        public decimal TotalBalance
+        {
+            get => _totalBalance;
+            set
+            {
+                _totalBalance = value;
+                OnPropertyChanged(nameof(TotalBalance));
             }
         }
 
@@ -70,7 +87,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
                     DataContext = dialogViewModel
                 };
 
-                var result = await DialogHost.Show(view, "RootDialog", HandleCloseDialog);
+                var result = await DialogHost.Show(view, "RootDialog", HandleFilterCloseDialog);
 
                 if (bool.TryParse(result?.ToString(), out bool doAdd))
                 {
@@ -82,7 +99,15 @@ namespace MoneyTrack.WPF.Client.ViewModels
             });
         }
 
-        private void HandleCloseDialog(object sender, DialogClosingEventArgs eventArgs)
+        public AsyncCommand ApplyFiltersCommand 
+        {
+            get => _applyFiltersCommand ??= new AsyncCommand(async obj =>
+            {
+                await SetTransactions();
+            });
+        }
+
+        private void HandleFilterCloseDialog(object sender, DialogClosingEventArgs eventArgs)
         {
             if (eventArgs.Parameter is bool isAccept)
             {
@@ -109,10 +134,14 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         public TransactionListViewModel(ITransactionService transactionService,
             IMapper mapper,
+            ICategoryService categoryService,
+            IAccountService accountService,
             AppSettings settings)
         {
             _transactionService = transactionService;
             _mapper = mapper;
+            _categoryService = categoryService;
+            _accountService = accountService;
             _settings = settings;
 
             _dbRequest = new DbQueryRequest();
@@ -136,6 +165,20 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
             Paging.Items = new ObservableCollection<TransactionModel>
                 (_mapper.Map<List<TransactionModel>>(await _transactionService.GetQueryTransactions(_dbRequest)));
+
+            TotalBalance = await _transactionService.CalculateTotalBalance(_dbRequest.Filters);
+        }
+
+        private async Task SetAccounts()
+        {
+            _accounts = new ObservableCollection<AccountModel>
+                            (_mapper.Map<List<AccountModel>>(await _accountService.GetAllAccounts()));
+        }
+
+        private async Task SetCategories()
+        {
+            _categories = new ObservableCollection<CategoryModel>
+                            (_mapper.Map<List<CategoryModel>>(await _categoryService.GetAllCategories()));
         }
 
         public override async Task Initialize()
@@ -148,20 +191,88 @@ namespace MoneyTrack.WPF.Client.ViewModels
             InitPropLists();
 
             Filters = new ObservableCollection<FilterModel>();
-            Filters.CollectionChanged += Filters_CollectionChanged;
+
+            TransactionModel.TransactionDeleted += TransactionModel_TransactionDeleted;
+            TransactionModel.TransactionUpdated += TransactionModel_TransactionUpdated;
 
             await SetTransactions();
+            await SetCategories();
+            await SetAccounts();
         }
 
-        private void Filters_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void TransactionModel_TransactionUpdated(object sender, EventArgs e)
         {
-            Task.Run(async () => await SetTransactions());
+            var transaction = (TransactionModel)sender;
+
+            OpenEditTransactionDialog(transaction);
+        }
+
+        private async Task OpenEditTransactionDialog(TransactionModel transaction)
+        {
+            var dialogVIewModel = new EditTransactionViewModel()
+            {
+                TransactionModel = transaction,
+                Categories = _categories,
+                Accounts = _accounts
+            };
+
+            var view = new EditTransactionDialog
+            {
+                DataContext = dialogVIewModel
+            };
+
+            var result = await DialogHost.Show(view, "RootDialog", HandleEditTransactionDialogClose);
+
+            if (Enum.TryParse(result?.ToString(), out CloseDialogResult action))
+            {
+                if (action == CloseDialogResult.Update)
+                {
+                    await _transactionService.Update(_mapper.Map<TransactionDto>(dialogVIewModel.TransactionModel));
+                }
+            }
+        }
+
+        private void HandleEditTransactionDialogClose(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if (Enum.TryParse(eventArgs.Parameter?.ToString(), out CloseDialogResult action))
+            {
+                if (action == CloseDialogResult.Cancel ||
+                    action == CloseDialogResult.Delete)
+                    return;
+            }
+            else return;
+
+
+            var dialog = (UserControl)eventArgs.Session.Content;
+            var dialogViewModel = (EditTransactionViewModel)dialog.DataContext;
+
+            string validateResult = dialogViewModel.TransactionModel.ValidateModel();
+            if (string.IsNullOrEmpty(validateResult))
+            {
+                return;
+            }
+            else
+            {
+                dialogViewModel.Errors = validateResult;
+                eventArgs.Cancel();
+            }
+        }
+
+        private void TransactionModel_TransactionDeleted(object sender, int e)
+        {
+            var items = (ObservableCollection<TransactionModel>)Paging.Items;
+
+            items.Remove(items.First(x => x.Id == e));
+
+            Task.Run(async () => await _transactionService.Delete(e));
         }
 
         private Dictionary<string, bool> _propSortingDirect;
         private ObservableCollection<FilterModel> _filters;
         private AsyncCommand _addFilterDialogCommand;
         private FilterModel _filterToDelete;
+        private decimal _totalBalance;
+        private AsyncCommand _applyFiltersCommand;
 
         private void InitPropLists()
         {

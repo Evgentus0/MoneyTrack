@@ -54,7 +54,10 @@
             <Button Margin="8 0 0 0" 
                     Style="{StaticResource MaterialDesignRaisedLightButton}"
                     Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
-                    Background="Red" BorderBrush="DarkRed">
+                    Background="Red">
+                <Button.BorderBrush>
+                    <SolidColorBrush Opacity="0"/>
+                </Button.BorderBrush>
                 <Button.CommandParameter>
                     <operational:CloseDialogResult>Delete</operational:CloseDialogResult>
                 </Button.CommandParameter>

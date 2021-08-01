@@ -24,6 +24,15 @@
 
     <local:BaseWindow.Resources>
         <converters:CollapseIfEmptyConverter x:Key="CollapseIfEmptyConverter"/>
+        
+
+        <ContextMenu  x:Key="RowMenu">
+            <MenuItem Header="Edit" Command="{Binding Path=UpdateTransactionCommand}" CommandParameter="{Binding}"/>
+            <MenuItem Header="Delete" Command="{Binding Path=DeleteTransactionCommand}" CommandParameter="{Binding}"/>
+        </ContextMenu>
+        <Style x:Key="DefaultRowStyle" TargetType="{x:Type DataGridRow}">
+            <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+        </Style>
     </local:BaseWindow.Resources>
     
     <materialDesign:DialogHost Identifier="RootDialog">
@@ -31,6 +40,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="8*"/>
                 </Grid.RowDefinitions>
 
@@ -43,9 +53,13 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Margin="2" Grid.Column="0">
-                        <Button Content="Add filter"
-                            Command="{Binding Path=AddFilterDialogCommand}">
+                        <Button Content="Add filter" Margin="10"
+                                Command="{Binding Path=AddFilterDialogCommand}">
 
+                        </Button>
+                        <Button Content="Apply filters" Margin="10"
+                                Command="{Binding Path=ApplyFiltersCommand}">
+                            
                         </Button>
                     </StackPanel>
 
@@ -75,8 +89,16 @@
                     </GroupBox>
                 </Grid>
 
-                <controls:PaginDataGrid Grid.Row="1" DataContext="{Binding Path=Paging}">
-                    <DataGrid AutoGenerateColumns="False"
+                <StackPanel Grid.Row="1" Orientation="Horizontal"
+                            Margin="10">
+                    <TextBlock Text="Total balance: "/>
+                    <TextBlock Text="{Binding Path=TotalBalance}"/>
+                </StackPanel>
+
+                <controls:PaginDataGrid Grid.Row="2" DataContext="{Binding Path=Paging}">
+                    <DataGrid 
+                        RowStyle="{StaticResource DefaultRowStyle}"
+                        AutoGenerateColumns="False"
                         ItemsSource="{Binding Path=Items}"
                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                         IsReadOnly="True" CanUserReorderColumns="False"
@@ -87,6 +109,7 @@
                         MaxHeight="600"
                         FontSize="15"
                         >
+
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="How much" Binding="{Binding Path=Quantity}" Width="2*"/>
                             <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="5*"/>
