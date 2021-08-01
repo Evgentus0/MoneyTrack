@@ -113,6 +113,18 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             return await result.ToList();
         }
 
+        public async Task<decimal> CalculateSum(string propName, List<Filter> filters)
+        {
+            var result = _dbProvider.Transactions.Query;
+
+            foreach (var filter in filters)
+            {
+                result = result.Where(filter);
+            }
+
+            return await result.Sum(propName);
+        }
+
         public async Task<int> CountTrasactions(List<Filter> filters)
         {
             var result = _dbProvider.Transactions.Query;

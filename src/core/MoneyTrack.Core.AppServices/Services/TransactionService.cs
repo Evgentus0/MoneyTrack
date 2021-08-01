@@ -74,5 +74,10 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             await _transactionRepository.Remove(id);
         }
+
+        public async Task<decimal> CalculateTotalBalance(List<Filter> filters)
+        {
+            return await _transactionRepository.CalculateSum(nameof(Transaction.Quantity), filters);
+        }
     }
 }

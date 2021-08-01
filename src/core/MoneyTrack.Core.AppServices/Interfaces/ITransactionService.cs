@@ -14,5 +14,6 @@ namespace MoneyTrack.Core.AppServices.Interfaces
         Task<int> CountTransactions(List<Filter> filters = null);
         Task Delete(int id);
         Task Update(TransactionDto transaction);
+        Task<decimal> CalculateTotalBalance(List<Filter> filters);
     }
 }

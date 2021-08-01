@@ -40,6 +40,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="8*"/>
                 </Grid.RowDefinitions>
 
@@ -52,9 +53,13 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Margin="2" Grid.Column="0">
-                        <Button Content="Add filter"
-                            Command="{Binding Path=AddFilterDialogCommand}">
+                        <Button Content="Add filter" Margin="10"
+                                Command="{Binding Path=AddFilterDialogCommand}">
 
+                        </Button>
+                        <Button Content="Apply filters" Margin="10"
+                                Command="{Binding Path=ApplyFiltersCommand}">
+                            
                         </Button>
                     </StackPanel>
 
@@ -84,7 +89,13 @@
                     </GroupBox>
                 </Grid>
 
-                <controls:PaginDataGrid Grid.Row="1" DataContext="{Binding Path=Paging}">
+                <StackPanel Grid.Row="1" Orientation="Horizontal"
+                            Margin="10">
+                    <TextBlock Text="Total balance: "/>
+                    <TextBlock Text="{Binding Path=TotalBalance}"/>
+                </StackPanel>
+
+                <controls:PaginDataGrid Grid.Row="2" DataContext="{Binding Path=Paging}">
                     <DataGrid 
                         RowStyle="{StaticResource DefaultRowStyle}"
                         AutoGenerateColumns="False"

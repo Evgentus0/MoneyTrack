@@ -53,7 +53,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
             }
         }
 
-        public FilterModel FilterToDelete 
+        public FilterModel FilterToDelete
         {
             get => _filterToDelete;
             set
@@ -61,6 +61,16 @@ namespace MoneyTrack.WPF.Client.ViewModels
                 _filterToDelete = value;
                 Filters.Remove(value);
                 OnPropertyChanged(nameof(FilterToDelete));
+            }
+        }
+
+        public decimal TotalBalance
+        {
+            get => _totalBalance;
+            set
+            {
+                _totalBalance = value;
+                OnPropertyChanged(nameof(TotalBalance));
             }
         }
 
@@ -86,6 +96,14 @@ namespace MoneyTrack.WPF.Client.ViewModels
                         Filters.Add(dialogViewModel.FilterModel);
                     }
                 }
+            });
+        }
+
+        public AsyncCommand ApplyFiltersCommand 
+        {
+            get => _applyFiltersCommand ??= new AsyncCommand(async obj =>
+            {
+                await SetTransactions();
             });
         }
 
@@ -147,6 +165,8 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
             Paging.Items = new ObservableCollection<TransactionModel>
                 (_mapper.Map<List<TransactionModel>>(await _transactionService.GetQueryTransactions(_dbRequest)));
+
+            TotalBalance = await _transactionService.CalculateTotalBalance(_dbRequest.Filters);
         }
 
         private async Task SetAccounts()
@@ -171,7 +191,6 @@ namespace MoneyTrack.WPF.Client.ViewModels
             InitPropLists();
 
             Filters = new ObservableCollection<FilterModel>();
-            Filters.CollectionChanged += Filters_CollectionChanged;
 
             TransactionModel.TransactionDeleted += TransactionModel_TransactionDeleted;
             TransactionModel.TransactionUpdated += TransactionModel_TransactionUpdated;
@@ -248,15 +267,12 @@ namespace MoneyTrack.WPF.Client.ViewModels
             Task.Run(async () => await _transactionService.Delete(e));
         }
 
-        private void Filters_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            Task.Run(async () => await SetTransactions());
-        }
-
         private Dictionary<string, bool> _propSortingDirect;
         private ObservableCollection<FilterModel> _filters;
         private AsyncCommand _addFilterDialogCommand;
         private FilterModel _filterToDelete;
+        private decimal _totalBalance;
+        private AsyncCommand _applyFiltersCommand;
 
         private void InitPropLists()
         {
