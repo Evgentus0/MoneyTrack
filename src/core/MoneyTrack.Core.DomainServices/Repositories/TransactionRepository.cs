@@ -42,33 +42,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
 
         public async Task Update(Transaction transaction)
         {
-            var transactionToUpdate = await _dbProvider.Transactions.Query.Where(new Filter
-            {
-                PropName = nameof(transaction.Id),
-                Operation = Operations.Eq,
-                Value = transaction.Id.ToString()
-
-            }).First();
-
-            if(transactionToUpdate is not null)
-            {
-                if (transaction.Quantity != 0)
-                    transactionToUpdate.Quantity = transaction.Quantity;
-
-                if (!string.IsNullOrEmpty(transaction.Description))
-                    transactionToUpdate.Description = transaction.Description;
-
-                if (transaction.Category is not null && transaction.Category.Id > 0)
-                    transactionToUpdate.Category.Id = transaction.Category.Id;
-
-                if (transaction.Account is not null && transaction.Account.Id > 0)
-                    transactionToUpdate.Account.Id = transaction.Account.Id;
-
-                if (transaction.AddedDttm > Transaction.CutOffDate)
-                    transactionToUpdate.AddedDttm = transaction.AddedDttm;
-
-                await _dbProvider.Transactions.Update(transactionToUpdate);
-            }
+            await _dbProvider.Transactions.Update(transaction);
 
         }
         public async Task Remove(int id)

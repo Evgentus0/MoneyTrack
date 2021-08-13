@@ -32,22 +32,17 @@ namespace MoneyTrack.Core.DomainServices.Repositories
 
         public async Task Update(Category category)
         {
-            var existingCategory = await _dbProvider.Categories.Query.Where(new Models.Operational.Filter
+            await _dbProvider.Categories.Update(category);
+        }
+
+        public async Task<Category> GetById(int id)
+        {
+            return await _dbProvider.Categories.Query.Where(new Models.Operational.Filter
             {
-                PropName = nameof(category.Id),
+                PropName = nameof(id),
                 Operation = Models.Operational.Operations.Eq,
-                Value = category.Id.ToString()
+                Value = id.ToString()
             }).First();
-
-            if(existingCategory is not null)
-            {
-                if (!string.IsNullOrEmpty(category.Name))
-                {
-                    existingCategory.Name = category.Name;
-                }
-
-                await _dbProvider.Categories.Update(existingCategory);
-            }
         }
     }
 }

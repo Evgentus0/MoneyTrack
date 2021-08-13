@@ -37,9 +37,18 @@ namespace MoneyTrack.Core.AppServices.Services
 
         public async Task Update(CategoryDto categoryDto)
         {
-            var category = _mapper.Map<Category>(categoryDto);
 
-            await _categoryRepository.Update(category);
+            Category categoryToUpdate = await _categoryRepository.GetById(categoryDto.Id);
+
+            if (categoryToUpdate is not null)
+            {
+                if (!string.IsNullOrEmpty(categoryDto.Name))
+                {
+                    categoryToUpdate.Name = categoryDto.Name;
+                }
+
+                await _categoryRepository.Update(categoryToUpdate);
+            }
         }
     }
 }

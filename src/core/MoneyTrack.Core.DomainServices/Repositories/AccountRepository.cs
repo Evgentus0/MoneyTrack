@@ -32,22 +32,17 @@ namespace MoneyTrack.Core.DomainServices.Repositories
 
         public async Task Update(Account account)
         {
-            var existingAccount = await _dbProvider.Accounts.Query.Where(new Models.Operational.Filter
+            await _dbProvider.Accounts.Update(account);
+        }
+
+        public async Task<Account> GetById(int id)
+        {
+            return await _dbProvider.Accounts.Query.Where(new Models.Operational.Filter
             {
-                PropName = nameof(account.Id),
+                PropName = nameof(id),
                 Operation = Models.Operational.Operations.Eq,
-                Value = account.Id.ToString()
+                Value = id.ToString()
             }).First();
-
-            if(existingAccount is not null)
-            {
-                if (!string.IsNullOrEmpty(account.Name))
-                {
-                    existingAccount.Name = account.Name;
-                }
-
-                await _dbProvider.Accounts.Update(existingAccount);
-            }
         }
     }
 }

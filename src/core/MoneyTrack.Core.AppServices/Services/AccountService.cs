@@ -38,10 +38,17 @@ namespace MoneyTrack.Core.AppServices.Services
 
         public async Task Update(AccountDto accountDto)
         {
-            var account = _mapper.Map<Account>(accountDto);
+            Account accountToUpdate = await _accountRepository.GetById(accountDto.Id);
 
+            if (accountToUpdate is not null)
+            {
+                if (!string.IsNullOrEmpty(accountDto.Name))
+                {
+                    accountToUpdate.Name = accountDto.Name;
+                }
 
-            await _accountRepository.Update(account);
+                await _accountRepository.Update(accountToUpdate);
+            }
         }
     }
 }

@@ -67,7 +67,27 @@ namespace MoneyTrack.Core.AppServices.Services
 
         public async Task Update(TransactionDto transaction)
         {
-            await _transactionRepository.Update(_mapper.Map<Transaction>(transaction));
+            var transactionToUpdate = await _transactionRepository.GetById(transaction.Id);
+            
+            if(transactionToUpdate is not null)
+            {
+                if (transaction.Quantity.HasValue)
+                    transactionToUpdate.Quantity = transaction.Quantity.Value;
+
+                if (!string.IsNullOrEmpty(transaction.Description))
+                    transactionToUpdate.Description = transaction.Description;
+
+                if (transaction.Category is not null && transaction.Category.Id > 0)
+                    transactionToUpdate.Category.Id = transaction.Category.Id;
+
+                if (transaction.Account is not null && transaction.Account.Id > 0)
+                    transactionToUpdate.Account.Id = transaction.Account.Id;
+
+                if (transaction.AddedDttm.HasValue && transaction.AddedDttm.Value > Transaction.CutOffDate)
+                    transactionToUpdate.AddedDttm = transaction.AddedDttm.Value;
+
+                await _transactionRepository.Update(transactionToUpdate);
+            }
         }
 
         public async Task Delete(int id)
