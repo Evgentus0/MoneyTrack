@@ -122,7 +122,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
                 result = result.Where(filter);
             }
 
-            return await result.Sum(propName);
+            return await result.SumDecimal(propName);
         }
 
         public async Task<int> CountTrasactions(List<Filter> filters)
