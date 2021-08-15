@@ -22,6 +22,7 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <TextBlock>New Account:</TextBlock>
 
@@ -43,7 +44,19 @@
             </TextBox.Text>
         </TextBox>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="3"
+        <TextBox wpf:HintAssist.Hint="Balance" Style="{DynamicResource MaterialDesignFloatingHintTextBox}"                 
+                 Margin="0 6 0 0"
+                 FontSize="18" Grid.Row="3">
+            <TextBox.Text>
+                <Binding Path="AccountModel.Balance" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <v:RequiredValidationRule/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="4"
                     Margin="0 16 0 0">
             <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
                     Command="{x:Static wpf:DialogHost.CloseDialogCommand}">

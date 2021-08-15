@@ -103,7 +103,19 @@
                              SelectedItem="{Binding Path=SelectedAccount}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Name}"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" 
+                                                   Text="{Binding Path=Name}"/>
+
+                                        <TextBlock Grid.Column="1" 
+                                                   Text="{Binding Path=Balance}" 
+                                                   Margin="50 0 0 0" FontWeight="Bold"/>
+
+                                    </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>

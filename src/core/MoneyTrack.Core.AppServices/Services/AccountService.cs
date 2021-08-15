@@ -47,6 +47,11 @@ namespace MoneyTrack.Core.AppServices.Services
                     accountToUpdate.Name = accountDto.Name;
                 }
 
+                if (accountDto.Balance.HasValue)
+                {
+                    accountToUpdate.Balance = accountDto.Balance.Value;
+                }
+
                 await _accountRepository.Update(accountToUpdate);
             }
         }

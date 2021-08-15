@@ -37,7 +37,6 @@ namespace MoneyTrack.Core.AppServices.Services
 
         public async Task Update(CategoryDto categoryDto)
         {
-
             Category categoryToUpdate = await _categoryRepository.GetById(categoryDto.Id);
 
             if (categoryToUpdate is not null)
