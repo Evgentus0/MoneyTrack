@@ -9,7 +9,7 @@ namespace MoneyTrack.Core.AppServices.Interfaces
         Task<List<AccountDto>> GetAllAccounts();
 
         Task AddAccount(AccountDto account);
-        Task Update(AccountDto accountDto);
+        Task Update(AccountDto accountDto, bool addTransaction = false);
         Task Delete(int id);
     }
 }

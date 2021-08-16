@@ -10,17 +10,28 @@ namespace MoneyTrack.WPF.Client.Models
         public override string this[string columnName] => PropertyValidation[columnName]();
 
         public int Id { get; set; }
-        public string Name 
-        { 
+        public string Name
+        {
             get => _name;
             set
             {
                 _name = value;
                 OnPropertyChanged(nameof(Name));
-            } 
+            }
+        }
+        public bool IsSystem 
+        {
+            get => _isSystem;
+            set
+            {
+                _isSystem = value;
+                OnPropertyChanged(nameof(IsSystem));
+            }
         }
 
         private Dictionary<string, Func<string>> _propertyValidation;
+        private bool _isSystem;
+
         private Dictionary<string, Func<string>> PropertyValidation => _propertyValidation ??= new Dictionary<string, Func<string>>
         {
             [nameof(Id)] = new Func<string>(() =>

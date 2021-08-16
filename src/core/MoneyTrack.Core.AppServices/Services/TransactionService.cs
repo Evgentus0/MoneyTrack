@@ -15,11 +15,13 @@ namespace MoneyTrack.Core.AppServices.Services
     public class TransactionService : ITransactionService
     {
         private readonly TransactionRepository _transactionRepository;
+        private readonly AccountRepository _accountRepository;
         private readonly IMapper _mapper;
 
-        public TransactionService(TransactionRepository transactionRepository, IMapper mapper)
+        public TransactionService(TransactionRepository transactionRepository, AccountRepository accountRepository, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
+            _accountRepository = accountRepository;
             _mapper = mapper;
         }
 
@@ -34,8 +36,12 @@ namespace MoneyTrack.Core.AppServices.Services
                 throw new ValidationException(validationError);
             }
 
+            var account = await _accountRepository.GetById(transaction.Account.Id);
+            account.Balance += transaction.Quantity.Value;
+            await _accountRepository.Update(account);
+
             var entity = _mapper.Map<Transaction>(transaction);
-           await  _transactionRepository.Add(entity);
+            await  _transactionRepository.Add(entity);
         }
 
         public async Task<List<TransactionDto>> GetLastTransactions(Paging paging)

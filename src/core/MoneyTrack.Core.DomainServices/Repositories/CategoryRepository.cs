@@ -1,5 +1,6 @@
 ﻿using MoneyTrack.Core.DomainServices.Data;
 using MoneyTrack.Core.Models;
+using MoneyTrack.Core.Models.Operational;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -43,6 +44,21 @@ namespace MoneyTrack.Core.DomainServices.Repositories
                 Operation = Models.Operational.Operations.Eq,
                 Value = id.ToString()
             }).First();
+        }
+
+        public async Task<List<Category>> GetCategories(List<Filter> filters)
+        {
+            var categories = _dbProvider.Categories.Query;
+
+            if(filters is not null)
+            {
+                foreach (var f in filters)
+                {
+                    categories = categories.Where(f);
+                }
+            }
+
+            return await categories.ToList();
         }
     }
 }
