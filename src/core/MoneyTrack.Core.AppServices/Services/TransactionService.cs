@@ -74,20 +74,42 @@ namespace MoneyTrack.Core.AppServices.Services
         public async Task Update(TransactionDto transaction)
         {
             var transactionToUpdate = await _transactionRepository.GetById(transaction.Id);
-            
-            if(transactionToUpdate is not null)
+
+            if (transactionToUpdate is not null)
             {
-                if (transaction.Quantity.HasValue)
+                if (transaction.Account is not null && transaction.Account.Id > 0 && transaction.Account.Id != transactionToUpdate.Account.Id)
+                {
+                    var transactionQuantity = transactionToUpdate.Quantity;
+
+                    var fromAcc = await _accountRepository.GetById(transactionToUpdate.Account.Id);
+                    var toAcc = await _accountRepository.GetById(transaction.Account.Id);
+
+                    fromAcc.Balance -= transactionQuantity;
+                    toAcc.Balance += transactionQuantity;
+
+                    await _accountRepository.Update(fromAcc);
+                    await _accountRepository.Update(toAcc);
+
+                    transactionToUpdate.Account.Id = transaction.Account.Id;
+                }
+
+                if (transaction.Quantity.HasValue && transaction.Quantity.Value != transactionToUpdate.Quantity)
+                {
+                    var diff = transaction.Quantity.Value - transactionToUpdate.Quantity;
+
                     transactionToUpdate.Quantity = transaction.Quantity.Value;
+
+                    var acc = await _accountRepository.GetById(transaction.Account.Id);
+
+                    acc.Balance += diff;
+                    await _accountRepository.Update(acc);
+                }
 
                 if (!string.IsNullOrEmpty(transaction.Description))
                     transactionToUpdate.Description = transaction.Description;
 
                 if (transaction.Category is not null && transaction.Category.Id > 0)
                     transactionToUpdate.Category.Id = transaction.Category.Id;
-
-                if (transaction.Account is not null && transaction.Account.Id > 0)
-                    transactionToUpdate.Account.Id = transaction.Account.Id;
 
                 if (transaction.AddedDttm.HasValue && transaction.AddedDttm.Value > Transaction.CutOffDate)
                     transactionToUpdate.AddedDttm = transaction.AddedDttm.Value;
@@ -98,6 +120,12 @@ namespace MoneyTrack.Core.AppServices.Services
 
         public async Task Delete(int id)
         {
+            var transaction = await _transactionRepository.GetById(id);
+
+            var account = await _accountRepository.GetById(transaction.Account.Id);
+            account.Balance -= transaction.Quantity;
+            await _accountRepository.Update(account);
+
             await _transactionRepository.Remove(id);
         }
 

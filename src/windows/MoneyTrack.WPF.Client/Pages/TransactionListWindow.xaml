@@ -91,7 +91,7 @@
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal"
                             Margin="10">
-                    <TextBlock Text="Total balance: "/>
+                    <TextBlock Text="Balance: "/>
                     <TextBlock Text="{Binding Path=TotalBalance}"/>
                 </StackPanel>
 

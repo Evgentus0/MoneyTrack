@@ -265,11 +265,15 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         private void TransactionModel_TransactionDeleted(object sender, int e)
         {
-            var items = (ObservableCollection<TransactionModel>)Paging.Items;
+            try
+            {
+                var items = (ObservableCollection<TransactionModel>)Paging.Items;
 
-            items.Remove(items.First(x => x.Id == e));
+                items.Remove(items.First(x => x.Id == e));
 
-            Task.Run(async () => await _transactionService.Delete(e));
+                Task.Run(async () => await _transactionService.Delete(e));
+            }
+            catch { }
         }
 
         private Dictionary<string, bool> _propSortingDirect;
