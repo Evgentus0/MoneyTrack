@@ -13,7 +13,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace MoneyTrack.WPF.Client.ViewModels
 {
@@ -23,8 +22,6 @@ namespace MoneyTrack.WPF.Client.ViewModels
         private ObservableCollection<AccountModel> _accounts;
         private CategoryModel _selectedCategory;
         private AccountModel _selectedAccount;
-        private AsyncCommand _addCategoryCommand;
-        private AsyncCommand _addAccountCommand;
         private readonly ICategoryService _categoryService;
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
@@ -55,46 +52,8 @@ namespace MoneyTrack.WPF.Client.ViewModels
             set
             {
                 _selectedCategory = value;
-                SelectCategory();
                 OnPropertyChanged(nameof(SelectedCategory));
             }
-        }
-
-        private async Task SelectCategory()
-        {
-            if (SelectedCategory is null)
-                return;
-
-            var dialogViewModel = new CategoryViewModel();
-            dialogViewModel.CategoryModel = SelectedCategory;
-
-            var view = new EditCategoryDialog
-            {
-                DataContext = dialogViewModel
-            };
-
-            var result = await DialogHost.Show(view, "CategoryRootDialog", HandleCloseCategoryDialog);
-
-            if (Enum.TryParse(result?.ToString(), out CloseDialogResult operation))
-            {
-                switch (operation)
-                {
-                    case CloseDialogResult.Update:
-                        var categoryDto = _mapper.Map<CategoryDto>(dialogViewModel.CategoryModel);
-                        await _categoryService.Update(categoryDto);
-                        break;
-                    case CloseDialogResult.Delete:
-                        await _categoryService.Delete(dialogViewModel.CategoryModel.Id);
-                        Categories.Remove(dialogViewModel.CategoryModel);
-                        break;
-                    case CloseDialogResult.Done:
-                    case CloseDialogResult.Cancel:
-                    default:
-                        break;
-                }
-            }
-
-            SelectedCategory = null;
         }
 
         public AccountModel SelectedAccount
@@ -103,150 +62,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
             set
             {
                 _selectedAccount = value;
-                SelectAccount();
                 OnPropertyChanged(nameof(SelectedAccount));
-            }
-        }
-
-        private async Task SelectAccount()
-        {
-            if (SelectedAccount is null)
-                return;
-
-            var dialogViewModel = new AccountViewModel();
-            dialogViewModel.AccountModel = SelectedAccount;
-
-            var view = new EditAccountDialog
-            {
-                DataContext = dialogViewModel
-            };
-
-            var result = await DialogHost.Show(view, "AccountRootDialog", HandleCloseAccountDialog);
-
-            if (Enum.TryParse(result?.ToString(), out CloseDialogResult operation))
-            {
-                switch (operation)
-                {
-                    case CloseDialogResult.Cancel:
-                        break;
-                    case CloseDialogResult.Update:
-                        var accountDto = _mapper.Map<AccountDto>(dialogViewModel.AccountModel);
-                        await _accountService.Update(accountDto, true);
-                        break;
-                    case CloseDialogResult.Delete:
-                        await _accountService.Delete(dialogViewModel.AccountModel.Id);
-                        Accounts.Remove(dialogViewModel.AccountModel);
-                        break;
-                    case CloseDialogResult.Done:
-                    default:
-                        break;
-                }
-            }
-
-            SelectedAccount = null;
-        }
-
-        public AsyncCommand AddCategoryCommand 
-        { 
-            get => _addCategoryCommand ??= new AsyncCommand(async obj =>
-            {
-                var dialogViewModel = new CategoryViewModel();
-
-                var view = new AddCategoryDialog
-                {
-                    DataContext = dialogViewModel
-                };
-
-                var result = await DialogHost.Show(view, "CategoryRootDialog", HandleCloseCategoryDialog);
-
-                if (Enum.TryParse(result?.ToString(), out CloseDialogResult doAdd))
-                {
-                    if (doAdd == CloseDialogResult.Done)
-                    {
-                        Categories.Add(dialogViewModel.CategoryModel);
-                        var categoryDto = _mapper.Map<CategoryDto>(dialogViewModel.CategoryModel);
-                        await _categoryService.AddCategory(categoryDto);
-                    }
-                }
-            });
-        }
-
-        private void HandleCloseCategoryDialog(object sender, DialogClosingEventArgs eventArgs)
-        {
-
-            if (Enum.TryParse(eventArgs.Parameter?.ToString(), out CloseDialogResult doAdd))
-            {
-                if (doAdd == CloseDialogResult.Cancel ||
-                    doAdd == CloseDialogResult.Delete)
-                    return;
-            }
-            else return;
-                   
-
-            var dialog = (UserControl)eventArgs.Session.Content;
-            var dialogViewModel = (CategoryViewModel)dialog.DataContext;
-
-            var validateResult = dialogViewModel.CategoryModel.ValidateModel();
-            if (string.IsNullOrEmpty(validateResult))
-            {
-                return;
-            }
-            else
-            {
-                dialogViewModel.Errors = validateResult;
-                eventArgs.Cancel();
-            }
-        }
-
-        public AsyncCommand AddAccountCommand
-        {
-            get => _addAccountCommand ??= new AsyncCommand(async obj =>
-            {
-                var dialogViewModel = new AccountViewModel();
-
-                var view = new AddAccountDialog
-                {
-                    DataContext = dialogViewModel
-                };
-
-                var result = await DialogHost.Show(view, "AccountRootDialog", HandleCloseAccountDialog);
-
-                if (Enum.TryParse(result?.ToString(), out CloseDialogResult doAdd))
-                {
-                    if (doAdd == CloseDialogResult.Done)
-                    {
-                        Accounts.Add(dialogViewModel.AccountModel);
-                        var accountDto = _mapper.Map<AccountDto>(dialogViewModel.AccountModel);
-                        await _accountService.AddAccount(accountDto);
-                    }
-                }
-            });
-        }
-
-        private void HandleCloseAccountDialog(object sender, DialogClosingEventArgs eventArgs)
-        {
-
-            if (Enum.TryParse(eventArgs.Parameter?.ToString(), out CloseDialogResult doAdd))
-            {
-                if (doAdd == CloseDialogResult.Cancel ||
-                    doAdd == CloseDialogResult.Delete)
-                    return;
-            }
-            else return;
-
-
-            var dialog = (UserControl)eventArgs.Session.Content;
-            var dialogViewModel = (AccountViewModel)dialog.DataContext;
-
-            var validateResult = dialogViewModel.AccountModel.ValidateModel();
-            if (string.IsNullOrEmpty(validateResult))
-            {
-                return;
-            }
-            else
-            {
-                dialogViewModel.Errors = validateResult;
-                eventArgs.Cancel();
             }
         }
 
@@ -267,6 +83,60 @@ namespace MoneyTrack.WPF.Client.ViewModels
         {
             await SetCategories();
             await SetAccounts();
+        }
+
+        public void DeleteCategory(CategoryModel category)
+        {
+            Task.Run(async () =>
+            {
+                await _categoryService.Delete(category.Id);
+                Categories.Remove(category);
+            });
+        }
+        public void UpdateCategory(CategoryModel category)
+        {
+            Task.Run(async () =>
+            {
+                var categoryDto = _mapper.Map<CategoryDto>(category);
+                await _categoryService.Update(categoryDto);
+            });
+        }
+        public void AddCategory(CategoryModel category)
+        {
+            Task.Run(async () =>
+            {
+                Categories.Add(category);
+                var categoryDto = _mapper.Map<CategoryDto>(category);
+                await _categoryService.AddCategory(categoryDto);
+            });
+        }
+
+        public void UpdateAccount(AccountModel account)
+        {
+            Task.Run(async () =>
+            {
+                var accountDto = _mapper.Map<AccountDto>(account);
+                await _accountService.Update(accountDto, true);
+            });
+        }
+
+        public void DeleteAccount(AccountModel account)
+        {
+            Task.Run(async () =>
+            {
+                await _accountService.Delete(account.Id);
+                Accounts.Remove(account);
+            });
+        }
+
+        public void AddAccount(AccountModel account)
+        {
+            Task.Run(async () =>
+            {
+                Accounts.Add(account);
+                var accountDto = _mapper.Map<AccountDto>(account);
+                await _accountService.AddAccount(accountDto);
+            });
         }
 
         private async Task SetAccounts()

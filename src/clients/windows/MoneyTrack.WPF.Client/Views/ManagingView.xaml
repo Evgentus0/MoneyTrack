@@ -8,6 +8,17 @@
              xmlns:converters="clr-namespace:MoneyTrack.WPF.Client.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <local:BaseUserControl.Resources>
+        <Style x:Key="CategoryItemStyle" TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignGridViewItem}">
+            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown_Category" />
+        </Style>
+
+        <Style x:Key="AccountItemStyle" TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignGridViewItem}">
+            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown_Account" />
+        </Style>
+    </local:BaseUserControl.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -37,20 +48,22 @@
                               Margin="16"
                               Text="Categories" />
                     </materialDesign:ColorZone>
-                    <Button Command="{Binding Path=AddCategoryCommand}"
+                    <Button 
+                            Click="Button_Click_Add_Category"
                         Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Right"
                         Margin="0 -20 10 0"
                         Grid.Row="1"
                         Content="{materialDesign:PackIcon Kind=Plus, Size=25}"         
-                    
+                        
                     />
 
 
                     <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Auto">
                         <ListView ItemsSource="{Binding Path=Categories}" 
+                                  ItemContainerStyle="{StaticResource CategoryItemStyle}"
                                   SelectedItem="{Binding Path=SelectedCategory}"
                                   FontSize="16">
                             <ListView.View>
@@ -90,19 +103,21 @@
                               Text="Accounts" />
                     </materialDesign:ColorZone>
                     <Button Command="{Binding Path=AddAccountCommand}"
+                            Click="Button_Click_Add_Account"
                         Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Right"
                         Margin="0 -20 10 0"
                         Grid.Row="1"
                         Content="{materialDesign:PackIcon Kind=Plus, Size=25}"         
-                    
+                        
                     />
 
 
                     <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Auto">
                         <ListView ItemsSource="{Binding Path=Accounts}" 
+                                  ItemContainerStyle="{StaticResource AccountItemStyle}"
                                   SelectedItem="{Binding Path=SelectedAccount}"
                                   FontSize="16"
                                   AllowDrop="True"
@@ -120,6 +135,7 @@
                                                     Header="Balance"/>
                                 </GridView>
                             </ListView.View>
+                            
                         </ListView>
                     </ScrollViewer>
                 </Grid>
