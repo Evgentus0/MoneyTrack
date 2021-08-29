@@ -36,9 +36,12 @@ namespace MoneyTrack.Core.AppServices.Services
                 throw new ValidationException(validationError);
             }
 
-            var account = await _accountRepository.GetById(transaction.Account.Id);
-            account.Balance += transaction.Quantity.Value;
-            await _accountRepository.Update(account);
+            if (!transaction.IsPostponed)
+            {
+                var account = await _accountRepository.GetById(transaction.Account.Id);
+                account.Balance += transaction.Quantity.Value;
+                await _accountRepository.Update(account);
+            }
 
             var entity = _mapper.Map<Transaction>(transaction);
             await  _transactionRepository.Add(entity);
@@ -96,11 +99,9 @@ namespace MoneyTrack.Core.AppServices.Services
                 if (transaction.Quantity.HasValue && transaction.Quantity.Value != transactionToUpdate.Quantity)
                 {
                     var diff = transaction.Quantity.Value - transactionToUpdate.Quantity;
-
                     transactionToUpdate.Quantity = transaction.Quantity.Value;
 
                     var acc = await _accountRepository.GetById(transaction.Account.Id);
-
                     acc.Balance += diff;
                     await _accountRepository.Update(acc);
                 }
@@ -132,6 +133,24 @@ namespace MoneyTrack.Core.AppServices.Services
         public async Task<decimal> CalculateTotalBalance(List<Filter> filters)
         {
             return await _transactionRepository.CalculateSum(nameof(Transaction.Quantity), filters);
+        }
+
+        public async Task ApprovePostponedTransaction(int id)
+        {
+            var transaction = await _transactionRepository.GetById(id);
+
+            if(transaction is not null)
+            {
+                if (transaction.IsPostponed)
+                {
+                    var account = await _accountRepository.GetById(transaction.Account.Id);
+                    account.Balance += transaction.Quantity;
+                    await _accountRepository.Update(account);
+
+                    transaction.IsPostponed = false;
+                    await _transactionRepository.Update(transaction);
+                }
+            }
         }
     }
 }

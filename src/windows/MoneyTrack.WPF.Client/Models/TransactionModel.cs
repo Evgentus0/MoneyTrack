@@ -16,6 +16,7 @@ namespace MoneyTrack.WPF.Client.Models
 
         private RelayCommand _deleteTransactionCommand;
         private RelayCommand _updateTransactionCommand;
+        private RelayCommand _approvePostponedTransactionCommnad;
         #endregion
 
         #region Properties
@@ -75,6 +76,16 @@ namespace MoneyTrack.WPF.Client.Models
             }
         }
 
+        public bool IsPostponed 
+        {
+            get => _isPostponed; 
+            set
+            {
+                _isPostponed = value;
+                OnPropertyChanged(nameof(IsPostponed));
+            }
+        }
+
         #endregion
 
         protected TransactionModel()
@@ -94,9 +105,11 @@ namespace MoneyTrack.WPF.Client.Models
         public override string this[string columnName] => PropertyValidation[columnName]();
 
         private Dictionary<string, Func<string>> _propertyValidation;
+        private bool _isPostponed;
+
         private Dictionary<string, Func<string>> PropertyValidation => _propertyValidation ??= new Dictionary<string, Func<string>>
         {
-            [nameof(Quantity)] = new Func<string>(() => 
+            [nameof(Quantity)] = new Func<string>(() =>
             {
                 var result = string.Empty;
                 var message = $"{nameof(Quantity)} can not be 0; ";
@@ -114,7 +127,7 @@ namespace MoneyTrack.WPF.Client.Models
             }),
             [nameof(Description)] = new Func<string>(() =>
             {
-                if(Description != null && string.IsNullOrWhiteSpace(Description))
+                if (Description != null && string.IsNullOrWhiteSpace(Description))
                 {
                     return "Description can not be empty";
                 }
@@ -124,7 +137,7 @@ namespace MoneyTrack.WPF.Client.Models
             {
                 var result = string.Empty;
 
-                if(!SetCurrentDttm && AddedDttm is null)
+                if (!SetCurrentDttm && AddedDttm is null)
                 {
                     result = $"Date can not be empty";
                 }
@@ -135,12 +148,12 @@ namespace MoneyTrack.WPF.Client.Models
 
         public RelayCommand DeleteTransactionCommand
         {
-            get => _deleteTransactionCommand ??= new RelayCommand( obj =>
-            {
-                var transaction = (TransactionModel)obj;
+            get => _deleteTransactionCommand ??= new RelayCommand(obj =>
+           {
+               var transaction = (TransactionModel)obj;
 
-                TransactionDeleted?.Invoke(this, transaction.Id);
-            });
+               TransactionDeleted?.Invoke(this, transaction.Id);
+           });
         }
 
         public static event EventHandler<int> TransactionDeleted;
@@ -154,6 +167,19 @@ namespace MoneyTrack.WPF.Client.Models
         }
 
         public static event EventHandler TransactionUpdated;
+
+        public RelayCommand ApprovePostponedTransactionCommnad
+        {
+            get => _approvePostponedTransactionCommnad ??= new RelayCommand(obj =>
+            {
+                var transaction = (TransactionModel)obj;
+                transaction.IsPostponed = false;
+
+                PostponedTransactionApproved?.Invoke(this, transaction.Id);
+            });
+        }
+
+        public static event EventHandler<int> PostponedTransactionApproved;
 
         internal string ValidateModel()
         {

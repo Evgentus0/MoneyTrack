@@ -199,10 +199,16 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
             TransactionModel.TransactionDeleted += TransactionModel_TransactionDeleted;
             TransactionModel.TransactionUpdated += TransactionModel_TransactionUpdated;
+            TransactionModel.PostponedTransactionApproved += TransactionModel_PostponedTransactionApproved;
 
             await SetTransactions();
             await SetCategories();
             await SetAccounts();
+        }
+
+        private void TransactionModel_PostponedTransactionApproved(object sender, int e)
+        {
+            Task.Run(async () => await _transactionService.ApprovePostponedTransaction(e));
         }
 
         private void TransactionModel_TransactionUpdated(object sender, EventArgs e)
