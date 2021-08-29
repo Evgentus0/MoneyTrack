@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AEF48208
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "windows", "windows", "{F4D01D37-07A7-488B-994F-96D9028F5496}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.WPF.Client", "src\windows\MoneyTrack.WPF.Client\MoneyTrack.WPF.Client.csproj", "{BB8153CF-1DBC-482E-96D1-7AE9F9B40675}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.WPF.Client", "src\clients\windows\MoneyTrack.WPF.Client\MoneyTrack.WPF.Client.csproj", "{BB8153CF-1DBC-482E-96D1-7AE9F9B40675}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{3A048C41-3088-4642-8B5A-C18BB221879D}"
 EndProject
@@ -17,13 +17,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.Core.Models", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.Core.DomainServices", "src\core\MoneyTrack.Core.DomainServices\MoneyTrack.Core.DomainServices.csproj", "{77B12982-8E2C-42AF-8BD3-D71141BF352E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.WPF.Infrastructure", "src\windows\MoneyTrack.WPF.Infrastructure\MoneyTrack.WPF.Infrastructure.csproj", "{BE732F2A-5B58-47FB-99E8-B3BAD926D566}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.WPF.Infrastructure", "src\clients\windows\MoneyTrack.WPF.Infrastructure\MoneyTrack.WPF.Infrastructure.csproj", "{BE732F2A-5B58-47FB-99E8-B3BAD926D566}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.Core.AppServices", "src\core\MoneyTrack.Core.AppServices\MoneyTrack.Core.AppServices.csproj", "{D7F62276-F275-4184-AD61-79A37CB85154}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{8DD93C0F-3B9D-40A6-BD68-5949B9C1D7E1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.Core.Data.LiteDB", "src\core\data\MoneyTrack.Core.Data.LiteDB\MoneyTrack.Core.Data.LiteDB.csproj", "{65528D1D-318A-4DF1-A472-E309504C3C24}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "clients", "clients", "{BF5E639D-BAB7-4CE3-8708-11A73DD5D283}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,7 +62,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F4D01D37-07A7-488B-994F-96D9028F5496} = {AB4DD5D3-A934-42F2-8B35-B403A72B7523}
+		{F4D01D37-07A7-488B-994F-96D9028F5496} = {BF5E639D-BAB7-4CE3-8708-11A73DD5D283}
 		{BB8153CF-1DBC-482E-96D1-7AE9F9B40675} = {F4D01D37-07A7-488B-994F-96D9028F5496}
 		{3A048C41-3088-4642-8B5A-C18BB221879D} = {AB4DD5D3-A934-42F2-8B35-B403A72B7523}
 		{3E83855F-720B-47C4-AC70-2EA97311EACD} = {3A048C41-3088-4642-8B5A-C18BB221879D}
@@ -69,6 +71,7 @@ Global
 		{D7F62276-F275-4184-AD61-79A37CB85154} = {3A048C41-3088-4642-8B5A-C18BB221879D}
 		{8DD93C0F-3B9D-40A6-BD68-5949B9C1D7E1} = {3A048C41-3088-4642-8B5A-C18BB221879D}
 		{65528D1D-318A-4DF1-A472-E309504C3C24} = {8DD93C0F-3B9D-40A6-BD68-5949B9C1D7E1}
+		{BF5E639D-BAB7-4CE3-8708-11A73DD5D283} = {AB4DD5D3-A934-42F2-8B35-B403A72B7523}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2EE6D594-DE95-4A84-83CA-C707A9266C6A}
