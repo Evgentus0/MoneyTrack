@@ -3,6 +3,7 @@ using MoneyTrack.Core.DomainServices.Data;
 using MoneyTrack.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +32,32 @@ namespace MoneyTrack.Core.Data.LiteDB
             bsonMapper.Entity<Transaction>().DbRef(x => x.Account, nameof(Account));
             bsonMapper.Entity<Transaction>().DbRef(x => x.Category, nameof(Category));
 
+            bool isAlreadyExist = File.Exists(connectionString);
+
             _liteDatabase = new LiteDatabase(connectionString, bsonMapper);
+
+            if (!isAlreadyExist)
+            {
+                Initialize();
+            }
+        }
+
+        private void Initialize()
+        {
+            var categories = _liteDatabase.GetCollection<Category>();
+
+            categories.Insert(new Category
+            {
+                Name = Category.RealBalanceDiff,
+                IsSystem = true
+            });
+
+            categories.Insert(new Category
+            {
+
+                Name = Category.AccChangeCom,
+                IsSystem = true
+            });
         }
 
         public void Dispose()

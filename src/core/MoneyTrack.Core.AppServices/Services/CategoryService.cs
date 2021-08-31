@@ -3,6 +3,7 @@ using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
+using MoneyTrack.Core.Models.Operational;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,16 +31,26 @@ namespace MoneyTrack.Core.AppServices.Services
             await _categoryRepository.Delete(id);
         }
 
-        public async Task<List<CategoryDto>> GetAllCategories()
+        public async Task<List<CategoryDto>> GetCategories(List<Filter> filters = null)
         {
-            return _mapper.Map<List<CategoryDto>>(await _categoryRepository.GetAllCategories());
+            List<Category> result = await _categoryRepository.GetCategories(filters);
+
+            return _mapper.Map<List<CategoryDto>>(result);
         }
 
         public async Task Update(CategoryDto categoryDto)
         {
-            var category = _mapper.Map<Category>(categoryDto);
+            Category categoryToUpdate = await _categoryRepository.GetById(categoryDto.Id);
 
-            await _categoryRepository.Update(category);
+            if (categoryToUpdate is not null)
+            {
+                if (!string.IsNullOrEmpty(categoryDto.Name))
+                {
+                    categoryToUpdate.Name = categoryDto.Name;
+                }
+
+                await _categoryRepository.Update(categoryToUpdate);
+            }
         }
     }
 }

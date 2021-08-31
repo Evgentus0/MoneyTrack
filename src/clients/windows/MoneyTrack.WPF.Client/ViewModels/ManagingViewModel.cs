@@ -2,6 +2,7 @@
 using MaterialDesignThemes.Wpf;
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
+using MoneyTrack.Core.Models.Operational;
 using MoneyTrack.WPF.Client.Commands;
 using MoneyTrack.WPF.Client.Dialogs;
 using MoneyTrack.WPF.Client.Models;
@@ -130,7 +131,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
                         break;
                     case CloseDialogResult.Update:
                         var accountDto = _mapper.Map<AccountDto>(dialogViewModel.AccountModel);
-                        await _accountService.Update(accountDto);
+                        await _accountService.Update(accountDto, true);
                         break;
                     case CloseDialogResult.Delete:
                         await _accountService.Delete(dialogViewModel.AccountModel.Id);
@@ -277,7 +278,12 @@ namespace MoneyTrack.WPF.Client.ViewModels
         private async Task SetCategories()
         {
             Categories = new ObservableCollection<CategoryModel>
-                            (_mapper.Map<List<CategoryModel>>(await _categoryService.GetAllCategories()));
+                            (_mapper.Map<List<CategoryModel>>(await _categoryService.GetCategories(new List<Filter> { new Filter 
+                            {
+                                Operation = Operations.Eq,
+                                PropName = nameof(CategoryModel.IsSystem),
+                                Value = false.ToString()
+                            } })));
         }
     }
 }

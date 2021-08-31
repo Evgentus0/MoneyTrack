@@ -119,7 +119,12 @@ namespace MoneyTrack.WPF.Client.ViewModels
         private async Task SetCategories()
         {
             Categories = new ObservableCollection<CategoryModel>
-                            (_mapper.Map<List<CategoryModel>>(await _categoryService.GetAllCategories()));
+                            (_mapper.Map<List<CategoryModel>>(await _categoryService.GetCategories(new List<Filter> { new Filter
+                            {
+                                Operation = Operations.Eq,
+                                PropName = nameof(CategoryModel.IsSystem),
+                                Value = false.ToString()
+                            } })));
         }
 
         public async Task SetTransactions(PagingModel paging = null)

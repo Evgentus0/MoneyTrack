@@ -178,7 +178,12 @@ namespace MoneyTrack.WPF.Client.ViewModels
         private async Task SetCategories()
         {
             _categories = new ObservableCollection<CategoryModel>
-                            (_mapper.Map<List<CategoryModel>>(await _categoryService.GetAllCategories()));
+                            (_mapper.Map<List<CategoryModel>>(await _categoryService.GetCategories(new List<Filter> { new Filter
+                            {
+                                Operation = Operations.Eq,
+                                PropName = nameof(CategoryModel.IsSystem),
+                                Value = false.ToString()
+                            } })));
         }
 
         public override async Task Initialize()
@@ -194,10 +199,16 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
             TransactionModel.TransactionDeleted += TransactionModel_TransactionDeleted;
             TransactionModel.TransactionUpdated += TransactionModel_TransactionUpdated;
+            TransactionModel.PostponedTransactionApproved += TransactionModel_PostponedTransactionApproved;
 
             await SetTransactions();
             await SetCategories();
             await SetAccounts();
+        }
+
+        private void TransactionModel_PostponedTransactionApproved(object sender, int e)
+        {
+            Task.Run(async () => await _transactionService.ApprovePostponedTransaction(e));
         }
 
         private void TransactionModel_TransactionUpdated(object sender, EventArgs e)
@@ -260,11 +271,15 @@ namespace MoneyTrack.WPF.Client.ViewModels
 
         private void TransactionModel_TransactionDeleted(object sender, int e)
         {
-            var items = (ObservableCollection<TransactionModel>)Paging.Items;
+            try
+            {
+                var items = (ObservableCollection<TransactionModel>)Paging.Items;
 
-            items.Remove(items.First(x => x.Id == e));
+                items.Remove(items.First(x => x.Id == e));
 
-            Task.Run(async () => await _transactionService.Delete(e));
+                Task.Run(async () => await _transactionService.Delete(e));
+            }
+            catch { }
         }
 
         private Dictionary<string, bool> _propSortingDirect;

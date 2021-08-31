@@ -15,11 +15,13 @@ namespace MoneyTrack.Core.AppServices.Services
     public class TransactionService : ITransactionService
     {
         private readonly TransactionRepository _transactionRepository;
+        private readonly AccountRepository _accountRepository;
         private readonly IMapper _mapper;
 
-        public TransactionService(TransactionRepository transactionRepository, IMapper mapper)
+        public TransactionService(TransactionRepository transactionRepository, AccountRepository accountRepository, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
+            _accountRepository = accountRepository;
             _mapper = mapper;
         }
 
@@ -34,8 +36,15 @@ namespace MoneyTrack.Core.AppServices.Services
                 throw new ValidationException(validationError);
             }
 
+            if (!transaction.IsPostponed)
+            {
+                var account = await _accountRepository.GetById(transaction.Account.Id);
+                account.Balance += transaction.Quantity.Value;
+                await _accountRepository.Update(account);
+            }
+
             var entity = _mapper.Map<Transaction>(transaction);
-           await  _transactionRepository.Add(entity);
+            await  _transactionRepository.Add(entity);
         }
 
         public async Task<List<TransactionDto>> GetLastTransactions(Paging paging)
@@ -67,17 +76,81 @@ namespace MoneyTrack.Core.AppServices.Services
 
         public async Task Update(TransactionDto transaction)
         {
-            await _transactionRepository.Update(_mapper.Map<Transaction>(transaction));
+            var transactionToUpdate = await _transactionRepository.GetById(transaction.Id);
+
+            if (transactionToUpdate is not null)
+            {
+                if (transaction.Account is not null && transaction.Account.Id > 0 && transaction.Account.Id != transactionToUpdate.Account.Id)
+                {
+                    var transactionQuantity = transactionToUpdate.Quantity;
+
+                    var fromAcc = await _accountRepository.GetById(transactionToUpdate.Account.Id);
+                    var toAcc = await _accountRepository.GetById(transaction.Account.Id);
+
+                    fromAcc.Balance -= transactionQuantity;
+                    toAcc.Balance += transactionQuantity;
+
+                    await _accountRepository.Update(fromAcc);
+                    await _accountRepository.Update(toAcc);
+
+                    transactionToUpdate.Account.Id = transaction.Account.Id;
+                }
+
+                if (transaction.Quantity.HasValue && transaction.Quantity.Value != transactionToUpdate.Quantity)
+                {
+                    var diff = transaction.Quantity.Value - transactionToUpdate.Quantity;
+                    transactionToUpdate.Quantity = transaction.Quantity.Value;
+
+                    var acc = await _accountRepository.GetById(transaction.Account.Id);
+                    acc.Balance += diff;
+                    await _accountRepository.Update(acc);
+                }
+
+                if (!string.IsNullOrEmpty(transaction.Description))
+                    transactionToUpdate.Description = transaction.Description;
+
+                if (transaction.Category is not null && transaction.Category.Id > 0)
+                    transactionToUpdate.Category.Id = transaction.Category.Id;
+
+                if (transaction.AddedDttm.HasValue && transaction.AddedDttm.Value > Transaction.CutOffDate)
+                    transactionToUpdate.AddedDttm = transaction.AddedDttm.Value;
+
+                await _transactionRepository.Update(transactionToUpdate);
+            }
         }
 
         public async Task Delete(int id)
         {
+            var transaction = await _transactionRepository.GetById(id);
+
+            var account = await _accountRepository.GetById(transaction.Account.Id);
+            account.Balance -= transaction.Quantity;
+            await _accountRepository.Update(account);
+
             await _transactionRepository.Remove(id);
         }
 
         public async Task<decimal> CalculateTotalBalance(List<Filter> filters)
         {
             return await _transactionRepository.CalculateSum(nameof(Transaction.Quantity), filters);
+        }
+
+        public async Task ApprovePostponedTransaction(int id)
+        {
+            var transaction = await _transactionRepository.GetById(id);
+
+            if(transaction is not null)
+            {
+                if (transaction.IsPostponed)
+                {
+                    var account = await _accountRepository.GetById(transaction.Account.Id);
+                    account.Balance += transaction.Quantity;
+                    await _accountRepository.Update(account);
+
+                    transaction.IsPostponed = false;
+                    await _transactionRepository.Update(transaction);
+                }
+            }
         }
     }
 }

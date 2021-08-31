@@ -1,5 +1,6 @@
 ﻿using MoneyTrack.Core.DomainServices.Data;
 using MoneyTrack.Core.Models;
+using MoneyTrack.Core.Models.Operational;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -32,22 +33,32 @@ namespace MoneyTrack.Core.DomainServices.Repositories
 
         public async Task Update(Category category)
         {
-            var existingCategory = await _dbProvider.Categories.Query.Where(new Models.Operational.Filter
+            await _dbProvider.Categories.Update(category);
+        }
+
+        public async Task<Category> GetById(int id)
+        {
+            return await _dbProvider.Categories.Query.Where(new Models.Operational.Filter
             {
-                PropName = nameof(category.Id),
+                PropName = nameof(id),
                 Operation = Models.Operational.Operations.Eq,
-                Value = category.Id.ToString()
+                Value = id.ToString()
             }).First();
+        }
 
-            if(existingCategory is not null)
+        public async Task<List<Category>> GetCategories(List<Filter> filters)
+        {
+            var categories = _dbProvider.Categories.Query;
+
+            if(filters is not null)
             {
-                if (!string.IsNullOrEmpty(category.Name))
+                foreach (var f in filters)
                 {
-                    existingCategory.Name = category.Name;
+                    categories = categories.Where(f);
                 }
-
-                await _dbProvider.Categories.Update(existingCategory);
             }
+
+            return await categories.ToList();
         }
     }
 }

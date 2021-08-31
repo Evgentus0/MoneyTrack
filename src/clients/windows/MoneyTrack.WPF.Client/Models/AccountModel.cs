@@ -7,6 +7,7 @@ namespace MoneyTrack.WPF.Client.Models
     {
         private string _name;
         private int _id;
+        private decimal? _balance;
 
         public override string this[string columnName] => PropertyValidation[columnName]();
 
@@ -29,7 +30,18 @@ namespace MoneyTrack.WPF.Client.Models
             }
         }
 
+        public decimal? Balance 
+        {
+            get => _balance;
+            set
+            {
+                _balance = value;
+                OnPropertyChanged(nameof(Balance));
+            } 
+        }
+
         private Dictionary<string, Func<string>> _propertyValidation;
+
         private Dictionary<string, Func<string>> PropertyValidation => _propertyValidation ??= new Dictionary<string, Func<string>>
         {
             [nameof(Id)] = new Func<string>(() =>

@@ -19,6 +19,9 @@ namespace MoneyTrack.Core.DomainServices.Data
         Task<T> First();
         Task<List<T>> ToList();
         Task<int> Count();
-        Task<decimal> Sum(string propName);
+        Task<decimal> SumDecimal(string propName);
+        Task<int> SumInt(string propName);
+        Task<double> SumDouble(string propName);
+        Task<long> SumLong(string propName);
     }
 }

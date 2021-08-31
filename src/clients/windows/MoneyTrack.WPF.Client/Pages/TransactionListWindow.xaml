@@ -29,8 +29,19 @@
         <ContextMenu  x:Key="RowMenu">
             <MenuItem Header="Edit" Command="{Binding Path=UpdateTransactionCommand}" CommandParameter="{Binding}"/>
             <MenuItem Header="Delete" Command="{Binding Path=DeleteTransactionCommand}" CommandParameter="{Binding}"/>
+            <MenuItem Header="Approve" Command="{Binding Path=ApprovePostponedTransactionCommnad}" CommandParameter="{Binding}">
+                <MenuItem.Style>
+                    <Style TargetType="MenuItem">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsPostponed}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </MenuItem.Style>
+            </MenuItem>
         </ContextMenu>
-        <Style x:Key="DefaultRowStyle" TargetType="{x:Type DataGridRow}">
+        <Style x:Key="RowStyle" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource PostponedTransaction}">
             <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
         </Style>
     </local:BaseWindow.Resources>
@@ -91,13 +102,13 @@
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal"
                             Margin="10">
-                    <TextBlock Text="Total balance: "/>
+                    <TextBlock Text="Balance: "/>
                     <TextBlock Text="{Binding Path=TotalBalance}"/>
                 </StackPanel>
 
                 <controls:PaginDataGrid Grid.Row="2" DataContext="{Binding Path=Paging}">
                     <DataGrid 
-                        RowStyle="{StaticResource DefaultRowStyle}"
+                        RowStyle="{StaticResource RowStyle}"
                         AutoGenerateColumns="False"
                         ItemsSource="{Binding Path=Items}"
                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch"

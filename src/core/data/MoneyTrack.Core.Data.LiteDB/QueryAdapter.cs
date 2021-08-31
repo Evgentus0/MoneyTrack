@@ -64,11 +64,32 @@ namespace MoneyTrack.Core.Data.LiteDB
             return await Task.Run(() => _queryable.Count());
         }
 
-        public async Task<decimal> Sum(string propName)
+        public async Task<decimal> SumDecimal(string propName)
         {
             var result = await Task.Run(() => _queryable.Select(BsonExpression.Create(propName)).ToList());
 
             return result.Sum(x => x[propName].AsDecimal);
+        }
+
+        public async Task<int> SumInt(string propName)
+        {
+            var result = await Task.Run(() => _queryable.Select(BsonExpression.Create(propName)).ToList());
+
+            return result.Sum(x => x[propName].AsInt32);
+        }
+
+        public async Task<double> SumDouble(string propName)
+        {
+            var result = await Task.Run(() => _queryable.Select(BsonExpression.Create(propName)).ToList());
+
+            return result.Sum(x => x[propName].AsDouble);
+        }
+
+        public async Task<long> SumLong(string propName)
+        {
+            var result = await Task.Run(() => _queryable.Select(BsonExpression.Create(propName)).ToList());
+
+            return result.Sum(x => x[propName].AsInt64);
         }
     }
 }

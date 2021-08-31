@@ -28,6 +28,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -120,7 +121,18 @@
                     </ComboBox.SelectedValue>
                 </ComboBox>
             </StackPanel>
+        </StackPanel>
 
+        <StackPanel Grid.Row="2" 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+
+            <StackPanel Orientation="Horizontal" Margin="20">
+                <Label Content="Transaction is postponed" Target="{Binding ElementName=IsTransactionPostponed}"/>
+                <CheckBox Name="IsTransactionPostponed" IsChecked="{Binding Path=NewTransaction.IsPostponed}" IsThreeState="False"/>
+            </StackPanel>
+            
             <StackPanel Orientation="Horizontal" Margin="20">
                 <Label Content="Set current date: " Target="{Binding ElementName=SetCurrentDateCheckBox}"/>
                 <CheckBox Name="SetCurrentDateCheckBox" IsChecked="{Binding Path=NewTransaction.SetCurrentDttm}" IsThreeState="False"
@@ -141,16 +153,17 @@
                     </DatePicker.SelectedDate>
                 </DatePicker>
             </StackPanel>
+            
         </StackPanel>
 
-        <Button Grid.Row="2" 
+        <Button Grid.Row="3" 
                 Content="Add new record" Width="200"
                 FontSize="18"
                 Command="{Binding Path=AddTransactionCommand}"
                 >
         </Button>
 
-        <StackPanel Grid.Row="3"
+        <StackPanel Grid.Row="4"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal"
@@ -165,7 +178,7 @@
 
         </StackPanel>
 
-        <StackPanel Grid.Row="4"
+        <StackPanel Grid.Row="5"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal"
@@ -175,7 +188,7 @@
         </StackPanel>
 
 
-        <controls:PaginDataGrid Grid.Row="5" DataContext="{Binding Path=Paging}">
+        <controls:PaginDataGrid Grid.Row="6" DataContext="{Binding Path=Paging}">
             <DataGrid AutoGenerateColumns="False"
                     ItemsSource="{Binding Path=Items}"
                     VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
@@ -186,7 +199,10 @@
                     MaxHeight="300"
                     Height="auto"
                     FontSize="15"
+                      
+                    RowStyle="{StaticResource PostponedTransaction}"
                     >
+
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="How much" Binding="{Binding Path=Quantity}" Width="2*"/>
                     <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="5*"/>

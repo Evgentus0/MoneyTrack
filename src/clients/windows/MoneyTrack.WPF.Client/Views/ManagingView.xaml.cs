@@ -24,5 +24,20 @@ namespace MoneyTrack.WPF.Client.Views
         {
             InitializeComponent();
         }
+
+        private void ListView_MouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void ListView_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
+
+        }
+
+        private void ListView_DragEnter(object sender, DragEventArgs e)
+        {
+
+        }
     }
 }

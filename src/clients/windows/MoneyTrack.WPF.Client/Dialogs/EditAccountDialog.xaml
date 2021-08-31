@@ -22,8 +22,9 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock>New Account:</TextBlock>
+        <TextBlock>Edit Account:</TextBlock>
 
         <TextBlock Grid.Column="1" Text="{Binding Path=Errors}" Foreground="Red" 
                    Visibility="{Binding Path=Errors, Converter={StaticResource CollapseIfEmptyConverter}}"
@@ -40,7 +41,19 @@
             </TextBox.Text>
         </TextBox>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="3"
+        <TextBox wpf:HintAssist.Hint="Balance" Style="{DynamicResource MaterialDesignFloatingHintTextBox}"                 
+                 Margin="0 6 0 0"
+                 FontSize="18" Grid.Row="3">
+            <TextBox.Text>
+                <Binding Path="AccountModel.Balance" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <v:RequiredValidationRule/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="4"
                     Margin="0 16 0 0">
             <Button IsDefault="True" 
                     Style="{StaticResource MaterialDesignRaisedButton}"

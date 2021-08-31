@@ -50,14 +50,17 @@
 
                     <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Auto">
-                        <ListBox ItemsSource="{Binding Path=Categories}"
-                             SelectedItem="{Binding Path=SelectedCategory}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Name}"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        <ListView ItemsSource="{Binding Path=Categories}" 
+                                  SelectedItem="{Binding Path=SelectedCategory}"
+                                  FontSize="16">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}"
+                                                    Width="auto"
+                                                    Header="Category"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </ScrollViewer>
                 </Grid>
             </Border>
@@ -99,14 +102,25 @@
 
                     <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Auto">
-                        <ListBox ItemsSource="{Binding Path=Accounts}"
-                             SelectedItem="{Binding Path=SelectedAccount}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Name}"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        <ListView ItemsSource="{Binding Path=Accounts}" 
+                                  SelectedItem="{Binding Path=SelectedAccount}"
+                                  FontSize="16"
+                                  AllowDrop="True"
+                                  MouseMove="ListView_MouseMove"
+                                  GiveFeedback="ListView_GiveFeedback"
+                                  DragEnter="ListView_DragEnter" DragLeave="ListView_DragEnter"
+                                  >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}"
+                                                    Width="auto"
+                                                    Header="Account"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Balance}"
+                                                    
+                                                    Header="Balance"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </ScrollViewer>
                 </Grid>
             </Border>
