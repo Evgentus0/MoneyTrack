@@ -27,7 +27,7 @@
         
 
         <ContextMenu  x:Key="RowMenu">
-            <MenuItem Header="Edit" Command="{Binding Path=UpdateTransactionCommand}" CommandParameter="{Binding}"/>
+            <MenuItem Header="Edit" Command="{Binding Path=UpdateTransactionCommand}" Click="MenuItem_Click_Edit_Transaction"/>
             <MenuItem Header="Delete" Command="{Binding Path=DeleteTransactionCommand}" CommandParameter="{Binding}"/>
             <MenuItem Header="Approve" Command="{Binding Path=ApprovePostponedTransactionCommnad}" CommandParameter="{Binding}">
                 <MenuItem.Style>
@@ -65,7 +65,7 @@
 
                     <StackPanel Margin="2" Grid.Column="0">
                         <Button Content="Add filter" Margin="10"
-                                Command="{Binding Path=AddFilterDialogCommand}">
+                                Click="Button_Click_AddFilter">
 
                         </Button>
                         <Button Content="Apply filters" Margin="10"
