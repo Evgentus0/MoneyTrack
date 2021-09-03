@@ -56,6 +56,11 @@ namespace MoneyTrack.WPF.Client.Views
 
                 var viewModel = (ManagingViewModel)DataContext;
 
+                var previousCategory = new CategoryModel
+                {
+                    Name = selectedCategory.Name
+                };
+
                 var dialogViewModel = new CategoryViewModel();
                 dialogViewModel.CategoryModel = selectedCategory;
 
@@ -76,8 +81,12 @@ namespace MoneyTrack.WPF.Client.Views
                             break;
                         case CloseDialogResult.Delete:
                             break;
-                        case CloseDialogResult.Done:
                         case CloseDialogResult.Cancel:
+                            var index = viewModel.Categories.IndexOf(selectedCategory);
+                            viewModel.Categories.Remove(selectedCategory);
+                            viewModel.Categories.Insert(index, previousCategory);
+                            break;
+                        case CloseDialogResult.Done:
                         default:
                             break;
                     }
@@ -145,6 +154,13 @@ namespace MoneyTrack.WPF.Client.Views
 
                 var viewModel = (ManagingViewModel)DataContext;
 
+                var previousAccount = new AccountModel
+                {
+                    Id = selectedAccount.Id,
+                    Name = selectedAccount.Name,
+                    Balance = selectedAccount.Balance
+                };
+
                 var dialogViewModel = new AccountViewModel();
                 dialogViewModel.AccountModel = selectedAccount;
 
@@ -160,6 +176,9 @@ namespace MoneyTrack.WPF.Client.Views
                     switch (operation)
                     {
                         case CloseDialogResult.Cancel:
+                            var index = viewModel.Accounts.IndexOf(selectedAccount);
+                            viewModel.Accounts.Remove(selectedAccount);
+                            viewModel.Accounts.Insert(index, previousAccount);
                             break;
                         case CloseDialogResult.Update:
                             viewModel.UpdateAccount(dialogViewModel.AccountModel);

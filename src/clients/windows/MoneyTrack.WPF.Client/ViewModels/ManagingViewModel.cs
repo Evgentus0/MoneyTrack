@@ -103,9 +103,10 @@ namespace MoneyTrack.WPF.Client.ViewModels
         }
         public void AddCategory(CategoryModel category)
         {
+            Categories.Add(category);
+
             Task.Run(async () =>
             {
-                Categories.Add(category);
                 var categoryDto = _mapper.Map<CategoryDto>(category);
                 await _categoryService.AddCategory(categoryDto);
             });
