@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace MoneyTrack.WPF.Client.Commands
+namespace MoneyTrack.Clients.Common.Commands
 {
     public class RelayCommand : ICommand
     {
         private Action<object> execute;
         private Func<object, bool> canExecute;
 
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
+        public event EventHandler CanExecuteChanged;
 
         public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {

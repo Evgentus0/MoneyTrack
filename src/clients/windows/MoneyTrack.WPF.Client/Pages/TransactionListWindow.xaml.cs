@@ -1,24 +1,13 @@
 ﻿using MaterialDesignThemes.Wpf;
+using MoneyTrack.Clients.Common.Models;
+using MoneyTrack.Clients.Common.Models.Operational;
+using MoneyTrack.Clients.Common.ViewModels;
 using MoneyTrack.Core.Models.Operational;
 using MoneyTrack.WPF.Client.Dialogs;
-using MoneyTrack.WPF.Client.Models;
-using MoneyTrack.WPF.Client.Models.Operational;
-using MoneyTrack.WPF.Client.ViewModels;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MoneyTrack.WPF.Client.Pages
 {

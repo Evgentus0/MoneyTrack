@@ -1,12 +1,8 @@
-﻿using MoneyTrack.WPF.Client.Models;
-using System;
-using System.Collections.Generic;
+﻿using MoneyTrack.Clients.Common.Models;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MoneyTrack.WPF.Client.ViewModels
+namespace MoneyTrack.Clients.Common.ViewModels
 {
     public class EditTransactionViewModel : BaseViewModel
     {

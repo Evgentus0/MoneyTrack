@@ -1,7 +1,7 @@
-﻿using MoneyTrack.WPF.Client.Models;
+﻿using MoneyTrack.Clients.Common.Models;
 using System.Threading.Tasks;
 
-namespace MoneyTrack.WPF.Client.ViewModels
+namespace MoneyTrack.Clients.Common.ViewModels
 {
     public abstract class BaseViewModel: BaseModel
     {

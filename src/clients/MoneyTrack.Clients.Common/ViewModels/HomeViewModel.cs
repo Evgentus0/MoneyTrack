@@ -1,16 +1,15 @@
 ﻿using AutoMapper;
+using MoneyTrack.Clients.Common.Commands;
+using MoneyTrack.Clients.Common.Models;
+using MoneyTrack.Clients.Common.Settings;
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
-using MoneyTrack.WPF.Client.Commands;
-using MoneyTrack.WPF.Client.Models;
-using MoneyTrack.WPF.Infrastructure.Settings;
-using System;
+using MoneyTrack.Core.Models.Operational;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using MoneyTrack.Core.Models.Operational;
 
-namespace MoneyTrack.WPF.Client.ViewModels
+namespace MoneyTrack.Clients.Common.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {

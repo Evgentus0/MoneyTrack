@@ -1,20 +1,13 @@
 ﻿using AutoMapper;
-using MaterialDesignThemes.Wpf;
+using MoneyTrack.Clients.Common.Models;
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.Models.Operational;
-using MoneyTrack.WPF.Client.Commands;
-using MoneyTrack.WPF.Client.Dialogs;
-using MoneyTrack.WPF.Client.Models;
-using MoneyTrack.WPF.Client.Models.Operational;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MoneyTrack.WPF.Client.ViewModels
+namespace MoneyTrack.Clients.Common.ViewModels
 {
     public class ManagingViewModel : BaseViewModel
     {

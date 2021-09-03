@@ -1,22 +1,16 @@
 ﻿using AutoMapper;
-using MaterialDesignThemes.Wpf;
+using MoneyTrack.Clients.Common.Commands;
+using MoneyTrack.Clients.Common.Models;
+using MoneyTrack.Clients.Common.Settings;
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.Models.Operational;
-using MoneyTrack.WPF.Client.Commands;
-using MoneyTrack.WPF.Client.Dialogs;
-using MoneyTrack.WPF.Client.Models;
-using MoneyTrack.WPF.Client.Models.Operational;
-using MoneyTrack.WPF.Infrastructure.Settings;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
-namespace MoneyTrack.WPF.Client.ViewModels
+namespace MoneyTrack.Clients.Common.ViewModels
 {
     public class TransactionListViewModel : BaseViewModel
     {
@@ -140,7 +134,7 @@ namespace MoneyTrack.WPF.Client.ViewModels
             TotalBalance = await _transactionService.CalculateTotalBalance(_dbRequest.Filters);
         }
 
-        internal void UpdateTransaction(TransactionModel transactionModel)
+        public void UpdateTransaction(TransactionModel transactionModel)
         {
             Task.Run(async () =>
             {

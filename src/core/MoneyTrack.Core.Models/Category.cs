@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MoneyTrack.Core.Models
+﻿namespace MoneyTrack.Core.Models
 {
     public class Category
     {

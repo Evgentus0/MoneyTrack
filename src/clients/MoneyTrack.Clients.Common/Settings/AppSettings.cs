@@ -1,4 +1,4 @@
-﻿namespace MoneyTrack.WPF.Infrastructure.Settings
+﻿namespace MoneyTrack.Clients.Common.Settings
 {
     public class AppSettings
     {

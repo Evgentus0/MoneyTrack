@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MoneyTrack.WPF.Client.Commands
+namespace MoneyTrack.Clients.Common.Commands
 {
     public class AsyncCommand : AsyncCommandBase
     {

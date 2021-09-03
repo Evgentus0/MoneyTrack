@@ -1,13 +1,10 @@
-﻿using MoneyTrack.WPF.Client.Commands;
-using MoneyTrack.WPF.Client.Models;
-using System;
+﻿using MoneyTrack.Clients.Common.Commands;
+using MoneyTrack.Clients.Common.Models;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MoneyTrack.WPF.Client.ViewModels
+namespace MoneyTrack.Clients.Common.ViewModels
 {
     public class PagingViewModel : BaseViewModel
     {

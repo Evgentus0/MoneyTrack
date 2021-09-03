@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MoneyTrack.WPF.Client.Models
+namespace MoneyTrack.Clients.Common.Models
 {
     public class AccountModel : BaseModel
     {

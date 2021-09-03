@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using MoneyTrack.Clients.Common.Models;
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.Models.Operational;
-using MoneyTrack.WPF.Client.Models;
 
-namespace MoneyTrack.WPF.Client.Automapper
+namespace MoneyTrack.Clients.Common.Automapper
 {
     public class DtoModelsMapperProfile: Profile
     {

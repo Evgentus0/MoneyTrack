@@ -1,12 +1,7 @@
 ﻿using LiteDB;
 using MoneyTrack.Core.DomainServices.Data;
 using MoneyTrack.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.Data.LiteDB
 {

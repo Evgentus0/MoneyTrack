@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace MoneyTrack.WPF.Client.ViewModels
+namespace MoneyTrack.Clients.Common.ViewModels
 {
     public class AnalyticsViewModel : BaseViewModel
     {

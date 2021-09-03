@@ -5,8 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MoneyTrack.WPF.Client.Views"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
-             xmlns:viewModels="clr-namespace:MoneyTrack.WPF.Client.ViewModels"
-             xmlns:models="clr-namespace:MoneyTrack.WPF.Client.Models"
              xmlns:converters="clr-namespace:MoneyTrack.WPF.Client.Converters"
              xmlns:controls="clr-namespace:MoneyTrack.WPF.Client.Controls"
              xmlns:v="clr-namespace:MoneyTrack.WPF.Client.Validation"

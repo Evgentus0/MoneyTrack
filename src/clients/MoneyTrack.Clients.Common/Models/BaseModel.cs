@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace MoneyTrack.WPF.Client.Models
+namespace MoneyTrack.Clients.Common.Models
 {
     public abstract class BaseModel : INotifyPropertyChanged, IDataErrorInfo
     {

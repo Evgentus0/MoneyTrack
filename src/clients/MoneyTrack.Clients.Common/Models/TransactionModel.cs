@@ -1,8 +1,8 @@
-﻿using MoneyTrack.WPF.Client.Commands;
+﻿using MoneyTrack.Clients.Common.Commands;
 using System;
 using System.Collections.Generic;
 
-namespace MoneyTrack.WPF.Client.Models
+namespace MoneyTrack.Clients.Common.Models
 {
     public class TransactionModel : BaseModel
     {
@@ -171,7 +171,7 @@ namespace MoneyTrack.WPF.Client.Models
 
         public static event EventHandler<int> PostponedTransactionApproved;
 
-        internal string ValidateModel()
+        public string ValidateModel()
         {
             var result = string.Empty;
 

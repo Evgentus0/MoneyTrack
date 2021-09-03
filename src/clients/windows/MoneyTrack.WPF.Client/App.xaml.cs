@@ -1,15 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MoneyTrack.Clients.Common.Automapper;
+using MoneyTrack.Clients.Common.Settings;
+using MoneyTrack.Clients.Common.ViewModels;
 using MoneyTrack.Core.AppServices;
 using MoneyTrack.Core.AppServices.Automapper;
 using MoneyTrack.Core.Data.LiteDB;
 using MoneyTrack.Core.DomainServices;
-using MoneyTrack.WPF.Client.Automapper;
-using MoneyTrack.WPF.Client.ViewModels;
-using MoneyTrack.WPF.Infrastructure.Settings;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Windows;
 
 namespace MoneyTrack.WPF.Client

@@ -1,11 +1,7 @@
-﻿using MoneyTrack.WPF.Client.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using MoneyTrack.Clients.Common.Models;
 using System.Threading.Tasks;
 
-namespace MoneyTrack.WPF.Client.ViewModels
+namespace MoneyTrack.Clients.Common.ViewModels
 {
     public class AccountViewModel: BaseViewModel
     {

@@ -1,4 +1,4 @@
-﻿using MoneyTrack.WPF.Client.ViewModels;
+﻿using MoneyTrack.Clients.Common.ViewModels;
 using MoneyTrack.WPF.Client.Views;
 using System.Windows;
 
