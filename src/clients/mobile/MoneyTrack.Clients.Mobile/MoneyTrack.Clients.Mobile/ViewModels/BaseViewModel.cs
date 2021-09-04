@@ -10,7 +10,7 @@ namespace MoneyTrack.Clients.Mobile.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        public IDataStore<Item> DataStore => App.GetService<IDataStore<Item>>();
 
         bool isBusy = false;
         public bool IsBusy

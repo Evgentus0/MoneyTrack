@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Foundation;
+using Microsoft.Extensions.DependencyInjection;
 using UIKit;
 
 namespace MoneyTrack.Clients.Mobile.iOS
@@ -23,9 +24,14 @@ namespace MoneyTrack.Clients.Mobile.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
-            LoadApplication(new App());
+            LoadApplication(new App(AddServices));
 
             return base.FinishedLaunching(app, options);
+        }
+
+        // add platform specific services
+        static void AddServices(IServiceCollection services)
+        {
         }
     }
 }

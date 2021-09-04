@@ -14,6 +14,7 @@ namespace MoneyTrack.Clients.Mobile.Views
 
         public NewItemPage()
         {
+
             InitializeComponent();
             BindingContext = new NewItemViewModel();
         }
