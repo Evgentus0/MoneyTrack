@@ -5,6 +5,7 @@ using MoneyTrack.Clients.Common.Settings;
 using MoneyTrack.Clients.Common.ViewModels;
 using MoneyTrack.Core.AppServices;
 using MoneyTrack.Core.AppServices.Automapper;
+using MoneyTrack.Core.AppServices.Exceptions;
 using MoneyTrack.Core.Data.LiteDB;
 using MoneyTrack.Core.DomainServices;
 using System;
@@ -79,7 +80,7 @@ namespace MoneyTrack.WPF.Client
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            if(e.Exception is ValidationException)
+            if(e.Exception is AppValidationException)
             {
                 e.Handled = true;
                 MessageBox.Show(e.Exception.Message);

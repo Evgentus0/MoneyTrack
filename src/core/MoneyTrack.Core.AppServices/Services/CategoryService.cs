@@ -42,7 +42,7 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             Category categoryToUpdate = await _categoryRepository.GetById(categoryDto.Id);
 
-            if (categoryToUpdate is not null)
+            if (categoryToUpdate != null)
             {
                 if (!string.IsNullOrEmpty(categoryDto.Name))
                 {

@@ -49,7 +49,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             var categories = _dbProvider.Categories.Query;
 
-            if(filters is not null)
+            if(filters != null)
             {
                 foreach (var f in filters)
                 {

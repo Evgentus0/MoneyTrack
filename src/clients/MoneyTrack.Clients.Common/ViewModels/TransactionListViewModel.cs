@@ -91,7 +91,8 @@ namespace MoneyTrack.Clients.Common.ViewModels
 
         public AsyncCommand ApplyFiltersCommand 
         {
-            get => _applyFiltersCommand ??= new AsyncCommand(async obj =>
+            get => _applyFiltersCommand != null ? _applyFiltersCommand
+                : _applyFiltersCommand = new AsyncCommand(async obj =>
             {
                 await SetTransactions();
             });

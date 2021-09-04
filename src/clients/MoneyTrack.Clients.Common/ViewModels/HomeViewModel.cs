@@ -146,7 +146,8 @@ namespace MoneyTrack.Clients.Common.ViewModels
 
         public AsyncCommand AddTransactionCommand
         {
-            get => _addTransaction ??= new AsyncCommand(async obj =>
+            get => _addTransaction != null ? _addTransaction 
+                : _addTransaction = new AsyncCommand(async obj =>
                     {
                         var transactionEntity = _mapper.Map<TransactionDto>(NewTransaction);
                         await _transactionService.Add(transactionEntity);
