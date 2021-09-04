@@ -73,7 +73,8 @@ namespace MoneyTrack.Clients.Common.ViewModels
         {
             get
             {
-                return _previousPage ??= new RelayCommand(obj =>
+                return _previousPage != null ? _previousPage
+                    : _previousPage = new RelayCommand(obj =>
                 {
                     PagingModel.CurrentPage--;
                 });
@@ -84,7 +85,8 @@ namespace MoneyTrack.Clients.Common.ViewModels
         {
             get
             {
-                return _nextPage ??= new RelayCommand(obj =>
+                return _nextPage != null ? _nextPage
+                    : _nextPage = new RelayCommand(obj =>
                 {
                     PagingModel.CurrentPage++;
                 });

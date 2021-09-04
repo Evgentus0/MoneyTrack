@@ -107,7 +107,8 @@ namespace MoneyTrack.Clients.Common.Models
         private Dictionary<string, Func<string>> _propertyValidation;
         private bool _isPostponed;
 
-        private Dictionary<string, Func<string>> PropertyValidation => _propertyValidation ??= new Dictionary<string, Func<string>>
+        private Dictionary<string, Func<string>> PropertyValidation => _propertyValidation != null ? _propertyValidation
+            : _propertyValidation = new Dictionary<string, Func<string>>
         {
             [nameof(Quantity)] = new Func<string>(() =>
             {
@@ -148,7 +149,8 @@ namespace MoneyTrack.Clients.Common.Models
 
         public RelayCommand DeleteTransactionCommand
         {
-            get => _deleteTransactionCommand ??= new RelayCommand(obj =>
+            get => _deleteTransactionCommand != null ? _deleteTransactionCommand
+                : _deleteTransactionCommand = new RelayCommand(obj =>
            {
                var transaction = (TransactionModel)obj;
 
@@ -160,7 +162,8 @@ namespace MoneyTrack.Clients.Common.Models
 
         public RelayCommand ApprovePostponedTransactionCommnad
         {
-            get => _approvePostponedTransactionCommnad ??= new RelayCommand(obj =>
+            get => _approvePostponedTransactionCommnad != null ? _approvePostponedTransactionCommnad
+                : _approvePostponedTransactionCommnad = new RelayCommand(obj =>
             {
                 var transaction = (TransactionModel)obj;
                 transaction.IsPostponed = false;

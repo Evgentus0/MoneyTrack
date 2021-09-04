@@ -32,7 +32,8 @@ namespace MoneyTrack.Clients.Common.Models
         private Dictionary<string, Func<string>> _propertyValidation;
         private bool _isSystem;
 
-        private Dictionary<string, Func<string>> PropertyValidation => _propertyValidation ??= new Dictionary<string, Func<string>>
+        private Dictionary<string, Func<string>> PropertyValidation => _propertyValidation != null ? _propertyValidation 
+            : _propertyValidation = new Dictionary<string, Func<string>>
         {
             [nameof(Id)] = new Func<string>(() =>
             {
