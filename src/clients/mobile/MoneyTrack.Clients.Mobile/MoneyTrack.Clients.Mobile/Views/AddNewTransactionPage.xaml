@@ -15,6 +15,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        
+        <Entry Grid.Row="0" Placeholder="How much" Text="{Binding Path=NewTransaction.Quantity}"/>
+        <Entry Grid.Row="1" Placeholder="Description" Text="{Binding Path=NewTransaction.Description}"/>
+        <Picker Grid.Row="2" ItemsSource="{Binding Path=Categories}" SelectedItem="{Binding Path=NewTransaction.Category}"/>
+        <Picker Grid.Row="3" ItemsSource="{Binding Path=Accounts}" SelectedItem="{Binding Path=NewTransaction.Account}"/>
     </Grid>
 </ContentPage>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoneyTrack.Clients.Common.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,11 @@ namespace MoneyTrack.Clients.Mobile.Views
         public AddNewTransactionPage()
         {
             InitializeComponent();
+            // need to add sql lite db
+            var viewModel = App.GetViewModel<HomeViewModel>();
+
+            BindingContext = viewModel;
+            Task.Run(viewModel.Initialize);
         }
     }
 }
