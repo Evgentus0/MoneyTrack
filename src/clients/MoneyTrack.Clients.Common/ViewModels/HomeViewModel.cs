@@ -88,6 +88,8 @@ namespace MoneyTrack.Clients.Common.ViewModels
             _settings = settings;
             _mapper = mapper;
             TransactionListViewModel = transactionListViewModel;
+
+            Title = "Home";
         }
 
         public async override Task Initialize()

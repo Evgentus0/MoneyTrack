@@ -18,4 +18,10 @@
     <ProjectReference Include="..\..\..\..\core\data\MoneyTrack.Core.Data.LiteDB\MoneyTrack.Core.Data.LiteDB.csproj" />
     <ProjectReference Include="..\..\..\MoneyTrack.Clients.Common\MoneyTrack.Clients.Common.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\AddNewTransactionPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

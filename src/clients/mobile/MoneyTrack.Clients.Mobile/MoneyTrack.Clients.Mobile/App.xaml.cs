@@ -16,7 +16,6 @@ namespace MoneyTrack.Clients.Mobile
 {
     public partial class App : Application
     {
-
         public AppSettings Settings { get; private set; }
         public static IServiceProvider ServiceProvider { get; private set; }
 
