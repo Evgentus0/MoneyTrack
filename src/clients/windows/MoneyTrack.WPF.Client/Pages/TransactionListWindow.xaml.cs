@@ -41,8 +41,12 @@ namespace MoneyTrack.WPF.Client.Pages
         private async void Button_Click_AddFilter(object sender, RoutedEventArgs e)
         {
             var viewModel = (TransactionListViewModel)DataContext;
-           
-            var dialogViewModel = new FilterViewModel(viewModel.PropertiesList, Enum.GetNames(typeof(Operations)).ToList());
+
+            var button = (Button)sender;
+            var filterOp = button.Tag != null ? (FilterOp)Enum.Parse(typeof(FilterOp), (string)button.Tag)
+                : FilterOp.And;
+
+            var dialogViewModel = new FilterViewModel(viewModel.PropertiesList, filterOp);
 
             var view = new AddNewFilterDialog
             {
@@ -56,6 +60,7 @@ namespace MoneyTrack.WPF.Client.Pages
                 if (doAdd)
                 {
                     viewModel.Filters.Add(dialogViewModel.FilterModel);
+                    viewModel.IsFirstFilter = false;
                 }
             }
         }

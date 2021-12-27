@@ -55,13 +55,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
                 .Include(nameof(Account))
                 .Include(nameof(Category));
 
-            if(request.Filters != null)
-            {
-                foreach (var filter in request.Filters)
-                {
-                    result = result.Where(filter);
-                }
-            }
+            result = result.Where(request.Filters);
 
             if(request.Sorting != null)
             {
@@ -90,10 +84,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             var result = _dbProvider.Transactions.Query;
 
-            foreach (var filter in filters)
-            {
-                result = result.Where(filter);
-            }
+            result = result.Where(filters);
 
             return await result.SumDecimal(propName);
         }
@@ -102,10 +93,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             var result = _dbProvider.Transactions.Query;
 
-            foreach (var filter in filters)
-            {
-                result = result.Where(filter);
-            }
+            result = result.Where(filters);
 
             return await result.Count();
         }

@@ -5,6 +5,7 @@ using MoneyTrack.Clients.Common.Settings;
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.Models.Operational;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -55,6 +56,10 @@ namespace MoneyTrack.Clients.Common.ViewModels
                 _filterToDelete = value;
                 Filters.Remove(value);
                 OnPropertyChanged(nameof(FilterToDelete));
+                if (Filters.Count < 1)
+                {
+                    IsFirstFilter = true;
+                }
             }
         }
 
@@ -87,7 +92,27 @@ namespace MoneyTrack.Clients.Common.ViewModels
             }
         }
 
-        public List<string> PropertiesList { get; private set; }
+        public bool IsFirstFilter 
+        {
+            get => _isFirstFilter;
+            set
+            {
+                _isFirstFilter = value;
+                OnPropertyChanged(nameof(IsFirstFilter));
+                IsNotFirstFilter = !value;
+            }
+        }
+
+        public bool IsNotFirstFilter
+        {
+            get => !_isFirstFilter;
+            set
+            {
+                OnPropertyChanged(nameof(IsNotFirstFilter));
+            }
+        }
+
+        public Dictionary<string, Type> PropertiesList { get; private set; }
 
         public AsyncCommand ApplyFiltersCommand 
         {
@@ -167,6 +192,8 @@ namespace MoneyTrack.Clients.Common.ViewModels
 
             Paging.PagingModel.CurrentPageChanged += PagingModel_CurrentPageChanged;
 
+            IsFirstFilter = true;
+
             InitPropLists();
 
             Filters = new ObservableCollection<FilterModel>();
@@ -202,20 +229,21 @@ namespace MoneyTrack.Clients.Common.ViewModels
         private FilterModel _filterToDelete;
         private decimal _totalBalance;
         private AsyncCommand _applyFiltersCommand;
+        private bool _isFirstFilter;
 
         private void InitPropLists()
         {
-            PropertiesList = new List<string>
+            PropertiesList = new Dictionary<string, Type>
             {
-                nameof(TransactionModel.Quantity),
-                nameof(TransactionModel.Description),
-                nameof(TransactionModel.Category) + "." + nameof(TransactionModel.Category.Name),
-                nameof(TransactionModel.Account) + "." + nameof(TransactionModel.Account.Name),
-                nameof(TransactionModel.AddedDttm),
+                [nameof(TransactionModel.Quantity)] = typeof(decimal),
+                [nameof(TransactionModel.Description)] = typeof(string),
+                [nameof(TransactionModel.Category) + "." + nameof(TransactionModel.Category.Name)] = typeof(string),
+                [nameof(TransactionModel.Account) + "." + nameof(TransactionModel.Account.Name)] = typeof(string),
+                [nameof(TransactionModel.AddedDttm)] = typeof(DateTimeOffset),
             };
 
             _propSortingDirect = new Dictionary<string, bool>();
-            foreach (var item in PropertiesList)
+            foreach (var item in PropertiesList.Keys.ToList())
             {
                 _propSortingDirect.Add(item, true);
             }

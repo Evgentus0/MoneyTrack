@@ -1,5 +1,9 @@
 ﻿using MoneyTrack.Clients.Common.Models;
+using MoneyTrack.Core.DomainServices.Attributes;
+using MoneyTrack.Core.Models.Operational;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MoneyTrack.Clients.Common.ViewModels
@@ -10,6 +14,8 @@ namespace MoneyTrack.Clients.Common.ViewModels
         private List<string> _properties;
         private List<string> _operations;
         private string _errors;
+
+        private Dictionary<string, Type> _propertyTypes;
 
         public FilterModel FilterModel
         {
@@ -51,13 +57,23 @@ namespace MoneyTrack.Clients.Common.ViewModels
             }
         }
 
-        public FilterViewModel(List<string> properties, List<string> operations)
+        public FilterViewModel(Dictionary<string, Type> properties, FilterOp filterOp)
         {
-            Properties = properties;
-            Operations = operations;
-            FilterModel = new FilterModel();
+            _propertyTypes = properties;
+
+            Properties = properties.Keys.ToList();
+            FilterModel = new FilterModel
+            {
+                FilterOp = filterOp
+            };
+
+            FilterModel.PropertyUpdated += FilterModel_PropertyUpdated;
         }
 
+        private void FilterModel_PropertyUpdated(object sender, string e)
+        {
+            Operations = Filter.GetAvailableOperations(_propertyTypes[e]).Select(x => x.ToString()).ToList();
+        }
 
         public override string this[string columnName] => string.Empty;
 

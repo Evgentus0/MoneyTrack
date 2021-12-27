@@ -24,6 +24,7 @@
 
     <local:BaseWindow.Resources>
         <converters:CollapseIfEmptyConverter x:Key="CollapseIfEmptyConverter"/>
+        <converters:CollapseIfCheckedConverter x:Key="CollapseIfCheckedConverter"/>
         
 
         <ContextMenu  x:Key="RowMenu">
@@ -65,9 +66,21 @@
 
                     <StackPanel Margin="2" Grid.Column="0">
                         <Button Content="Add filter" Margin="10"
-                                Click="Button_Click_AddFilter">
+                                Click="Button_Click_AddFilter"
+                                Visibility="{Binding Path=IsNotFirstFilter, Converter={StaticResource CollapseIfCheckedConverter}}">
 
                         </Button>
+                        <StackPanel Orientation="Horizontal"
+                                    Visibility="{Binding Path=IsFirstFilter, Converter={StaticResource CollapseIfCheckedConverter}}">
+                            <Button Content="Add Or" Margin="10"
+                                    Click="Button_Click_AddFilter"
+                                    Tag="Or">
+                            </Button>
+                            <Button Content="Add And" Margin="5"
+                                    Click="Button_Click_AddFilter"
+                                    Tag="And">
+                            </Button>
+                        </StackPanel>
                         <Button Content="Apply filters" Margin="10"
                                 Command="{Binding Path=ApplyFiltersCommand}">
                             

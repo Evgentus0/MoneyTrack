@@ -1,4 +1,5 @@
 ﻿using MoneyTrack.Core.Models.Operational;
+using System;
 
 namespace MoneyTrack.Clients.Common.Models
 {
@@ -7,6 +8,7 @@ namespace MoneyTrack.Clients.Common.Models
         private string _propName;
         private string _value;
         private Operations _operation;
+        private FilterOp _filterOp;
 
         public override string this[string columnName] => string.Empty;
 
@@ -17,6 +19,8 @@ namespace MoneyTrack.Clients.Common.Models
             {
                 _propName = value;
                 OnPropertyChanged(nameof(PropName));
+
+                PropertyUpdated.Invoke(this, value);
             }
         }
         public string Value
@@ -38,6 +42,16 @@ namespace MoneyTrack.Clients.Common.Models
             }
         }
 
+        public FilterOp FilterOp 
+        {
+            get => _filterOp;
+            set
+            {
+                _filterOp = value;
+                OnPropertyChanged(nameof(FilterOp));
+            }
+        }
+
         public string ValidateModel()
         {
             var result = string.Empty;
@@ -54,5 +68,7 @@ namespace MoneyTrack.Clients.Common.Models
 
             return result;
         }
+
+        public event EventHandler<string> PropertyUpdated;
     }
 }

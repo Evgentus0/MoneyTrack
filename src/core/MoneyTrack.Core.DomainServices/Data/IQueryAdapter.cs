@@ -6,6 +6,7 @@ namespace MoneyTrack.Core.DomainServices.Data
 {
     public interface IQueryAdapter<T>
     {
+        IQueryAdapter<T> Where(List<Filter> filters);
         IQueryAdapter<T> Where(Filter filter);
         IQueryAdapter<T> OrderByDesc(string propName);
         IQueryAdapter<T> OrderBy(string propName);
