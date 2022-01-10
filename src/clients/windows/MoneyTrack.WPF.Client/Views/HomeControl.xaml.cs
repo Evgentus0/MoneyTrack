@@ -1,7 +1,6 @@
-﻿using MoneyTrack.WPF.Client.Pages;
-using MoneyTrack.WPF.Client.ViewModels;
+﻿using MoneyTrack.Clients.Common.ViewModels;
+using MoneyTrack.WPF.Client.Pages;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace MoneyTrack.WPF.Client.Views
 {

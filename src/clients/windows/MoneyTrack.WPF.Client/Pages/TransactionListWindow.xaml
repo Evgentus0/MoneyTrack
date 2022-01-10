@@ -24,10 +24,11 @@
 
     <local:BaseWindow.Resources>
         <converters:CollapseIfEmptyConverter x:Key="CollapseIfEmptyConverter"/>
+        <converters:CollapseIfCheckedConverter x:Key="CollapseIfCheckedConverter"/>
         
 
         <ContextMenu  x:Key="RowMenu">
-            <MenuItem Header="Edit" Command="{Binding Path=UpdateTransactionCommand}" CommandParameter="{Binding}"/>
+            <MenuItem Header="Edit" Command="{Binding Path=UpdateTransactionCommand}" Click="MenuItem_Click_Edit_Transaction"/>
             <MenuItem Header="Delete" Command="{Binding Path=DeleteTransactionCommand}" CommandParameter="{Binding}"/>
             <MenuItem Header="Approve" Command="{Binding Path=ApprovePostponedTransactionCommnad}" CommandParameter="{Binding}">
                 <MenuItem.Style>
@@ -65,9 +66,21 @@
 
                     <StackPanel Margin="2" Grid.Column="0">
                         <Button Content="Add filter" Margin="10"
-                                Command="{Binding Path=AddFilterDialogCommand}">
+                                Click="Button_Click_AddFilter"
+                                Visibility="{Binding Path=IsNotFirstFilter, Converter={StaticResource CollapseIfCheckedConverter}}">
 
                         </Button>
+                        <StackPanel Orientation="Horizontal"
+                                    Visibility="{Binding Path=IsFirstFilter, Converter={StaticResource CollapseIfCheckedConverter}}">
+                            <Button Content="Add Or" Margin="10"
+                                    Click="Button_Click_AddFilter"
+                                    Tag="Or">
+                            </Button>
+                            <Button Content="Add And" Margin="5"
+                                    Click="Button_Click_AddFilter"
+                                    Tag="And">
+                            </Button>
+                        </StackPanel>
                         <Button Content="Apply filters" Margin="10"
                                 Command="{Binding Path=ApplyFiltersCommand}">
                             

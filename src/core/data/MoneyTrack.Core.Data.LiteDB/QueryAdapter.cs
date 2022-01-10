@@ -1,11 +1,10 @@
 ﻿using LiteDB;
 using MoneyTrack.Core.DomainServices.Data;
 using MoneyTrack.Core.Models.Operational;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using MoneyTrack.Core.DomainServices.Attributes;
 
 namespace MoneyTrack.Core.Data.LiteDB
 {
@@ -42,6 +41,25 @@ namespace MoneyTrack.Core.Data.LiteDB
         public async Task<T> First()
         {
             return await Task.Run(() => _queryable.FirstOrDefault());
+        }
+
+        public IQueryAdapter<T> Where(List<Filter> filters)
+        {
+            if(filters != null && filters.Count > 0)
+            {
+                var expression = filters.First().ToBsonExpression();
+                foreach (var filter in filters.Skip(1))
+                {
+                    expression += $" {filter.FilterOp.GetDescription()} ";
+                    expression += $" {filter.ToBsonExpression()} ";
+                }
+
+                var bson = BsonExpression.Create(expression);
+
+                return new QueryAdapter<T>(_queryable.Where(bson));
+            }
+
+            return new QueryAdapter<T>(_queryable);
         }
 
         public IQueryAdapter<T> Where(Filter filter)

@@ -52,7 +52,7 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             Account accountToUpdate = await _accountRepository.GetById(accountDto.Id);
 
-            if (accountToUpdate is not null)
+            if (accountToUpdate != null)
             {
                 if (!string.IsNullOrEmpty(accountDto.Name))
                 {

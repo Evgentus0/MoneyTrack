@@ -1,12 +1,7 @@
 ﻿using LiteDB;
 using MoneyTrack.Core.DomainServices.Data;
 using MoneyTrack.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.Data.LiteDB
 {
@@ -15,16 +10,16 @@ namespace MoneyTrack.Core.Data.LiteDB
         private LiteDatabase _liteDatabase;
 
         private ICollectionAdapter<Transaction> _transactions;
-        public ICollectionAdapter<Transaction> Transactions => _transactions 
-            ??= new CollectionAdapter<Transaction>(_liteDatabase.GetCollection<Transaction>());
+        public ICollectionAdapter<Transaction> Transactions => _transactions != null ? _transactions
+            : _transactions =  new CollectionAdapter<Transaction>(_liteDatabase.GetCollection<Transaction>());
 
         private ICollectionAdapter<Category> _categories;
-        public ICollectionAdapter<Category> Categories => _categories ??= 
-            new CollectionAdapter<Category>(_liteDatabase.GetCollection<Category>());
+        public ICollectionAdapter<Category> Categories => _categories != null ? _categories
+            : _categories = new CollectionAdapter<Category>(_liteDatabase.GetCollection<Category>());
 
         private ICollectionAdapter<Account> _accounts;
-        public ICollectionAdapter<Account> Accounts => _accounts ??= 
-            new CollectionAdapter<Account>(_liteDatabase.GetCollection<Account>());
+        public ICollectionAdapter<Account> Accounts => _accounts != null ? _accounts
+            : _accounts = new CollectionAdapter<Account>(_liteDatabase.GetCollection<Account>());
 
         public DbProvider(string connectionString)
         {

@@ -1,9 +1,4 @@
-﻿using MoneyTrack.WPF.Client.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MoneyTrack.Clients.Common.ViewModels;
 using System.Windows;
 
 namespace MoneyTrack.WPF.Client.Pages

@@ -1,7 +1,6 @@
 ﻿using MoneyTrack.Core.DomainServices.Data;
 using MoneyTrack.Core.Models;
 using MoneyTrack.Core.Models.Operational;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -38,10 +37,10 @@ namespace MoneyTrack.Core.DomainServices.Repositories
 
         public async Task<Category> GetById(int id)
         {
-            return await _dbProvider.Categories.Query.Where(new Models.Operational.Filter
+            return await _dbProvider.Categories.Query.Where(new Filter
             {
                 PropName = nameof(id),
-                Operation = Models.Operational.Operations.Eq,
+                Operation = Operations.Eq,
                 Value = id.ToString()
             }).First();
         }
@@ -50,13 +49,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             var categories = _dbProvider.Categories.Query;
 
-            if(filters is not null)
-            {
-                foreach (var f in filters)
-                {
-                    categories = categories.Where(f);
-                }
-            }
+            categories = categories.Where(filters);
 
             return await categories.ToList();
         }

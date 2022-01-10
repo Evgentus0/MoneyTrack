@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using MoneyTrack.Core.AppServices.DTOs;
+using MoneyTrack.Core.AppServices.Exceptions;
 using MoneyTrack.Core.AppServices.Interfaces;
 using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
 using MoneyTrack.Core.Models.Operational;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.AppServices.Services
@@ -33,7 +32,7 @@ namespace MoneyTrack.Core.AppServices.Services
             var validationError = transaction.GetErrorString();
             if (!string.IsNullOrEmpty(validationError))
             {
-                throw new ValidationException(validationError);
+                throw new AppValidationException(validationError);
             }
 
             if (!transaction.IsPostponed)
@@ -78,9 +77,9 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             var transactionToUpdate = await _transactionRepository.GetById(transaction.Id);
 
-            if (transactionToUpdate is not null)
+            if (transactionToUpdate != null)
             {
-                if (transaction.Account is not null && transaction.Account.Id > 0 && transaction.Account.Id != transactionToUpdate.Account.Id)
+                if (transaction.Account != null && transaction.Account.Id > 0 && transaction.Account.Id != transactionToUpdate.Account.Id)
                 {
                     var transactionQuantity = transactionToUpdate.Quantity;
 
@@ -109,7 +108,7 @@ namespace MoneyTrack.Core.AppServices.Services
                 if (!string.IsNullOrEmpty(transaction.Description))
                     transactionToUpdate.Description = transaction.Description;
 
-                if (transaction.Category is not null && transaction.Category.Id > 0)
+                if (transaction.Category != null && transaction.Category.Id > 0)
                     transactionToUpdate.Category.Id = transaction.Category.Id;
 
                 if (transaction.AddedDttm.HasValue && transaction.AddedDttm.Value > Transaction.CutOffDate)
@@ -139,7 +138,7 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             var transaction = await _transactionRepository.GetById(id);
 
-            if(transaction is not null)
+            if(transaction != null)
             {
                 if (transaction.IsPostponed)
                 {

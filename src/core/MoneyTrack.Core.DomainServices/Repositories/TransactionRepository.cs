@@ -3,7 +3,6 @@ using MoneyTrack.Core.Models;
 using MoneyTrack.Core.Models.Operational;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.DomainServices.Repositories
@@ -35,7 +34,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             var result = _dbProvider.Transactions.Query.Where(filter);
             if(result is null)
             {
-                throw new ArgumentException($"Transaction with id {id} is not exist");
+                throw new ArgumentException($"Transaction with id {id} != exist");
             }
             return await result.First();
         }
@@ -56,15 +55,9 @@ namespace MoneyTrack.Core.DomainServices.Repositories
                 .Include(nameof(Account))
                 .Include(nameof(Category));
 
-            if(request.Filters is not null)
-            {
-                foreach (var filter in request.Filters)
-                {
-                    result = result.Where(filter);
-                }
-            }
+            result = result.Where(request.Filters);
 
-            if(request.Sorting is not null)
+            if(request.Sorting != null)
             {
                 switch (request.Sorting.Direction)
                 {
@@ -79,7 +72,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
                 }
             }
 
-            if(request.Paging is not null)
+            if(request.Paging != null)
             {
                 result = result.Skip(request.Paging.PageSize * (request.Paging.CurrentPage - 1)).Take(request.Paging.PageSize);
             }
@@ -91,10 +84,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             var result = _dbProvider.Transactions.Query;
 
-            foreach (var filter in filters)
-            {
-                result = result.Where(filter);
-            }
+            result = result.Where(filters);
 
             return await result.SumDecimal(propName);
         }
@@ -103,10 +93,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             var result = _dbProvider.Transactions.Query;
 
-            foreach (var filter in filters)
-            {
-                result = result.Where(filter);
-            }
+            result = result.Where(filters);
 
             return await result.Count();
         }

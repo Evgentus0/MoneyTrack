@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\core\data\MoneyTrack.Core.Data.LiteDB\MoneyTrack.Core.Data.LiteDB.csproj" />
     <ProjectReference Include="..\..\..\core\MoneyTrack.Core.AppServices\MoneyTrack.Core.AppServices.csproj" />
+    <ProjectReference Include="..\..\MoneyTrack.Clients.Common\MoneyTrack.Clients.Common.csproj" />
     <ProjectReference Include="..\MoneyTrack.WPF.Infrastructure\MoneyTrack.WPF.Infrastructure.csproj" />
   </ItemGroup>
 
