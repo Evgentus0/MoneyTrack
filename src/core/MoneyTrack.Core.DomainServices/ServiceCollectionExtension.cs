@@ -10,8 +10,6 @@ namespace MoneyTrack.Core.DomainServices
             services.AddScoped<AccountRepository>();
             services.AddScoped<CategoryRepository>();
             services.AddScoped<TransactionRepository>();
-
-            services.AddScoped<UnitOfWork>();
         }
     }
 }
