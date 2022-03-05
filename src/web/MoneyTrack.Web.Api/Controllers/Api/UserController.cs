@@ -23,10 +23,10 @@ namespace MoneyTrack.Web.Api.Controllers.Api
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> SignUp(UserModel user)
+        public async Task<IActionResult> SignUp(SignUpRequest request)
         {
-            var userDto = _mapper.Map<UserDto>(user);
-            ServiceModels.SignInResult signInResult = await _userService.SignUp(userDto);
+            var userDto = _mapper.Map<UserDto>(request.User);
+            ServiceModels.SignInResult signInResult = await _userService.SignUp(userDto, request.Passwords);
             var response = _mapper.Map<SignInResponse>(signInResult);
 
             return Ok(response);

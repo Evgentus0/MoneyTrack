@@ -86,7 +86,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
 
             result = result.Where(filters);
 
-            return await result.SumDecimal(propName);
+            return await result.Sum<decimal>(propName);
         }
 
         public async Task<int> CountTrasactions(List<Filter> filters)
