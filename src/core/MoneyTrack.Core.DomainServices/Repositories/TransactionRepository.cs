@@ -34,7 +34,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             var result = _dbProvider.Transactions.Query.Where(filter);
             if(result is null)
             {
-                throw new ArgumentException($"Transaction with id {id} != exist");
+                return null;
             }
             return await result.First();
         }

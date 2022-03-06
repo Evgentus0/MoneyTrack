@@ -122,6 +122,11 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             var transaction = await _transactionRepository.GetById(id);
 
+            if(transaction is null)
+            {
+                return;
+            }
+
             var account = await _accountRepository.GetById(transaction.Account.Id);
             account.Balance -= transaction.Quantity;
             await _accountRepository.Update(account);

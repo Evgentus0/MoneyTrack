@@ -35,8 +35,8 @@ namespace MoneyTrack.Web.Api.Controllers.Api
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("sign-up")]
-        public async Task<IActionResult> SignUp(SignUpRequest request)
+        [Route("signUp")]
+        public async Task<IActionResult> SignUp([FromBody]SignUpRequest request)
         {
             var userDto = _mapper.Map<UserDto>(request.User);
             userDto.Roles = new List<string> { UserRoles.User };
@@ -49,8 +49,8 @@ namespace MoneyTrack.Web.Api.Controllers.Api
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("sign-in")]
-        public async Task<IActionResult> SignIn(SignInRequest request)
+        [Route("signIn")]
+        public async Task<IActionResult> SignIn([FromBody]SignInRequest request)
         {
             var userDto = await _userService.SignIn(request.Login, request.Password);
             var response = GetResponse(userDto);
