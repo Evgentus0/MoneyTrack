@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MoneyTrack.Web.Infrastructure.Settings
 {
-    public class AppSettings
+    public class AuthorizationSettings
     {
-        public AuthorizationSettings Authorization { get; set; }
-        public DbType DbType { get; set; }
+        public string SecretKey { get; set; }
+        public double MinutesToExpiration { get; set; }
     }
 }

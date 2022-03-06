@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
-using MoneyTrack.Core.AppServices.Models;
 using MoneyTrack.Core.DomainServices.Exceptions;
 using MoneyTrack.Core.DomainServices.Identity;
 using MoneyTrack.Core.Models;
@@ -23,7 +22,7 @@ namespace MoneyTrack.Core.AppServices.Services
             _mapper = mapper;
         }
 
-        public async Task<SignInResult> SignIn(string login, string password)
+        public async Task<UserDto> SignIn(string login, string password)
         {
             bool isAuthenticate = await _userManager.CheckIsAuthenticate(login, password);
 
@@ -32,26 +31,20 @@ namespace MoneyTrack.Core.AppServices.Services
                 User user = await _userManager.GetByLogin(login);
                 var userDto = _mapper.Map<UserDto>(user);
 
-                return GenerateResult(userDto);
+                return userDto;
             }
 
             throw new MoneyTrackException("Login or/and password is incorrect");
         }
 
-        public async Task<SignInResult> SignUp(UserDto userDto, string password)
+        public async Task<UserDto> SignUp(UserDto userDto, string password)
         {
             var user = _mapper.Map<User>(userDto);
             user = await _userManager.Create(user, password);
 
             userDto = _mapper.Map<UserDto>(user);
 
-            return GenerateResult(userDto);
+            return userDto;
         }
-
-        private SignInResult GenerateResult(UserDto userDto)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }

@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
+using MoneyTrack.Data.MsSqlServer.Identity;
 using MoneyTrack.Web.Api.Models.Entities;
 using MoneyTrack.Web.Api.Models.Requests;
 using MoneyTrack.Web.Api.Models.Responses;
-using ServiceModels = MoneyTrack.Core.AppServices.Models;
+using MoneyTrack.Web.Infrastructure.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace MoneyTrack.Web.Api.Controllers.Api
 {
@@ -16,28 +18,48 @@ namespace MoneyTrack.Web.Api.Controllers.Api
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly ITokenGenerator _tokenGenerator;
+        private readonly JwtSecurityTokenHandler _tokenHandler;
 
-        public UserController(IUserService userService, IMapper mapper)
+        public UserController(IUserService userService, 
+            IMapper mapper, 
+            ITokenGenerator tokenGenerator,
+            JwtSecurityTokenHandler tokenHandler)
         {
             _userService = userService;
             _mapper = mapper;
+            _tokenGenerator = tokenGenerator;
+            _tokenHandler = tokenHandler;
         }
 
         public async Task<IActionResult> SignUp(SignUpRequest request)
         {
             var userDto = _mapper.Map<UserDto>(request.User);
-            ServiceModels.SignInResult signInResult = await _userService.SignUp(userDto, request.Passwords);
-            var response = _mapper.Map<SignInResponse>(signInResult);
+            userDto.Roles = new List<string> { UserRoles.User };
+
+            userDto = await _userService.SignUp(userDto, request.Passwords);
+            var response = GetResponse(userDto);
 
             return Ok(response);
         }
 
         public async Task<IActionResult> SignIn(SignInRequest request)
         {
-            ServiceModels.SignInResult result = await _userService.SignIn(request.Login, request.Password);
-            var response = _mapper.Map<SignInResponse>(result);
+            var userDto = await _userService.SignIn(request.Login, request.Password);
+            var response = GetResponse(userDto);
 
             return Ok(response);
+        }
+
+        private SignInResponse GetResponse(UserDto user)
+        {
+            var token = _tokenGenerator.GenerateToken(user);
+
+            return new SignInResponse
+            {
+                Token = _tokenHandler.WriteToken(token),
+                ExpiredAt = token.ValidTo
+            };
         }
     }
 }

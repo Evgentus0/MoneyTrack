@@ -14,4 +14,8 @@
     <ProjectReference Include="..\MoneyTrack.Core.Models\MoneyTrack.Core.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>
