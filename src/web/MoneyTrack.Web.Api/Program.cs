@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using MoneyTrack.Core.AppServices;
+using MoneyTrack.Core.AppServices.Automapper;
 using MoneyTrack.Core.DomainServices;
 using MoneyTrack.Data.MsSqlServer;
+using MoneyTrack.Web.Api.Automapper;
 using MoneyTrack.Web.Infrastructure;
 using MoneyTrack.Web.Infrastructure.Settings;
 using System.Net;
@@ -86,7 +88,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddInfrastructure(settings);
 builder.Services.AddAppServices();
 builder.Services.AddDomainServices();
-builder.Services.AddMsSqlDb(builder.Configuration, factory, settings); 
+builder.Services.AddMsSqlDb(builder.Configuration, factory, settings);
+
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile(new DomainModelsDtoMapperProfile());
+    config.AddProfile(new DbToDomainProfile());
+    config.AddProfile(new DtoToModelProfile());
+});
 
 var app = builder.Build();
 

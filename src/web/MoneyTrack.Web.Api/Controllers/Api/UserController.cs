@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MoneyTrack.Core.AppServices.DTOs;
@@ -32,6 +33,9 @@ namespace MoneyTrack.Web.Api.Controllers.Api
             _tokenHandler = tokenHandler;
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("sign-up")]
         public async Task<IActionResult> SignUp(SignUpRequest request)
         {
             var userDto = _mapper.Map<UserDto>(request.User);
@@ -43,6 +47,9 @@ namespace MoneyTrack.Web.Api.Controllers.Api
             return Ok(response);
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("sign-in")]
         public async Task<IActionResult> SignIn(SignInRequest request)
         {
             var userDto = await _userService.SignIn(request.Login, request.Password);
