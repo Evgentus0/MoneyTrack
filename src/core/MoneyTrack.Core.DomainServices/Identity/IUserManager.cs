@@ -10,6 +10,7 @@ namespace MoneyTrack.Core.DomainServices.Identity
     {
         Task<bool> CheckIsAuthenticate(string login, string password);
         Task<User> GetByLogin(string login);
-        Task<User> Create(User user, string password);
+        Task<User> CreateUser(User user, string password);
+        Task<string> CreateRole(string role);
     }
 }

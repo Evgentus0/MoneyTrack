@@ -1,4 +1,5 @@
-﻿using MoneyTrack.Core.DomainServices.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using MoneyTrack.Core.DomainServices.Identity;
 using MoneyTrack.Core.Models;
 using MoneyTrack.Data.MsSqlServer.Identity;
 using System;
@@ -20,6 +21,16 @@ namespace MoneyTrack.Data.MsSqlServer.Db
                 return;
             }
 
+            #region Roles
+            foreach (var role in UserRoles.GetRoles())
+            {
+                userManager.CreateRole(role).Wait();
+            }
+
+            context.SaveChanges();
+            #endregion
+
+            #region Users
             var user = new User
             {
                 FirstName = "Eugene",
@@ -29,9 +40,10 @@ namespace MoneyTrack.Data.MsSqlServer.Db
                 Roles = new List<string> { UserRoles.Admin }
             };
 
-            userManager.Create(user, "Password_1").Wait();
+            userManager.CreateUser(user, "Password_1").Wait();
 
-            context.SaveChanges(); ;
+            context.SaveChanges();
+            #endregion
         }
     }
 }

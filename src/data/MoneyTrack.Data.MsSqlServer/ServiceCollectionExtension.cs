@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using MoneyTrack.Data.MsSqlServer.Entites;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using MoneyTrack.Core.AppServices.Interfaces;
+using MoneyTrack.Core.DomainServices.Identity;
+using MoneyTrack.Data.MsSqlServer.Identity;
 
 namespace MoneyTrack.Data.MsSqlServer
 {
@@ -54,6 +57,8 @@ namespace MoneyTrack.Data.MsSqlServer
                 };
             })
                 .AddEntityFrameworkStores<MoneyTrackContext>();
+
+            services.AddScoped<IUserManager, AppUserManager>();
         }
     }
 }

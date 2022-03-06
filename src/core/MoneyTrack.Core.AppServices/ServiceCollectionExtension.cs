@@ -11,6 +11,8 @@ namespace MoneyTrack.Core.AppServices
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IAccountService, AccountService>();
+
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }

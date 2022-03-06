@@ -42,7 +42,20 @@ namespace MoneyTrack.Data.MsSqlServer.Identity
             return false;
         }
 
-        public async Task<User> Create(User user, string password)
+        public async Task<string> CreateRole(string role)
+        {
+            var newRole = new IdentityRole
+            {
+                Name = role,
+                NormalizedName = role.ToLower(),
+            };
+
+            await _roleManager.CreateAsync(newRole);
+
+            return newRole.Name;
+        }
+
+        public async Task<User> CreateUser(User user, string password)
         {
             var appUser = _mapper.Map<ApplicationUser>(user);
             appUser.Id = Guid.NewGuid().ToString();

@@ -10,5 +10,19 @@ namespace MoneyTrack.Data.MsSqlServer.Identity
     {
         public static string User = "User";
         public static string Admin = "Admin";
+
+        private static List<string> _roles;
+        public static List<string> GetRoles()
+        {
+            if(_roles is null)
+            {
+                _roles = new List<string>
+                {
+                    User, Admin
+                };
+            }
+
+            return _roles;
+        }
     }
 }

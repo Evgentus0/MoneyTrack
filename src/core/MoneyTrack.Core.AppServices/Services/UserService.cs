@@ -40,7 +40,7 @@ namespace MoneyTrack.Core.AppServices.Services
         public async Task<UserDto> SignUp(UserDto userDto, string password)
         {
             var user = _mapper.Map<User>(userDto);
-            user = await _userManager.Create(user, password);
+            user = await _userManager.CreateUser(user, password);
 
             userDto = _mapper.Map<UserDto>(user);
 
