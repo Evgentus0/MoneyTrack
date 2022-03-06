@@ -14,11 +14,6 @@ using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-using var factory = LoggerFactory.Create(builder =>
-{
-    builder.AddConsole();
-});
-
 builder.Logging.AddConsole();
 
 var settings = builder.Configuration.Get<AppSettings>();
@@ -88,7 +83,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddInfrastructure(settings);
 builder.Services.AddAppServices();
 builder.Services.AddDomainServices();
-builder.Services.AddMsSqlDb(builder.Configuration, factory, settings);
+builder.Services.AddMsSqlDb(builder.Configuration, settings);
 
 builder.Services.AddAutoMapper(config =>
 {

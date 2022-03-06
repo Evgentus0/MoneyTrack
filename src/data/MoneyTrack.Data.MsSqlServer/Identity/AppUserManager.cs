@@ -82,7 +82,7 @@ namespace MoneyTrack.Data.MsSqlServer.Identity
 
             if(user is null)
             {
-                throw new MoneyTrackException($"Cannot find user with login {login}");
+                return null;
             }
 
             var result = _mapper.Map<User>(user);

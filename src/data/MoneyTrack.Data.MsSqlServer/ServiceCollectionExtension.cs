@@ -21,22 +21,19 @@ namespace MoneyTrack.Data.MsSqlServer
     public static class ServiceCollectionExtension
     {
         public static void AddMsSqlDb(this IServiceCollection services, 
-            IConfiguration configuration, ILoggerFactory loggerFactory, AppSettings settings)
+            IConfiguration configuration, AppSettings settings)
         {
             services.AddScoped<IDbProvider, DbProvider>();
 
             services.AddDbContext<MoneyTrackContext>(options =>
             {
-                var optionsBuilder = options.UseLoggerFactory(loggerFactory)
-                                            .EnableSensitiveDataLogging();
-
                 switch (settings.DbType)
                 {
                     case DbType.MsSqlServer:
-                        optionsBuilder.UseSqlServer(configuration.GetConnectionString("MsSqlServerConnection"));
+                        options.UseSqlServer(configuration.GetConnectionString("MsSqlServerConnection"));
                         break;
                     case DbType.InMemory:
-                        optionsBuilder.UseInMemoryDatabase("InMemoryDb");
+                        options.UseInMemoryDatabase("InMemoryDb");
                         break;
                     default:
                         throw new ArgumentException($"Incorrect db type {settings.DbType}");

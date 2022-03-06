@@ -14,9 +14,11 @@ namespace MoneyTrack.Data.MsSqlServer.Db
     {
         internal static void Initialize(MoneyTrackContext context, IUserManager userManager)
         {
-            var alreadyExis = !context.Database.EnsureCreated();
+            context.Database.EnsureCreated();
 
-            if (alreadyExis)
+            var isInit = userManager.GetByLogin("zerom2016romanenko@gmail.com").Result is not null;
+
+            if (isInit)
             {
                 return;
             }
