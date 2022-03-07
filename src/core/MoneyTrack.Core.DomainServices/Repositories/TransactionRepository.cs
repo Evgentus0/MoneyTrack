@@ -44,7 +44,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             await _dbProvider.Transactions.Update(transaction);
 
         }
-        public async Task Remove(int id)
+        public async Task Delete(int id)
         {
             await _dbProvider.Transactions.Remove(id);
         }
@@ -96,6 +96,11 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             result = result.Where(filters);
 
             return await result.Count();
+        }
+
+        public async Task Save()
+        {
+            await _dbProvider.Save();
         }
     }
 }

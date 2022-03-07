@@ -35,11 +35,12 @@ namespace MoneyTrack.Data.MsSqlServer
 
         internal static Expression<Func<T, bool>> ExpressionFromFilter<T>(Filter filter)
         {
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(typeof(T)).Find(filter.PropName, true);
+            var propInfo = typeof(T).GetProperty(filter.PropName);
 
             ParameterExpression param = Expression.Parameter(typeof(T), "prop");
-            ConstantExpression value = Expression.Constant(Convert.ChangeType(filter.Value, prop.PropertyType), prop.PropertyType);
-            Expression operation = MapOperations[filter.Operation](param, value);
+            ConstantExpression value = Expression.Constant(Convert.ChangeType(filter.Value, propInfo.PropertyType), propInfo.PropertyType);
+            Expression getProperty = Expression.Property(param, propInfo);
+            Expression operation = MapOperations[filter.Operation](getProperty, value);
             Expression<Func<T, bool>> lambda =
                 Expression.Lambda<Func<T, bool>>(
                     operation,
@@ -79,6 +80,7 @@ namespace MoneyTrack.Data.MsSqlServer
         private static Dictionary<Operations, Func<Expression, Expression, Expression>> MapOperations = 
             new Dictionary<Operations, Func<Expression, Expression, Expression>>
         {
+            [Operations.Eq] = Expression.Equal,
             [Operations.EqString] = Expression.Equal,
             [Operations.NotEq] = Expression.NotEqual,
             [Operations.NotEqString] = Expression.NotEqual,

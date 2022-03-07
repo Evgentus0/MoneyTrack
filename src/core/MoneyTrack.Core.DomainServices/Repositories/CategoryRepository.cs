@@ -40,7 +40,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             return await _dbProvider.Categories.Query.Where(new Filter
             {
-                PropName = nameof(id),
+                PropName = nameof(Category.Id),
                 Operation = Operations.Eq,
                 Value = id.ToString()
             }).First();
@@ -56,6 +56,11 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             }
 
             return await categories.ToList();
+        }
+
+        public async Task Save()
+        {
+            await _dbProvider.Save();
         }
     }
 }

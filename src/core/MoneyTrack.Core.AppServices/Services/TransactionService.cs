@@ -35,15 +35,24 @@ namespace MoneyTrack.Core.AppServices.Services
                 throw new AppValidationException(validationError);
             }
 
+            var account = await _accountRepository.GetById(transaction.Account.Id);
+
             if (!transaction.IsPostponed)
             {
-                var account = await _accountRepository.GetById(transaction.Account.Id);
                 account.Balance += transaction.Quantity.Value;
+
                 await _accountRepository.Update(account);
             }
 
             var entity = _mapper.Map<Transaction>(transaction);
-            await  _transactionRepository.Add(entity);
+            entity.AccountId = entity.Account.Id;
+            entity.Account = null;
+            entity.CategoryId = entity.Category.Id;
+            entity.Category = null;
+
+            await _transactionRepository.Add(entity);
+
+            await _transactionRepository.Save();
         }
 
         public async Task<List<TransactionDto>> GetLastTransactions(Paging paging)
@@ -115,6 +124,8 @@ namespace MoneyTrack.Core.AppServices.Services
                     transactionToUpdate.AddedDttm = transaction.AddedDttm.Value;
 
                 await _transactionRepository.Update(transactionToUpdate);
+
+                await _transactionRepository.Save();
             }
         }
 
@@ -131,7 +142,9 @@ namespace MoneyTrack.Core.AppServices.Services
             account.Balance -= transaction.Quantity;
             await _accountRepository.Update(account);
 
-            await _transactionRepository.Remove(id);
+            await _transactionRepository.Delete(id);
+
+            await _transactionRepository.Save();
         }
 
         public async Task<decimal> CalculateTotalBalance(List<Filter> filters)
@@ -153,6 +166,8 @@ namespace MoneyTrack.Core.AppServices.Services
 
                     transaction.IsPostponed = false;
                     await _transactionRepository.Update(transaction);
+
+                    await _transactionRepository.Save();
                 }
             }
         }

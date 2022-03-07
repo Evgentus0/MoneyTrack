@@ -33,7 +33,7 @@ namespace MoneyTrack.Data.MsSqlServer
 
         public async Task<T> First()
         {
-            var entity =  await _query.FirstOrDefaultAsync();
+            var entity =  await _query.AsNoTracking().FirstOrDefaultAsync();
 
             return _mapper.Map<T>(entity);
         }
@@ -108,7 +108,7 @@ namespace MoneyTrack.Data.MsSqlServer
 
         public async Task<List<T>> ToList()
         {
-            var entities = await _query.ToListAsync();
+            var entities = await _query.AsNoTracking().ToListAsync();
 
             return _mapper.Map<List<T>>(entities);
         }

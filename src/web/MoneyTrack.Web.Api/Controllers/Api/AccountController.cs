@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
@@ -8,6 +10,7 @@ namespace MoneyTrack.Web.Api.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AccountController:MoneyTrackController
     {
         private readonly IAccountService _accountService;

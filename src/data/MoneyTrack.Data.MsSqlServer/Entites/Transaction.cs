@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyTrack.Data.MsSqlServer.Entites
 {
-    public class Transaction: IEntity<int>
+    public class Transaction : IEntity<int>
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public decimal Quantity { get; set; }
         public string Description { get; set; }

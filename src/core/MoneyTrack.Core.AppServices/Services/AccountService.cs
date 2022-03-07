@@ -36,11 +36,15 @@ namespace MoneyTrack.Core.AppServices.Services
             var accountEntity = _mapper.Map<Account>(account);
 
             await _accountRepository.Add(accountEntity);
+
+            await _accountRepository.Save();
         }
 
         public async Task Delete(int id)
         {
             await _accountRepository.Delete(id);
+
+            await _accountRepository.Save();
         }
 
         public async Task<List<AccountDto>> GetAllAccounts()
@@ -89,6 +93,8 @@ namespace MoneyTrack.Core.AppServices.Services
                 }
 
                 await _accountRepository.Update(accountToUpdate);
+
+                await _accountRepository.Save();
             }
         }
     }
