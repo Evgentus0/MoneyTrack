@@ -88,9 +88,12 @@ namespace MoneyTrack.Data.MsSqlServer
             [Operations.EqOrLess] = Expression.LessThanOrEqual,
             [Operations.Greater] = Expression.GreaterThan,
             [Operations.Less] = Expression.LessThan,
-            [Operations.Like] = (left, right) => Expression.Call(left, typeof(string).GetMethod(nameof(string.Contains)), right),
-            [Operations.StartWith] = (left, right) => Expression.Call(left, typeof(string).GetMethod(nameof(string.StartsWith)), right),
-            [Operations.EndWith] = (left, right) => Expression.Call(left, typeof(string).GetMethod(nameof(string.EndsWith)), right)
+            [Operations.Like] = (left, right) => Expression.Call(left, 
+                typeof(string).GetMethod(nameof(string.Contains), new Type[] { typeof(string) })!, right),
+            [Operations.StartWith] = (left, right) => Expression.Call(left, 
+                typeof(string).GetMethod(nameof(string.StartsWith), new Type[] { typeof(string) })!, right),
+            [Operations.EndWith] = (left, right) => Expression.Call(left, 
+                typeof(string).GetMethod(nameof(string.EndsWith), new Type[] { typeof(string) })!, right)
         };
 
         private class ParameterReplaceVisitor : ExpressionVisitor

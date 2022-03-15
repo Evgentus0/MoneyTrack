@@ -37,24 +37,24 @@ namespace MoneyTrack.Core.Models.Operational
     public enum Operations
     {
         // Number
-        Eq,
-        NotEq,
-        Less, 
-        EqOrLess, 
-        Greater, 
-        EqOrGreater,
+        Eq = 1,
+        NotEq = 2,
+        Less = 3, 
+        EqOrLess = 4, 
+        Greater = 5, 
+        EqOrGreater = 6,
 
         // String
-        EqString,
-        NotEqString,
-        Like,
-        StartWith,
-        EndWith
+        EqString = 101,
+        NotEqString = 102,
+        Like = 103,
+        StartWith = 104,
+        EndWith = 105
     }
 
     public enum FilterOp
     {
-        And, 
-        Or
+        And = 1, 
+        Or = 2
     }
 }

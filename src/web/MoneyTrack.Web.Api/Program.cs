@@ -47,11 +47,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             {
                 context.HttpContext.Response.WriteAsync(JsonSerializer.Serialize(new
                 {
-                    Exception = context.Exception,
+                    Exception = context.Exception.ToString(),
                     StatusCode = HttpStatusCode.Unauthorized
                 }));
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             },
             OnChallenge = context =>
             {

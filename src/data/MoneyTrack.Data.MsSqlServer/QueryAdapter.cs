@@ -47,20 +47,14 @@ namespace MoneyTrack.Data.MsSqlServer
 
         public IQueryAdapter<T> OrderBy(string propName)
         {
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(typeof(TEntity)).Find(propName, true);
-
-            if (prop is not null) 
-                _query = _query.OrderBy(x => prop.GetValue(x));
+            _query = _query.OrderBy(ToLambda<TEntity>(propName));
 
             return this;
         }
 
         public IQueryAdapter<T> OrderByDesc(string propName)
         {
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(typeof(TEntity)).Find(propName, true);
-
-            if (prop is not null)
-                _query = _query.OrderByDescending(x => prop.GetValue(x));
+            _query = _query.OrderByDescending(ToLambda<TEntity>(propName));
 
             return this;
         }
@@ -125,6 +119,15 @@ namespace MoneyTrack.Data.MsSqlServer
             _query = _query.Where(ExpressionFromFilter<TEntity>(filter));
 
             return this;
-        }       
+        }
+
+        private static Expression<Func<TResult, object>> ToLambda<TResult>(string propertyName)
+        {
+            var parameter = Expression.Parameter(typeof(TResult));
+            var property = Expression.Property(parameter, propertyName);
+            var propAsObject = Expression.Convert(property, typeof(object));
+
+            return Expression.Lambda<Func<TResult, object>>(propAsObject, parameter);
+        }
     }
 }
