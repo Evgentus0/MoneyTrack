@@ -65,7 +65,8 @@ namespace MoneyTrack.Web.Api.Controllers.Api
             return new SignInResponse
             {
                 Token = _tokenHandler.WriteToken(token),
-                ExpiredAt = token.ValidTo
+                ExpiredAt = token.ValidTo,
+                User = _mapper.Map<UserModel>(user)
             };
         }
     }
