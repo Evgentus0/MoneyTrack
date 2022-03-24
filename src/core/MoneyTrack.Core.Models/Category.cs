@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public bool IsSystem { get; set; }
+        public User User { get; set; }
 
         public const string RealBalanceDiff = "Real balance difference";
         public const string AccChangeCom = "Account change commission";

@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public bool IsSystem { get; set; }
+        public UserDto User { get; set; }
 
         public override string GetErrorString()
         {

@@ -8,6 +8,7 @@
         public CategoryModel? Category { get; set; }
         public AccountModel? Account { get; set; }
         public DateTimeOffset? AddedDttm { get; set; }
+        public UserModel? User { get; set; }
         public bool IsPostponed { get; set; }
 
         public bool SetCurrentDttm { get; set; } = true;

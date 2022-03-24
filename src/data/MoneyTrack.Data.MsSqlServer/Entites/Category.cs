@@ -15,5 +15,8 @@ namespace MoneyTrack.Data.MsSqlServer.Entites
         public int Id { get; set; }
         public string Name { get; set; }
         public bool IsSystem { get; set; }
+        [ForeignKey(nameof(User))]
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }

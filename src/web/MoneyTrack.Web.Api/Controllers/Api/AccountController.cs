@@ -29,6 +29,8 @@ namespace MoneyTrack.Web.Api.Controllers.Api
         {
             var accountDto = _mapper.Map<AccountDto>(accountModel);
 
+            accountDto.User = new UserDto { Id = GetCurrentUserId() };
+
             await _accountService.AddAccount(accountDto);
 
             return Ok();

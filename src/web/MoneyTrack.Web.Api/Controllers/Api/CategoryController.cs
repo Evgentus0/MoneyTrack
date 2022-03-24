@@ -29,6 +29,8 @@ namespace MoneyTrack.Web.Api.Controllers.Api
         {
             var categoryDto = _mapper.Map<CategoryDto>(categoryModel);
 
+            categoryDto.User = new UserDto { Id = GetCurrentUserId() };
+
             await _categoryService.AddCategory(categoryDto);
 
             return Ok();

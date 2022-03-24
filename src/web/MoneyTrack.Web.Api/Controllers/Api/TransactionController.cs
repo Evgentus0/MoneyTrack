@@ -46,6 +46,8 @@ namespace MoneyTrack.Web.Api.Controllers.Api
         {
             var transactionDto = _mapper.Map<TransactionDto>(transactionModel);
 
+            transactionDto.User = new UserDto { Id = GetCurrentUserId() };
+
             await _transactionService.Add(transactionDto);
 
             return Ok();
