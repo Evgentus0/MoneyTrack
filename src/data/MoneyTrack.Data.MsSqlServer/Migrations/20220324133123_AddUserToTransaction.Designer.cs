@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoneyTrack.Data.MsSqlServer.Db;
 
@@ -11,9 +12,10 @@ using MoneyTrack.Data.MsSqlServer.Db;
 namespace MoneyTrack.Data.MsSqlServer.Migrations
 {
     [DbContext(typeof(MoneyTrackContext))]
-    partial class MoneyTrackContextModelSnapshot : ModelSnapshot
+    [Migration("20220324133123_AddUserToTransaction")]
+    partial class AddUserToTransaction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

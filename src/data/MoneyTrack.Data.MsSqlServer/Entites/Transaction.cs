@@ -18,5 +18,8 @@ namespace MoneyTrack.Data.MsSqlServer.Entites
         public Account Account { get; set; }
         public DateTimeOffset AddedDttm { get; set; }
         public bool IsPostponed { get; set; }
+        [ForeignKey(nameof(User))]
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }
