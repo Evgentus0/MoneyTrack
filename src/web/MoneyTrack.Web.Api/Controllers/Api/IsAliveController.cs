@@ -10,9 +10,10 @@ namespace MoneyTrack.Web.Api.Controllers.Api
     public class IsAliveController : MoneyTrackController
     {
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
-            return Ok(new {
+            return Ok(new 
+            {
                 IsAlive = true,
                 ServerTime = DateTime.Now,
             });

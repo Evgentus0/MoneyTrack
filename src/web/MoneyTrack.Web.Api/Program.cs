@@ -11,6 +11,7 @@ using MoneyTrack.Web.Infrastructure.Settings;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Web.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,16 +54,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
         options.Events = new JwtBearerEvents
         {
-            OnAuthenticationFailed = context =>
-            {
-                context.HttpContext.Response.WriteAsync(JsonSerializer.Serialize(new
-                {
-                    Exception = context.Exception.ToString(),
-                    StatusCode = HttpStatusCode.Unauthorized
-                }));
-
-                return Task.CompletedTask;
-            },
             OnChallenge = context =>
             {
                 if (!context.Response.HasStarted)

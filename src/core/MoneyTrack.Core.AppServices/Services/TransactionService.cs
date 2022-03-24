@@ -45,10 +45,6 @@ namespace MoneyTrack.Core.AppServices.Services
             }
 
             var entity = _mapper.Map<Transaction>(transaction);
-            entity.AccountId = entity.Account.Id;
-            entity.Account = null;
-            entity.CategoryId = entity.Category.Id;
-            entity.Category = null;
 
             await _transactionRepository.Add(entity);
 
