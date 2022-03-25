@@ -96,7 +96,7 @@ builder.Services.AddAutoMapper(config =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (settings.UseSwagger)
 {
     app.UseSwagger();
     app.UseSwaggerUI();

@@ -10,5 +10,6 @@ namespace MoneyTrack.Web.Infrastructure.Settings
     {
         public AuthorizationSettings Authorization { get; set; }
         public DbType DbType { get; set; }
+        public bool UseSwagger { get; set; } = false;
     }
 }
