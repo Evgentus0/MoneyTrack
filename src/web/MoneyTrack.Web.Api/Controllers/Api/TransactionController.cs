@@ -35,7 +35,7 @@ namespace MoneyTrack.Web.Api.Controllers.Api
                 PageSize = pageSize
             };
 
-            var transactions = await _transactionService.GetLastTransactions(paging);
+            var transactions = await _transactionService.GetLastTransactions(paging, GetCurrentUserId());
 
             return Ok(_mapper.Map<List<TransactionModel>>(transactions));
         }
@@ -45,8 +45,6 @@ namespace MoneyTrack.Web.Api.Controllers.Api
         public async Task<IActionResult> Add([FromBody]TransactionModel transactionModel)
         {
             var transactionDto = _mapper.Map<TransactionDto>(transactionModel);
-
-            transactionDto.User = new UserDto { Id = GetCurrentUserId() };
 
             await _transactionService.Add(transactionDto);
 
@@ -59,7 +57,7 @@ namespace MoneyTrack.Web.Api.Controllers.Api
         {
             var dbRequest = _mapper.Map<DbQueryRequest>(request);
 
-            var transactions = await _transactionService.GetQueryTransactions(dbRequest);
+            var transactions = await _transactionService.GetQueryTransactions(dbRequest, GetCurrentUserId());
 
             return Ok(_mapper.Map<List<TransactionModel>>(transactions));
         }

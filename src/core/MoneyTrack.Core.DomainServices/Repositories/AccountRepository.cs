@@ -1,6 +1,8 @@
 ﻿using MoneyTrack.Core.DomainServices.Data;
 using MoneyTrack.Core.Models;
+using MoneyTrack.Core.Models.Operational;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.DomainServices.Repositories
@@ -14,9 +16,16 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             _dbProvider = dbProvider;
         }
 
-        public async Task<List<Account>> GetAllAccounts()
+        public async Task<List<Account>> GetAccounts(List<Filter> filters)
         {
-            return await _dbProvider.Accounts.Query.ToList();
+            var accounts = _dbProvider.Accounts.Query;
+
+            if (filters != null && filters.Any())
+            {
+                accounts = accounts.Where(filters);
+            }
+
+            return await accounts.ToList();
         }
 
         public async Task Add(Account account)

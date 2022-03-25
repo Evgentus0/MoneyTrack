@@ -35,8 +35,17 @@ namespace MoneyTrack.Core.AppServices.Services
             await _categoryRepository.Save();
         }
 
-        public async Task<List<CategoryDto>> GetCategories(List<Filter> filters = null)
+        public async Task<List<CategoryDto>> GetCategories(string userId, List<Filter> filters = null)
         {
+            filters = filters ?? new List<Filter>();
+            filters.Add(new Filter
+            {
+                FilterOp = FilterOp.And,
+                Operation = Operations.EqString,
+                PropName = nameof(Category.User)+nameof(Category.User.Id),
+                Value = userId
+            });
+
             List<Category> result = await _categoryRepository.GetCategories(filters);
 
             return _mapper.Map<List<CategoryDto>>(result);

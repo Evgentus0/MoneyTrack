@@ -11,7 +11,6 @@ namespace MoneyTrack.Data.MsSqlServer.Entites
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public List<Transaction> Transactions { get; set; } = new List<Transaction>();
         public List<Account> Accounts { get; set; } = new List<Account>();
         public List<Category> Categories { get; set; } = new List<Category>();
     }

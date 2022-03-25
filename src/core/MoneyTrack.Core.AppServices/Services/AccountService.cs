@@ -47,9 +47,18 @@ namespace MoneyTrack.Core.AppServices.Services
             await _accountRepository.Save();
         }
 
-        public async Task<List<AccountDto>> GetAllAccounts()
+        public async Task<List<AccountDto>> GetAccounts(string userId, List<Filter> filters = null)
         {
-            return _mapper.Map<List<AccountDto>>(await _accountRepository.GetAllAccounts());
+            filters = filters ?? new List<Filter>();
+            filters.Add(new Filter
+            {
+                FilterOp = FilterOp.And,
+                Operation = Operations.EqString,
+                PropName = nameof(Account.User)+nameof(Account.User.Id),
+                Value = userId
+            });
+
+            return _mapper.Map<List<AccountDto>>(await _accountRepository.GetAccounts(filters));
         }
 
         public async Task Update(AccountDto accountDto, bool addTransaction = false)

@@ -40,7 +40,7 @@ namespace MoneyTrack.Web.Api.Controllers.Api
         [Route("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            var categoriesDto = await _categoryService.GetCategories();
+            var categoriesDto = await _categoryService.GetCategories(GetCurrentUserId());
 
             var result = _mapper.Map<List<CategoryModel>>(categoriesDto);
 

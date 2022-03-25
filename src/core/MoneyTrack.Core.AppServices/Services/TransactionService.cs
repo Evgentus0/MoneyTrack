@@ -51,7 +51,7 @@ namespace MoneyTrack.Core.AppServices.Services
             await _transactionRepository.Save();
         }
 
-        public async Task<List<TransactionDto>> GetLastTransactions(Paging paging)
+        public async Task<List<TransactionDto>> GetLastTransactions(Paging paging, string userId)
         {
             var result = await _transactionRepository.GetQueriedTransactiones(new DbQueryRequest
             {
@@ -60,14 +60,33 @@ namespace MoneyTrack.Core.AppServices.Services
                 {
                     Direction = SortDirect.Desc,
                     PropName = nameof(Transaction.AddedDttm)
+                },
+                Filters = new List<Filter>
+                {
+                    new Filter
+                    {
+                        FilterOp = FilterOp.And,
+                        Operation = Operations.EqString,
+                        PropName = nameof(Transaction.Account)+"."+nameof(Account.User)+nameof(Account.User.Id),
+                        Value = userId
+                    }
                 }
             });
 
             return _mapper.Map<List<TransactionDto>>(result);
         }
 
-        public async Task<List<TransactionDto>> GetQueryTransactions(DbQueryRequest request)
+        public async Task<List<TransactionDto>> GetQueryTransactions(DbQueryRequest request, string userId)
         {
+            request.Filters = request.Filters ?? new List<Filter>();
+            request.Filters.Add(new Filter
+            {
+                FilterOp = FilterOp.And,
+                Operation = Operations.EqString,
+                PropName = nameof(Transaction.Account)+"."+nameof(Account.User)+nameof(Account.User.Id),
+                Value = userId
+            });
+
             List<Transaction> transactions = await _transactionRepository.GetQueriedTransactiones(request);
 
             return _mapper.Map<List<TransactionDto>>(transactions);
