@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +12,8 @@ namespace MoneyTrack.Data.MsSqlServer
 {
     internal static class FilterProcessor
     {
+        private static char[] _separators = { '.' };
+
         internal static Expression<Func<T, bool>> ExpressionFromFilters<T>(List<Filter> filters)
         {
             var expr = ExpressionFromFilter<T>(filters.First());
@@ -35,11 +38,22 @@ namespace MoneyTrack.Data.MsSqlServer
 
         internal static Expression<Func<T, bool>> ExpressionFromFilter<T>(Filter filter)
         {
-            var propInfo = typeof(T).GetProperty(filter.PropName);
-
             ParameterExpression param = Expression.Parameter(typeof(T), "prop");
-            ConstantExpression value = Expression.Constant(Convert.ChangeType(filter.Value, propInfo.PropertyType), propInfo.PropertyType);
+
+            var path = filter.PropName.Split(_separators);
+
+            PropertyInfo propInfo = typeof(T).GetProperty(path.First());
+
             Expression getProperty = Expression.Property(param, propInfo);
+
+            foreach (var field in path.Skip(1))
+            {
+                propInfo = propInfo.PropertyType.GetProperty(field);
+                getProperty = Expression.Property(getProperty, propInfo);
+            }
+
+            ConstantExpression value = Expression.Constant(Convert.ChangeType(filter.Value, propInfo.PropertyType), propInfo.PropertyType);
+
             Expression operation = MapOperations[filter.Operation](getProperty, value);
             Expression<Func<T, bool>> lambda =
                 Expression.Lambda<Func<T, bool>>(
