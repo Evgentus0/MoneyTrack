@@ -58,5 +58,14 @@ namespace MoneyTrack.Core.AppServices.Services
 
             return userDto;
         }
+
+        public async Task<UserDto> GetByUsername(string username)
+        {
+            var user = await _userManager.GetByLogin(username);
+
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return userDto;
+        }
     }
 }

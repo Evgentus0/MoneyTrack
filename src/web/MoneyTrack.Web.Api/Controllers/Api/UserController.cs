@@ -78,6 +78,18 @@ namespace MoneyTrack.Web.Api.Controllers.Api
             }
         }
 
+        [Authorize(UserRoles.Admin)]
+        [HttpGet]
+        [Route("getByUsername")]
+        public async Task<IActionResult> GetByUsername([FromQuery] string username)
+        {
+            var userDto = await _userService.GetByUsername(username);
+
+            var response = GetResponse(userDto);
+
+            return Ok(response);
+        }
+
         private SignInResponse GetResponse(UserDto user)
         {
             var token = _tokenGenerator.GenerateToken(user);
