@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MoneyTrack.Data.MsSqlServer.Identity
+namespace MoneyTrack.Core.DomainServices.Identity
 {
     public class UserRoles
     {

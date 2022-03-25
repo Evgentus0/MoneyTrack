@@ -39,7 +39,7 @@ namespace MoneyTrack.Data.MsSqlServer.Db
                 LastName = "Romanenko",
                 Email = "zerom2016romanenko@gmail.com",
                 UserName = "zerom2016romanenko@gmail.com",
-                Roles = new List<string> { UserRoles.Admin }
+                Roles = UserRoles.GetRoles()
             };
 
             userManager.CreateUser(user, "Password_1").Wait();

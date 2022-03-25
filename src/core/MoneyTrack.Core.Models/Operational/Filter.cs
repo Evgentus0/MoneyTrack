@@ -16,7 +16,7 @@ namespace MoneyTrack.Core.Models.Operational
 
             if(type == typeof(string))
             {
-                result = new List<Operations> { Operations.EqString, Operations.NotEqString,
+                result = new List<Operations> { Operations.Eq, Operations.NotEq,
                 Operations.Like, Operations.StartWith, Operations.EndWith };
             }
             else if(type == typeof(int) || type == typeof(int?)
@@ -38,23 +38,21 @@ namespace MoneyTrack.Core.Models.Operational
     {
         // Number
         Eq = 1,
-        NotEq = 2,
-        Less = 3, 
-        EqOrLess = 4, 
-        Greater = 5, 
-        EqOrGreater = 6,
+        NotEq,
+        Less, 
+        EqOrLess, 
+        Greater, 
+        EqOrGreater,
 
         // String
-        EqString = 101,
-        NotEqString = 102,
-        Like = 103,
-        StartWith = 104,
-        EndWith = 105
+        Like = 101,
+        StartWith,
+        EndWith
     }
 
     public enum FilterOp
     {
         And = 1, 
-        Or = 2
+        Or
     }
 }

@@ -95,9 +95,7 @@ namespace MoneyTrack.Data.MsSqlServer
             new Dictionary<Operations, Func<Expression, Expression, Expression>>
         {
             [Operations.Eq] = Expression.Equal,
-            [Operations.EqString] = Expression.Equal,
             [Operations.NotEq] = Expression.NotEqual,
-            [Operations.NotEqString] = Expression.NotEqual,
             [Operations.EqOrGreater] = Expression.GreaterThanOrEqual,
             [Operations.EqOrLess] = Expression.LessThanOrEqual,
             [Operations.Greater] = Expression.GreaterThan,

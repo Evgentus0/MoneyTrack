@@ -66,7 +66,7 @@ namespace MoneyTrack.Core.AppServices.Services
                     new Filter
                     {
                         FilterOp = FilterOp.And,
-                        Operation = Operations.EqString,
+                        Operation = Operations.Eq,
                         PropName = nameof(Transaction.Account)+"."+nameof(Account.User)+nameof(Account.User.Id),
                         Value = userId
                     }
@@ -82,8 +82,8 @@ namespace MoneyTrack.Core.AppServices.Services
             request.Filters.Add(new Filter
             {
                 FilterOp = FilterOp.And,
-                Operation = Operations.EqString,
-                PropName = nameof(Transaction.Account)+"."+nameof(Account.User)+nameof(Account.User.Id),
+                Operation = Operations.Eq,
+                PropName = nameof(Transaction.Account) + "." + nameof(Account.User) + nameof(Account.User.Id),
                 Value = userId
             });
 
@@ -148,7 +148,7 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             var transaction = await _transactionRepository.GetById(id);
 
-            if(transaction is null)
+            if (transaction is null)
             {
                 return;
             }
@@ -171,7 +171,7 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             var transaction = await _transactionRepository.GetById(id);
 
-            if(transaction != null)
+            if (transaction != null)
             {
                 if (transaction.IsPostponed)
                 {

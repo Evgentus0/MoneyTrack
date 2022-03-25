@@ -41,7 +41,7 @@ namespace MoneyTrack.Core.AppServices.Services
             filters.Add(new Filter
             {
                 FilterOp = FilterOp.And,
-                Operation = Operations.EqString,
+                Operation = Operations.Eq,
                 PropName = nameof(Category.User)+nameof(Category.User.Id),
                 Value = userId
             });

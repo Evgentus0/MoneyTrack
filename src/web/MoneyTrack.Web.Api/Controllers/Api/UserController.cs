@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
+using MoneyTrack.Core.DomainServices.Identity;
 using MoneyTrack.Data.MsSqlServer.Identity;
 using MoneyTrack.Web.Api.Models.Entities;
 using MoneyTrack.Web.Api.Models.Requests;
