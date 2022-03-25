@@ -12,5 +12,6 @@ namespace MoneyTrack.Core.DomainServices.Identity
         Task<User> GetByLogin(string login);
         Task<User> CreateUser(User user, string password);
         Task<string> CreateRole(string role);
+        Task<User> AddRole(string userId, string role);
     }
 }

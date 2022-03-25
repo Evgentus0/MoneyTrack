@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Interfaces;
+using MoneyTrack.Core.DomainServices.Exceptions;
 using MoneyTrack.Core.DomainServices.Identity;
 using MoneyTrack.Data.MsSqlServer.Identity;
 using MoneyTrack.Web.Api.Models.Entities;
@@ -40,7 +41,6 @@ namespace MoneyTrack.Web.Api.Controllers.Api
         public async Task<IActionResult> SignUp([FromBody]SignUpRequest request)
         {
             var userDto = _mapper.Map<UserDto>(request.User);
-            userDto.Roles = new List<string> { UserRoles.User };
 
             userDto = await _userService.SignUp(userDto, request.Passwords);
             var response = GetResponse(userDto);
@@ -57,6 +57,25 @@ namespace MoneyTrack.Web.Api.Controllers.Api
             var response = GetResponse(userDto);
 
             return Ok(response);
+        }
+
+        [Authorize(UserRoles.Admin)]
+        [HttpPost]
+        [Route("addRole")]
+        public async Task<IActionResult> AddRole([FromBody] AddRoleRequest request)
+        {
+            try
+            {
+                var userDto = await _userService.AddRole(request.UserId, request.Role);
+
+                var response = GetResponse(userDto);
+
+                return Ok(response);
+            }
+            catch(MoneyTrackException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         private SignInResponse GetResponse(UserDto user)

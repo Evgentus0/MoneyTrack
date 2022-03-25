@@ -66,7 +66,10 @@ namespace MoneyTrack.Data.MsSqlServer.Identity
                 var newUser = await _userManager.FindByIdAsync(appUser.Id);
                 await _userManager.AddToRolesAsync(newUser, user.Roles);
 
-                return _mapper.Map<User>(newUser);
+                var returnUser = _mapper.Map<User>(newUser);
+                returnUser.Roles = new List<string>(await _userManager.GetRolesAsync(newUser));
+
+                return returnUser;
             }
 
             throw new MoneyTrackException("Cannot create user");
@@ -90,5 +93,22 @@ namespace MoneyTrack.Data.MsSqlServer.Identity
 
             return result;
         }
+
+        public async Task<User> AddRole(string userId, string role)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if(user is null)
+            {
+                throw new MoneyTrackException("User not found");
+            }
+
+            await _userManager.AddToRoleAsync(user, role);
+
+            var updatedUser = await GetByLogin(user.UserName);
+
+            return updatedUser;
+        }
+
     }
 }

@@ -10,5 +10,6 @@ namespace MoneyTrack.Core.AppServices.Interfaces
     {
         Task<UserDto> SignUp(UserDto userDto, string password);
         Task<UserDto> SignIn(string login, string password);
+        Task<UserDto> AddRole(string userId, string role);
     }
 }

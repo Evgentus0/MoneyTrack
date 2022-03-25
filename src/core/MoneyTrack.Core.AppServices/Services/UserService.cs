@@ -40,9 +40,21 @@ namespace MoneyTrack.Core.AppServices.Services
         public async Task<UserDto> SignUp(UserDto userDto, string password)
         {
             var user = _mapper.Map<User>(userDto);
+            user.Roles = new List<string> { UserRoles.User };
+            user.UserName = user.Email;
+
             user = await _userManager.CreateUser(user, password);
 
             userDto = _mapper.Map<UserDto>(user);
+
+            return userDto;
+        }
+
+        public async Task<UserDto> AddRole(string userId, string role)
+        {
+            var updatetUser = await _userManager.AddRole(userId, role);
+
+            var userDto = _mapper.Map<UserDto>(updatetUser);
 
             return userDto;
         }

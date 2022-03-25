@@ -8,8 +8,8 @@ namespace MoneyTrack.Core.DomainServices.Identity
 {
     public class UserRoles
     {
-        public static string User = "User";
-        public static string Admin = "Admin";
+        public const string User = "User";
+        public const string Admin = "Admin";
 
         private static List<string> _roles;
         public static List<string> GetRoles()
