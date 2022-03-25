@@ -9,6 +9,13 @@ namespace MoneyTrack.Web.Api.Controllers.Api
     [ApiController]
     public class IsAliveController : MoneyTrackController
     {
+        private readonly IWebHostEnvironment _hostingEnvironment;
+
+        public IsAliveController(IWebHostEnvironment hostingEnvironment)
+        {
+            _hostingEnvironment = hostingEnvironment;
+        }
+
         [HttpGet]
         public IActionResult Get()
         {
@@ -16,6 +23,7 @@ namespace MoneyTrack.Web.Api.Controllers.Api
             {
                 IsAlive = true,
                 ServerTime = DateTime.Now,
+                Environment = _hostingEnvironment.EnvironmentName
             });
         }
     }
