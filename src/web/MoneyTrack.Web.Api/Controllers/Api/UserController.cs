@@ -42,7 +42,7 @@ namespace MoneyTrack.Web.Api.Controllers.Api
         {
             var userDto = _mapper.Map<UserDto>(request.User);
 
-            userDto = await _userService.SignUp(userDto, request.Passwords);
+            userDto = await _userService.SignUp(userDto, request.Password);
             var response = GetResponse(userDto);
 
             return Ok(response);
