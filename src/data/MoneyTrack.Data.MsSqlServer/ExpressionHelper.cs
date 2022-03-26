@@ -10,9 +10,27 @@ using System.Threading.Tasks;
 
 namespace MoneyTrack.Data.MsSqlServer
 {
-    internal static class FilterProcessor
+    internal static class ExpressionHelper
     {
         private static char[] _separators = { '.' };
+
+        internal static Expression<Func<TResult, object>> ToLambda<TResult>(string propertyName)
+        {
+            var parameter = Expression.Parameter(typeof(TResult));
+
+            var path = propertyName.Split(_separators);
+         
+            Expression getProperty = Expression.Property(parameter, path.First());
+            foreach (var field in path.Skip(1))
+            {
+                getProperty = Expression.Property(getProperty, field);
+            }
+
+            var property = Expression.Property(parameter, propertyName);
+            var propAsObject = Expression.Convert(property, typeof(object));
+
+            return Expression.Lambda<Func<TResult, object>>(propAsObject, parameter);
+        }
 
         internal static Expression<Func<T, bool>> ExpressionFromFilters<T>(List<Filter> filters)
         {

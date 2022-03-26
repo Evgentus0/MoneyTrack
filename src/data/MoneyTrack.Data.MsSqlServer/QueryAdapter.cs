@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-using static MoneyTrack.Data.MsSqlServer.FilterProcessor;
+using static MoneyTrack.Data.MsSqlServer.ExpressionHelper;
 
 namespace MoneyTrack.Data.MsSqlServer
 {
@@ -119,15 +119,6 @@ namespace MoneyTrack.Data.MsSqlServer
             _query = _query.Where(ExpressionFromFilter<TEntity>(filter));
 
             return this;
-        }
-
-        private static Expression<Func<TResult, object>> ToLambda<TResult>(string propertyName)
-        {
-            var parameter = Expression.Parameter(typeof(TResult));
-            var property = Expression.Property(parameter, propertyName);
-            var propAsObject = Expression.Convert(property, typeof(object));
-
-            return Expression.Lambda<Func<TResult, object>>(propAsObject, parameter);
         }
     }
 }
