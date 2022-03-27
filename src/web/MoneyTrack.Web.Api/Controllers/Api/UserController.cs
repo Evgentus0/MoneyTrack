@@ -59,7 +59,7 @@ namespace MoneyTrack.Web.Api.Controllers.Api
             return Ok(response);
         }
 
-        [Authorize(UserRoles.Admin)]
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         [Route("addRole")]
         public async Task<IActionResult> AddRole([FromBody] AddRoleRequest request)
@@ -78,7 +78,7 @@ namespace MoneyTrack.Web.Api.Controllers.Api
             }
         }
 
-        [Authorize(UserRoles.Admin)]
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet]
         [Route("getByUsername")]
         public async Task<IActionResult> GetByUsername([FromQuery] string username)
