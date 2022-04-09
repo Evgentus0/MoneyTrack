@@ -18,7 +18,7 @@ namespace MoneyTrack.Data.MsSqlServer.Entites
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
         [ForeignKey(nameof(LastTransaction))]
-        public int LastTransactionId { get; set; }
-        public Transaction LastTransaction { get; set; }
+        public int? LastTransactionId { get; set; }
+        public Transaction? LastTransaction { get; set; }
     }
 }
