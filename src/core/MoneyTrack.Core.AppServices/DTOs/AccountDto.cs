@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal? Balance { get; set; }
+        public TransactionDto LastTransaction { get; set; }
         public UserDto User { get; set; }
 
         public override string GetErrorString()

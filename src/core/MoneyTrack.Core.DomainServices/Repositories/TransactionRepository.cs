@@ -50,7 +50,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             await _dbProvider.Transactions.Remove(id);
         }
 
-        public async Task<List<Transaction>> GetQueriedTransactiones(DbQueryRequest request)
+        public async Task<List<Transaction>> GetQueriedTransactions(DbQueryRequest request)
         {
             var result = _dbProvider.Transactions.Query
                 .Include(nameof(Account))
@@ -82,6 +82,30 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             }
 
             return await result.ToList();
+        }
+        public async Task<Transaction> GetLastAccountTransaction(int accountId)
+        {
+            var transaction = await _dbProvider.Transactions.Query
+                .Where(new Filter
+                {
+                    PropName = $"{nameof(Account)}.{nameof(Account.Id)}",
+                    Operation = Operations.Eq,
+                    Value = accountId.ToString(),
+                    FilterOp = FilterOp.And
+                })
+                .OrderByDesc(nameof(Transaction.AddedDttm))
+                .First();
+
+            return transaction;
+        }
+
+        public async Task<int> GetNewAvailableId()
+        {
+            var lastId = (await _dbProvider.Transactions.Query
+                .OrderByDesc(nameof(Transaction.Id))
+                .First()).Id;
+
+            return lastId + 1;
         }
 
         public async Task<decimal> CalculateSum(string propName, List<Filter> filters)

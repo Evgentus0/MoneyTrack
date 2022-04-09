@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public decimal? Balance { get; set; }
+        public TransactionModel? LastTransaction { get; set; }
         public UserModel? User { get; set; }
     }
 }

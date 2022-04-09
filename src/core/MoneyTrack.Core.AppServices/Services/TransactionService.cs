@@ -7,6 +7,7 @@ using MoneyTrack.Core.Models;
 using MoneyTrack.Core.Models.Operational;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.AppServices.Services
@@ -35,25 +36,70 @@ namespace MoneyTrack.Core.AppServices.Services
                 throw new AppValidationException(validationError);
             }
 
-            var account = await _accountRepository.GetById(transaction.Account.Id);
+            var newTransaction = _mapper.Map<Transaction>(transaction);
 
-            if (!transaction.IsPostponed)
+            var lastAccountTransaction = await _transactionRepository.GetLastAccountTransaction(transaction.Account.Id);
+
+            if (lastAccountTransaction.AddedDttm > newTransaction.AddedDttm)
             {
-                account.Balance += transaction.Quantity.Value;
+                // Add not last transaction
+                var lastBeforeNew = (await _transactionRepository.GetQueriedTransactions(new DbQueryRequest
+                {
+                    Filters = new List<Filter>
+                    {
+                       new Filter
+                       {
+                           PropName = $"{nameof(Transaction.Account)}.{nameof(Transaction.Account.Id)}",
+                           Operation = Operations.Eq,
+                           Value = newTransaction.Account.Id.ToString(),
+                           FilterOp = FilterOp.And
+                       },
+                       new Filter
+                       {
+                           PropName = nameof(Transaction.AddedDttm),
+                           Operation = Operations.Less,
+                           Value = newTransaction.AddedDttm.ToString(),
+                           FilterOp = FilterOp.And
+                       }
+                    },
+                    Sorting = new Sorting
+                    {
+                        Direction = SortDirect.Desc,
+                        PropName = nameof(Transaction.AddedDttm)
+                    }
+                })).FirstOrDefault();
 
-                await _accountRepository.Update(account);
+                if(lastBeforeNew != null)
+                {
+                    newTransaction.AccountRest = lastAccountTransaction.AccountRest + newTransaction.Quantity;
+                }
+                else
+                {
+                    newTransaction.AccountRest = newTransaction.Quantity;
+                }
+
+                await UpdateTransactionsRestSinceDate(newTransaction.Account.Id, newTransaction.AddedDttm, newTransaction.Quantity);
+
+                await _transactionRepository.Save();
+
+                return;
             }
 
-            var entity = _mapper.Map<Transaction>(transaction);
+            newTransaction.AccountRest = lastAccountTransaction.AccountRest + newTransaction.Quantity;
+            newTransaction.Id = await _transactionRepository.GetNewAvailableId();
 
-            await _transactionRepository.Add(entity);
+            await _transactionRepository.Add(newTransaction);
+
+            var account = await _accountRepository.GetById(newTransaction.Account.Id);
+
+            account.LastTransaction.Id = newTransaction.Id;
 
             await _transactionRepository.Save();
         }
 
         public async Task<List<TransactionDto>> GetLastTransactions(Paging paging, string userId)
         {
-            var result = await _transactionRepository.GetQueriedTransactiones(new DbQueryRequest
+            var result = await _transactionRepository.GetQueriedTransactions(new DbQueryRequest
             {
                 Paging = paging,
                 Sorting = new Sorting
@@ -87,7 +133,7 @@ namespace MoneyTrack.Core.AppServices.Services
                 Value = userId
             });
 
-            List<Transaction> transactions = await _transactionRepository.GetQueriedTransactiones(request);
+            List<Transaction> transactions = await _transactionRepository.GetQueriedTransactions(request);
 
             return _mapper.Map<List<TransactionDto>>(transactions);
         }
@@ -103,40 +149,41 @@ namespace MoneyTrack.Core.AppServices.Services
 
             if (transactionToUpdate != null)
             {
-                if (transaction.Account != null && transaction.Account.Id > 0 && transaction.Account.Id != transactionToUpdate.Account.Id)
-                {
-                    var transactionQuantity = transactionToUpdate.Quantity;
-
-                    var fromAcc = await _accountRepository.GetById(transactionToUpdate.Account.Id);
-                    var toAcc = await _accountRepository.GetById(transaction.Account.Id);
-
-                    fromAcc.Balance -= transactionQuantity;
-                    toAcc.Balance += transactionQuantity;
-
-                    await _accountRepository.Update(fromAcc);
-                    await _accountRepository.Update(toAcc);
-
-                    transactionToUpdate.Account.Id = transaction.Account.Id;
-                }
-
-                if (transaction.Quantity.HasValue && transaction.Quantity.Value != transactionToUpdate.Quantity)
-                {
-                    var diff = transaction.Quantity.Value - transactionToUpdate.Quantity;
-                    transactionToUpdate.Quantity = transaction.Quantity.Value;
-
-                    var acc = await _accountRepository.GetById(transaction.Account.Id);
-                    acc.Balance += diff;
-                    await _accountRepository.Update(acc);
-                }
-
                 if (!string.IsNullOrEmpty(transaction.Description))
                     transactionToUpdate.Description = transaction.Description;
 
                 if (transaction.Category != null && transaction.Category.Id > 0)
                     transactionToUpdate.Category.Id = transaction.Category.Id;
 
-                if (transaction.AddedDttm.HasValue && transaction.AddedDttm.Value > Transaction.CutOffDate)
-                    transactionToUpdate.AddedDttm = transaction.AddedDttm.Value;
+                var isDateTimeChange = false;
+                if (transaction.AddedDttm.HasValue && transaction.AddedDttm.Value > Transaction.CutOffDate
+                    && transaction.AddedDttm.Value != transactionToUpdate.AddedDttm)
+                {
+                    isDateTimeChange = true;
+
+                    var oldDate = transactionToUpdate.AddedDttm;
+                    var newDate = transaction.AddedDttm.Value;
+
+                    var oldQuantity = transactionToUpdate.Quantity;
+
+                    transactionToUpdate.Quantity = transaction.Quantity.HasValue && transaction.Quantity.Value != transactionToUpdate.Quantity
+                        ? transaction.Quantity.Value
+                        : transactionToUpdate.Quantity;
+
+                    transactionToUpdate.AddedDttm = newDate;
+
+                    await UpdateTransactionsRestSinceDate(transactionToUpdate.Account.Id, oldDate, -oldQuantity);
+                    await _transactionRepository.Save();
+                    await UpdateTransactionsRestSinceDate(transactionToUpdate.Account.Id, newDate, transactionToUpdate.Quantity);
+                }
+
+                if(transaction.Quantity.HasValue && transaction.Quantity.Value != transactionToUpdate.Quantity && !isDateTimeChange)
+                {
+                    var diff = transaction.Quantity.Value - transactionToUpdate.Quantity;
+                    transactionToUpdate.Quantity = transaction.Quantity.Value;
+
+                    await UpdateTransactionsRestSinceDate(transactionToUpdate.Account.Id, transactionToUpdate.AddedDttm, diff);
+                }
 
                 await _transactionRepository.Update(transactionToUpdate);
 
@@ -153,9 +200,7 @@ namespace MoneyTrack.Core.AppServices.Services
                 return;
             }
 
-            var account = await _accountRepository.GetById(transaction.Account.Id);
-            account.Balance -= transaction.Quantity;
-            await _accountRepository.Update(account);
+            await UpdateTransactionsRestSinceDate(transaction.Account.Id, transaction.AddedDttm, -transaction.Quantity);
 
             await _transactionRepository.Delete(id);
 
@@ -167,23 +212,34 @@ namespace MoneyTrack.Core.AppServices.Services
             return await _transactionRepository.CalculateSum(nameof(Transaction.Quantity), filters);
         }
 
-        public async Task ApprovePostponedTransaction(int id)
+        private async Task UpdateTransactionsRestSinceDate(int accountId, DateTimeOffset date, decimal quantity)
         {
-            var transaction = await _transactionRepository.GetById(id);
-
-            if (transaction != null)
+            var transactionsToUpdate = await _transactionRepository.GetQueriedTransactions(new DbQueryRequest
             {
-                if (transaction.IsPostponed)
+                Filters = new List<Filter>
                 {
-                    var account = await _accountRepository.GetById(transaction.Account.Id);
-                    account.Balance += transaction.Quantity;
-                    await _accountRepository.Update(account);
-
-                    transaction.IsPostponed = false;
-                    await _transactionRepository.Update(transaction);
-
-                    await _transactionRepository.Save();
+                    new Filter
+                    {
+                        PropName = $"{nameof(Transaction.Account)}.{nameof(Transaction.Account.Id)}",
+                        Operation = Operations.Eq,
+                        Value = accountId.ToString(),
+                        FilterOp = FilterOp.And
+                    },
+                    new Filter
+                    {
+                        PropName = nameof(Transaction.AddedDttm),
+                        Operation = Operations.Greater,
+                        Value = date.ToString(),
+                        FilterOp = FilterOp.And
+                    }
                 }
+            });
+
+            foreach (var transaction in transactionsToUpdate)
+            {
+                transaction.AccountRest += quantity;
+
+                await _transactionRepository.Update(transaction);
             }
         }
     }

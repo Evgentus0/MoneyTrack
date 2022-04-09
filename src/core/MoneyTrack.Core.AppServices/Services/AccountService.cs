@@ -72,35 +72,6 @@ namespace MoneyTrack.Core.AppServices.Services
                     accountToUpdate.Name = accountDto.Name;
                 }
 
-                if (accountDto.Balance.HasValue && accountDto.Balance.Value != accountToUpdate.Balance)
-                {
-                    if (addTransaction)
-                    {
-                        var diff = accountDto.Balance.Value - accountToUpdate.Balance;
-                        var category = (await _categoryRepository.GetCategories(new List<Filter>()
-                        {
-                            new Filter
-                            {
-                                Operation = Operations.Eq,
-                                PropName = nameof(Category.Name),
-                                Value = $"\"{Category.RealBalanceDiff}\""
-                            }
-                        })).First();
-
-                        var transaction = new Transaction
-                        {
-                            Account = accountToUpdate,
-                            AddedDttm = DateTimeOffset.Now,
-                            Category = category,
-                            Quantity = diff,
-                            Description = $"Update {accountToUpdate.Name} for {diff}"
-                        };
-
-                        await _transactionRepository.Add(transaction);
-                    }
-                    accountToUpdate.Balance = accountDto.Balance.Value;
-                }
-
                 await _accountRepository.Update(accountToUpdate);
 
                 await _accountRepository.Save();

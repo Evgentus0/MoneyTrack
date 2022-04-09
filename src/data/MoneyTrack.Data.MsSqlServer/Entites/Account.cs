@@ -14,9 +14,11 @@ namespace MoneyTrack.Data.MsSqlServer.Entites
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Balance { get; set; }
         [ForeignKey(nameof(User))]
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
+        [ForeignKey(nameof(LastTransaction))]
+        public int LastTransactionId { get; set; }
+        public Transaction LastTransaction { get; set; }
     }
 }
