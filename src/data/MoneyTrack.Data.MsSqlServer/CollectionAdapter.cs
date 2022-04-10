@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MoneyTrack.Core.DomainServices.Data;
+using MoneyTrack.Data.MsSqlServer.Db;
 using MoneyTrack.Data.MsSqlServer.Entites;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,13 @@ namespace MoneyTrack.Data.MsSqlServer
     {
         private readonly DbSet<TEntity> _dbSet;
         private readonly IMapper _mapper;
+        private readonly MoneyTrackContext _context;
 
-        public CollectionAdapter(DbSet<TEntity> dbSet, IMapper mapper)
+        public CollectionAdapter(DbSet<TEntity> dbSet, IMapper mapper, MoneyTrackContext context)
         {
             _dbSet = dbSet;
             _mapper = mapper;
+            _context = context;
         }
 
         public IQueryAdapter<T> Query => new QueryAdapter<T, TEntity>(_dbSet.AsQueryable(), _mapper);
@@ -28,6 +31,17 @@ namespace MoneyTrack.Data.MsSqlServer
             var entity = _mapper.Map<TEntity>(item);
 
             await _dbSet.AddAsync(entity);
+        }
+
+        public async Task<T> AddWithSave(T item)
+        {
+            var entity = _mapper.Map<TEntity>(item);
+
+            await _dbSet.AddAsync(entity);
+            
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<T>(entity);
         }
 
         public async Task Remove(IdType id)

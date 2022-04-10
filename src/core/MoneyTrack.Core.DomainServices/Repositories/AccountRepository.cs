@@ -48,7 +48,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             return await _dbProvider.Accounts.Query.Where(new Models.Operational.Filter
             {
                 PropName = nameof(Account.Id),
-                Operation = Models.Operational.Operations.Eq,
+                Operation = Operations.Eq,
                 Value = id.ToString()
             }).First();
         }

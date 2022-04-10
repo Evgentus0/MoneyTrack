@@ -28,7 +28,7 @@ namespace MoneyTrack.Core.AppServices.Services
         public async Task Add(TransactionDto transaction)
         {
             if (transaction.SetCurrentDttm)
-                transaction.AddedDttm = DateTimeOffset.Now;
+                transaction.AddedDttm = DateTime.Now;
 
             var validationError = transaction.GetErrorString();
             if (!string.IsNullOrEmpty(validationError))
@@ -40,7 +40,8 @@ namespace MoneyTrack.Core.AppServices.Services
 
             var lastAccountTransaction = await _transactionRepository.GetLastAccountTransaction(transaction.Account.Id);
 
-            if (lastAccountTransaction.AddedDttm > newTransaction.AddedDttm)
+            if (lastAccountTransaction != null 
+                && lastAccountTransaction.AddedDttm > newTransaction.AddedDttm)
             {
                 // Add not last transaction
                 var lastBeforeNew = (await _transactionRepository.GetQueriedTransactions(new DbQueryRequest
@@ -85,14 +86,19 @@ namespace MoneyTrack.Core.AppServices.Services
                 return;
             }
 
-            newTransaction.AccountRest = lastAccountTransaction.AccountRest + newTransaction.Quantity;
-            newTransaction.Id = await _transactionRepository.GetNewAvailableId();
+            var previousRest = lastAccountTransaction != null
+                ? lastAccountTransaction.AccountRest
+                : 0;
 
-            await _transactionRepository.Add(newTransaction);
+            newTransaction.AccountRest = previousRest + newTransaction.Quantity;
+
+            newTransaction = await _transactionRepository.AddWithSave(newTransaction);
 
             var account = await _accountRepository.GetById(newTransaction.Account.Id);
 
             account.LastTransaction.Id = newTransaction.Id;
+
+            await _accountRepository.Update(account);
 
             await _transactionRepository.Save();
         }

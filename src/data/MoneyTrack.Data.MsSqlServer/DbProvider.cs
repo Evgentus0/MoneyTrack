@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MoneyTrack.Core.DomainServices.Data;
 using MoneyTrack.Core.Models;
 using MoneyTrack.Data.MsSqlServer.Db;
@@ -24,13 +25,13 @@ namespace MoneyTrack.Data.MsSqlServer
         }
 
         public ICollectionAdapter<Transaction, int> Transactions 
-            => new CollectionAdapter<Transaction, Entites.Transaction, int>(_context.Transactions, _mapper);
+            => new CollectionAdapter<Transaction, Entites.Transaction, int>(_context.Transactions, _mapper, _context);
 
         public ICollectionAdapter<Category, int> Categories
-            => new CollectionAdapter<Category, Entites.Category, int>(_context.Categories, _mapper);
+            => new CollectionAdapter<Category, Entites.Category, int>(_context.Categories, _mapper, _context);
 
         public ICollectionAdapter<Account, int> Accounts 
-            => new CollectionAdapter<Account, Entites.Account, int>(_context.Accounts, _mapper);
+            => new CollectionAdapter<Account, Entites.Account, int>(_context.Accounts, _mapper, _context);
 
         public void Dispose()
         {

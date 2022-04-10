@@ -9,7 +9,7 @@ namespace MoneyTrack.Core.AppServices.DTOs
         public string Description { get; set; }
         public CategoryDto Category { get; set; }
         public AccountDto Account { get; set; }
-        public DateTimeOffset? AddedDttm { get; set; }
+        public DateTime? AddedDttm { get; set; }
         public decimal AccountRest { get; set; }
 
         public bool SetCurrentDttm { get; set; }

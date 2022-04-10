@@ -23,6 +23,11 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             await _dbProvider.Transactions.Add(transaction);
         }
 
+        public async Task<Transaction> AddWithSave(Transaction transaction)
+        {
+            return await _dbProvider.Transactions.AddWithSave(transaction);
+        }
+
         public async Task<Transaction> GetById(int id)
         {
             var filter = new Filter
@@ -103,7 +108,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             var lastId = (await _dbProvider.Transactions.Query
                 .OrderByDesc(nameof(Transaction.Id))
-                .First()).Id;
+                .First())?.Id ?? 0;
 
             return lastId + 1;
         }

@@ -11,7 +11,7 @@ namespace MoneyTrack.Core.Models
         public string Description { get; set; }
         public Category Category { get; set; }
         public Account Account { get; set; }
-        public DateTimeOffset AddedDttm { get; set; }
+        public DateTime AddedDttm { get; set; }
         public decimal AccountRest { get; set; }
     }
 }

@@ -14,9 +14,12 @@ namespace MoneyTrack.Data.MsSqlServer
         {
             CreateMap<Account, Core.Models.Account>()
                 .ForPath(x => x.User.Id, opt => opt.MapFrom(x => x.UserId))
+                .ForPath(x => x.LastTransaction.Id, opt => opt.MapFrom(x => x.LastTransactionId))
                 .ReverseMap()
                 .ForMember(x => x.UserId, opt => opt.MapFrom(x => x.User.Id))
-                .ForMember(x => x.User, opt => opt.Ignore());
+                .ForMember(x => x.LastTransactionId, opt => opt.MapFrom(x => x.LastTransaction.Id))
+                .ForMember(x => x.User, opt => opt.Ignore())
+                .ForMember(x => x.LastTransaction, opt => opt.Ignore());
 
             CreateMap<Category, Core.Models.Category>()
                 .ForPath(x => x.User.Id, opt => opt.MapFrom(x => x.UserId))
