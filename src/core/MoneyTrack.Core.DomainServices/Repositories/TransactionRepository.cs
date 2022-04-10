@@ -134,6 +134,8 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         public async Task Save()
         {
             await _dbProvider.Save();
+
+            await _dbProvider.Transactions.ClearLocal();
         }
     }
 }

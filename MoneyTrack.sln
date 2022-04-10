@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{7AD3668B-F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.Data.MsSqlServer", "src\data\MoneyTrack.Data.MsSqlServer\MoneyTrack.Data.MsSqlServer.csproj", "{B282F664-4500-48EE-A591-12DD410A1A1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTrack.Web.Infrastructure", "src\web\MoneyTrack.Web.Infrastructure\MoneyTrack.Web.Infrastructure.csproj", "{40B6089B-82A5-4080-871B-74B176724662}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTrack.Web.Infrastructure", "src\web\MoneyTrack.Web.Infrastructure\MoneyTrack.Web.Infrastructure.csproj", "{40B6089B-82A5-4080-871B-74B176724662}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,16 +31,16 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3E83855F-720B-47C4-AC70-2EA97311EACD}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{3E83855F-720B-47C4-AC70-2EA97311EACD}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{3E83855F-720B-47C4-AC70-2EA97311EACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E83855F-720B-47C4-AC70-2EA97311EACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E83855F-720B-47C4-AC70-2EA97311EACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E83855F-720B-47C4-AC70-2EA97311EACD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{77B12982-8E2C-42AF-8BD3-D71141BF352E}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{77B12982-8E2C-42AF-8BD3-D71141BF352E}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{77B12982-8E2C-42AF-8BD3-D71141BF352E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77B12982-8E2C-42AF-8BD3-D71141BF352E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77B12982-8E2C-42AF-8BD3-D71141BF352E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77B12982-8E2C-42AF-8BD3-D71141BF352E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7F62276-F275-4184-AD61-79A37CB85154}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{D7F62276-F275-4184-AD61-79A37CB85154}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{D7F62276-F275-4184-AD61-79A37CB85154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7F62276-F275-4184-AD61-79A37CB85154}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7F62276-F275-4184-AD61-79A37CB85154}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7F62276-F275-4184-AD61-79A37CB85154}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A87CAA38-A07A-4534-82E9-4AE4D2124C65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

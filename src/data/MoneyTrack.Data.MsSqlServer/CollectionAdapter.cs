@@ -44,6 +44,16 @@ namespace MoneyTrack.Data.MsSqlServer
             return _mapper.Map<T>(entity);
         }
 
+        public Task ClearLocal()
+        {
+            foreach (var entity in _dbSet.Local)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
+
+            return Task.CompletedTask;
+        }
+
         public async Task Remove(IdType id)
         {
             var entity = await _dbSet.FirstOrDefaultAsync(x => x.Id.Equals(id));
@@ -51,11 +61,13 @@ namespace MoneyTrack.Data.MsSqlServer
             _dbSet.Remove(entity);
         }
 
-        public async Task Update(T item)
+        public Task Update(T item)
         {
             var entity = _mapper.Map<TEntity>(item);
 
-            _dbSet.Update(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+
+            return Task.CompletedTask;
         }
     }
 }

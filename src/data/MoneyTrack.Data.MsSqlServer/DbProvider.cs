@@ -41,6 +41,7 @@ namespace MoneyTrack.Data.MsSqlServer
         public async Task Save()
         {
             await _context.SaveChangesAsync();
+
         }
     }
 }

@@ -9,5 +9,7 @@ namespace MoneyTrack.Core.DomainServices.Data
         Task Update(T item);
         Task Remove(IdType id);
         IQueryAdapter<T> Query { get; }
+
+        Task ClearLocal();
     }
 }

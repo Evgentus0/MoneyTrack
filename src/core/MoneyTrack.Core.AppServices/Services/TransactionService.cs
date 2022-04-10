@@ -40,7 +40,7 @@ namespace MoneyTrack.Core.AppServices.Services
 
             var lastAccountTransaction = await _transactionRepository.GetLastAccountTransaction(transaction.Account.Id);
 
-            if (lastAccountTransaction != null 
+            if (lastAccountTransaction != null
                 && lastAccountTransaction.AddedDttm > newTransaction.AddedDttm)
             {
                 // Add not last transaction
@@ -59,7 +59,7 @@ namespace MoneyTrack.Core.AppServices.Services
                        {
                            PropName = nameof(Transaction.AddedDttm),
                            Operation = Operations.Less,
-                           Value = newTransaction.AddedDttm.ToString(),
+                           Value = newTransaction.AddedDttm.ToString("MM/dd/yyyy HH:mm:ss.fffffff"),
                            FilterOp = FilterOp.And
                        }
                     },
@@ -70,14 +70,16 @@ namespace MoneyTrack.Core.AppServices.Services
                     }
                 })).FirstOrDefault();
 
-                if(lastBeforeNew != null)
+                if (lastBeforeNew != null)
                 {
-                    newTransaction.AccountRest = lastAccountTransaction.AccountRest + newTransaction.Quantity;
+                    newTransaction.AccountRest = lastBeforeNew.AccountRest + newTransaction.Quantity;
                 }
                 else
                 {
                     newTransaction.AccountRest = newTransaction.Quantity;
                 }
+
+                await _transactionRepository.Add(newTransaction);
 
                 await UpdateTransactionsRestSinceDate(newTransaction.Account.Id, newTransaction.AddedDttm, newTransaction.Quantity);
 
@@ -180,13 +182,53 @@ namespace MoneyTrack.Core.AppServices.Services
 
                     await UpdateTransactionsRestSinceDate(transactionToUpdate.Account.Id, oldDate, -oldQuantity);
                     await _transactionRepository.Save();
+
+                    var lastBeforeNew = (await _transactionRepository.GetQueriedTransactions(new DbQueryRequest
+                    {
+                        Filters = new List<Filter>
+                        {
+                            new Filter
+                            {
+                                PropName = $"{nameof(Transaction.Account)}.{nameof(Transaction.Account.Id)}",
+                                Operation = Operations.Eq,
+                                Value = transactionToUpdate.Account.Id.ToString(),
+                                FilterOp = FilterOp.And
+                            },
+                            new Filter
+                            {
+                                PropName = nameof(Transaction.AddedDttm),
+                                Operation = Operations.Less,
+                                Value = newDate.ToString("MM/dd/yyyy HH:mm:ss.fffffff"),
+                                FilterOp = FilterOp.And
+                            }
+                        },
+                        Sorting = new Sorting
+                        {
+                            Direction = SortDirect.Desc,
+                            PropName = nameof(Transaction.AddedDttm)
+                        }
+                    })).FirstOrDefault();
+
+                    if (lastBeforeNew != null)
+                    {
+                        transactionToUpdate.AccountRest = lastBeforeNew.AccountRest + transactionToUpdate.Quantity;
+                    }
+                    else
+                    {
+                        transactionToUpdate.AccountRest = transactionToUpdate.Quantity;
+                    }
+
+                    await _transactionRepository.Update(transactionToUpdate);
+                    await _transactionRepository.Save();
+
                     await UpdateTransactionsRestSinceDate(transactionToUpdate.Account.Id, newDate, transactionToUpdate.Quantity);
                 }
 
-                if(transaction.Quantity.HasValue && transaction.Quantity.Value != transactionToUpdate.Quantity && !isDateTimeChange)
+                if (transaction.Quantity.HasValue && transaction.Quantity.Value != transactionToUpdate.Quantity && !isDateTimeChange)
                 {
                     var diff = transaction.Quantity.Value - transactionToUpdate.Quantity;
                     transactionToUpdate.Quantity = transaction.Quantity.Value;
+                    transactionToUpdate.AccountRest += diff;
 
                     await UpdateTransactionsRestSinceDate(transactionToUpdate.Account.Id, transactionToUpdate.AddedDttm, diff);
                 }
@@ -218,7 +260,7 @@ namespace MoneyTrack.Core.AppServices.Services
             return await _transactionRepository.CalculateSum(nameof(Transaction.Quantity), filters);
         }
 
-        private async Task UpdateTransactionsRestSinceDate(int accountId, DateTimeOffset date, decimal quantity)
+        private async Task UpdateTransactionsRestSinceDate(int accountId, DateTime date, decimal quantity)
         {
             var transactionsToUpdate = await _transactionRepository.GetQueriedTransactions(new DbQueryRequest
             {
@@ -235,7 +277,7 @@ namespace MoneyTrack.Core.AppServices.Services
                     {
                         PropName = nameof(Transaction.AddedDttm),
                         Operation = Operations.Greater,
-                        Value = date.ToString(),
+                        Value = date.ToString("MM/dd/yyyy HH:mm:ss.fffffff"),
                         FilterOp = FilterOp.And
                     }
                 }
