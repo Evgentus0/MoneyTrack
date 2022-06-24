@@ -2,11 +2,14 @@
 
 namespace MoneyTrack.Core.DomainServices.Data
 {
-    public interface ICollectionAdapter<T>
+    public interface ICollectionAdapter<T, IdType>
     {
         Task Add(T item);
+        Task<T> AddWithSave(T item);
         Task Update(T item);
-        Task Remove(int id);
+        Task Remove(IdType id);
         IQueryAdapter<T> Query { get; }
+
+        Task ClearLocal();
     }
 }

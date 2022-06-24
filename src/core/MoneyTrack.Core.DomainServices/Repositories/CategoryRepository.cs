@@ -2,6 +2,7 @@
 using MoneyTrack.Core.Models;
 using MoneyTrack.Core.Models.Operational;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.DomainServices.Repositories
@@ -39,7 +40,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             return await _dbProvider.Categories.Query.Where(new Filter
             {
-                PropName = nameof(id),
+                PropName = nameof(Category.Id),
                 Operation = Operations.Eq,
                 Value = id.ToString()
             }).First();
@@ -49,9 +50,17 @@ namespace MoneyTrack.Core.DomainServices.Repositories
         {
             var categories = _dbProvider.Categories.Query;
 
-            categories = categories.Where(filters);
+            if (filters != null && filters.Any())
+            {
+                categories = categories.Where(filters);
+            }
 
             return await categories.ToList();
+        }
+
+        public async Task Save()
+        {
+            await _dbProvider.Save();
         }
     }
 }

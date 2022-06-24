@@ -7,13 +7,12 @@ namespace MoneyTrack.Core.AppServices.Interfaces
 {
     public interface ITransactionService
     {
-        Task<List<TransactionDto>> GetLastTransactions(Paging paging);
+        Task<List<TransactionDto>> GetLastTransactions(Paging paging, string userId);
         Task Add(TransactionDto transaction);
-        Task<List<TransactionDto>> GetQueryTransactions(DbQueryRequest request);
+        Task<List<TransactionDto>> GetQueryTransactions(DbQueryRequest request, string userId);
         Task<int> CountTransactions(List<Filter> filters = null);
         Task Delete(int id);
         Task Update(TransactionDto transaction);
         Task<decimal> CalculateTotalBalance(List<Filter> filters);
-        Task ApprovePostponedTransaction(int id);
     }
 }

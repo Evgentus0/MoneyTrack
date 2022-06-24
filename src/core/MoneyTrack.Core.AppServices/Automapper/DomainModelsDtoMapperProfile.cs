@@ -13,6 +13,8 @@ namespace MoneyTrack.Core.AppServices.Automapper
             CreateMap<CategoryDto, Category>().ReverseMap();
 
             CreateMap<AccountDto, Account>().ReverseMap();
+
+            CreateMap<UserDto, User>().ReverseMap();
         }
     }
 }

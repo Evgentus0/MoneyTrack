@@ -11,6 +11,6 @@ namespace MoneyTrack.Core.AppServices.Interfaces
         Task Update(CategoryDto categoryDto);
         Task Delete(int id);
 
-        Task<List<CategoryDto>> GetCategories(List<Filter> filters = null);
+        Task<List<CategoryDto>> GetCategories(string userId, List<Filter> filters = null);
     }
 }

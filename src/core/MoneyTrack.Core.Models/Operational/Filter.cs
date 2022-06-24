@@ -5,8 +5,8 @@ namespace MoneyTrack.Core.Models.Operational
 {
     public class Filter
     {
-        public string PropName { get; set; }
-        public string Value { get; set; }
+        public string? PropName { get; set; }
+        public string? Value { get; set; }
         public Operations Operation { get; set; }
         public FilterOp FilterOp { get; set; }
 
@@ -16,7 +16,7 @@ namespace MoneyTrack.Core.Models.Operational
 
             if(type == typeof(string))
             {
-                result = new List<Operations> { Operations.EqString, Operations.NotEqString,
+                result = new List<Operations> { Operations.Eq, Operations.NotEq,
                 Operations.Like, Operations.StartWith, Operations.EndWith };
             }
             else if(type == typeof(int) || type == typeof(int?)
@@ -32,12 +32,33 @@ namespace MoneyTrack.Core.Models.Operational
 
             return result;
         }
+
+        public override bool Equals(object? obj)
+        {
+            if(obj is Filter f)
+            {
+                return PropName is not null ? PropName.Equals(f.PropName) : PropName == f.PropName
+                    && Value is not null ? Value.Equals(f.Value) : Value == f.Value
+                    && Operation == f.Operation
+                    && FilterOp == f.FilterOp;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return (PropName is not null ? PropName.GetHashCode() : 0)
+                ^ (Value is not null ? Value.GetHashCode() : 0)
+                ^ Operation.GetHashCode()
+                ^ FilterOp.GetHashCode();
+        }
     }
 
     public enum Operations
     {
         // Number
-        Eq,
+        Eq = 1,
         NotEq,
         Less, 
         EqOrLess, 
@@ -45,16 +66,14 @@ namespace MoneyTrack.Core.Models.Operational
         EqOrGreater,
 
         // String
-        EqString,
-        NotEqString,
-        Like,
+        Like = 101,
         StartWith,
         EndWith
     }
 
     public enum FilterOp
     {
-        And, 
+        And = 1, 
         Or
     }
 }

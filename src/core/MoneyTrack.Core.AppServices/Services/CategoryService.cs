@@ -23,16 +23,31 @@ namespace MoneyTrack.Core.AppServices.Services
         public async Task AddCategory(CategoryDto category)
         {
             var categoryEntity = _mapper.Map<Category>(category);
+            categoryEntity.IsSystem = false;
+
             await _categoryRepository.AddCategory(categoryEntity);
+
+            await _categoryRepository.Save();
         }
 
         public async Task Delete(int id)
         {
             await _categoryRepository.Delete(id);
+
+            await _categoryRepository.Save();
         }
 
-        public async Task<List<CategoryDto>> GetCategories(List<Filter> filters = null)
+        public async Task<List<CategoryDto>> GetCategories(string userId, List<Filter> filters = null)
         {
+            filters = filters ?? new List<Filter>();
+            filters.Add(new Filter
+            {
+                FilterOp = FilterOp.And,
+                Operation = Operations.Eq,
+                PropName = nameof(Category.User)+nameof(Category.User.Id),
+                Value = userId
+            });
+
             List<Category> result = await _categoryRepository.GetCategories(filters);
 
             return _mapper.Map<List<CategoryDto>>(result);
@@ -50,6 +65,8 @@ namespace MoneyTrack.Core.AppServices.Services
                 }
 
                 await _categoryRepository.Update(categoryToUpdate);
+
+                await _categoryRepository.Save();
             }
         }
     }

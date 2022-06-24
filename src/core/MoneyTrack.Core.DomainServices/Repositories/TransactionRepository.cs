@@ -1,13 +1,15 @@
 ﻿using MoneyTrack.Core.DomainServices.Data;
+using MoneyTrack.Core.DomainServices.Interfaces;
 using MoneyTrack.Core.Models;
 using MoneyTrack.Core.Models.Operational;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.DomainServices.Repositories
 {
-    public class TransactionRepository
+    public class TransactionRepository: ITransactionRepository
     {
 
         private readonly IDbProvider _dbProvider;
@@ -22,7 +24,12 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             await _dbProvider.Transactions.Add(transaction);
         }
 
-        public async Task<Transaction> GetById(int id)
+        public async Task<Transaction> AddWithSave(Transaction transaction)
+        {
+            return await _dbProvider.Transactions.AddWithSave(transaction);
+        }
+
+        public async Task<Transaction?> GetById(int id)
         {
             var filter = new Filter
             {
@@ -34,7 +41,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             var result = _dbProvider.Transactions.Query.Where(filter);
             if(result is null)
             {
-                throw new ArgumentException($"Transaction with id {id} != exist");
+                return null;
             }
             return await result.First();
         }
@@ -44,18 +51,21 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             await _dbProvider.Transactions.Update(transaction);
 
         }
-        public async Task Remove(int id)
+        public async Task Delete(int id)
         {
             await _dbProvider.Transactions.Remove(id);
         }
 
-        public async Task<List<Transaction>> GetQueriedTransactiones(DbQueryRequest request)
+        public async Task<List<Transaction>> GetQueriedTransactions(DbQueryRequest request)
         {
             var result = _dbProvider.Transactions.Query
                 .Include(nameof(Account))
                 .Include(nameof(Category));
 
-            result = result.Where(request.Filters);
+            if(request.Filters != null && request.Filters.Any())
+            {
+                result = result.Where(request.Filters);
+            }
 
             if(request.Sorting != null)
             {
@@ -79,6 +89,21 @@ namespace MoneyTrack.Core.DomainServices.Repositories
 
             return await result.ToList();
         }
+        public async Task<Transaction> GetLastAccountTransaction(int accountId)
+        {
+            var transaction = await _dbProvider.Transactions.Query
+                .Where(new Filter
+                {
+                    PropName = $"{nameof(Account)}.{nameof(Account.Id)}",
+                    Operation = Operations.Eq,
+                    Value = accountId.ToString(),
+                    FilterOp = FilterOp.And
+                })
+                .OrderByDesc(nameof(Transaction.AddedDttm))
+                .First();
+
+            return transaction;
+        }
 
         public async Task<decimal> CalculateSum(string propName, List<Filter> filters)
         {
@@ -86,7 +111,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
 
             result = result.Where(filters);
 
-            return await result.SumDecimal(propName);
+            return await result.Sum<decimal>(propName);
         }
 
         public async Task<int> CountTrasactions(List<Filter> filters)
@@ -96,6 +121,13 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             result = result.Where(filters);
 
             return await result.Count();
+        }
+
+        public async Task Save()
+        {
+            await _dbProvider.Save();
+
+            await _dbProvider.Transactions.ClearLocal();
         }
     }
 }

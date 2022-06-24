@@ -2,22 +2,24 @@
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Exceptions;
 using MoneyTrack.Core.AppServices.Interfaces;
+using MoneyTrack.Core.DomainServices.Interfaces;
 using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
 using MoneyTrack.Core.Models.Operational;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.AppServices.Services
 {
     public class TransactionService : ITransactionService
     {
-        private readonly TransactionRepository _transactionRepository;
-        private readonly AccountRepository _accountRepository;
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
 
-        public TransactionService(TransactionRepository transactionRepository, AccountRepository accountRepository, IMapper mapper)
+        public TransactionService(ITransactionRepository transactionRepository, IAccountRepository accountRepository, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
             _accountRepository = accountRepository;
@@ -27,7 +29,7 @@ namespace MoneyTrack.Core.AppServices.Services
         public async Task Add(TransactionDto transaction)
         {
             if (transaction.SetCurrentDttm)
-                transaction.AddedDttm = DateTimeOffset.Now;
+                transaction.AddedDttm = DateTime.Now;
 
             var validationError = transaction.GetErrorString();
             if (!string.IsNullOrEmpty(validationError))
@@ -35,35 +37,112 @@ namespace MoneyTrack.Core.AppServices.Services
                 throw new AppValidationException(validationError);
             }
 
-            if (!transaction.IsPostponed)
+            var newTransaction = _mapper.Map<Transaction>(transaction);
+
+            var lastAccountTransaction = await _transactionRepository.GetLastAccountTransaction(transaction.Account.Id);
+
+            if (lastAccountTransaction != null
+                && lastAccountTransaction.AddedDttm > newTransaction.AddedDttm)
             {
-                var account = await _accountRepository.GetById(transaction.Account.Id);
-                account.Balance += transaction.Quantity.Value;
-                await _accountRepository.Update(account);
+                // Add not last transaction
+                var lastBeforeNew = (await _transactionRepository.GetQueriedTransactions(new DbQueryRequest
+                {
+                    Filters = new List<Filter>
+                    {
+                       new Filter
+                       {
+                           PropName = $"{nameof(Transaction.Account)}.{nameof(Transaction.Account.Id)}",
+                           Operation = Operations.Eq,
+                           Value = newTransaction.Account.Id.ToString(),
+                           FilterOp = FilterOp.And
+                       },
+                       new Filter
+                       {
+                           PropName = nameof(Transaction.AddedDttm),
+                           Operation = Operations.Less,
+                           Value = newTransaction.AddedDttm.ToString("MM/dd/yyyy HH:mm:ss.fffffff"),
+                           FilterOp = FilterOp.And
+                       }
+                    },
+                    Sorting = new Sorting
+                    {
+                        Direction = SortDirect.Desc,
+                        PropName = nameof(Transaction.AddedDttm)
+                    }
+                })).FirstOrDefault();
+
+                if (lastBeforeNew != null)
+                {
+                    newTransaction.AccountRest = lastBeforeNew.AccountRest + newTransaction.Quantity;
+                }
+                else
+                {
+                    newTransaction.AccountRest = newTransaction.Quantity;
+                }
+
+                await _transactionRepository.Add(newTransaction);
+
+                await UpdateTransactionsRestSinceDate(newTransaction.Account.Id, newTransaction.AddedDttm, newTransaction.Quantity);
+
+                await _transactionRepository.Save();
+
+                return;
             }
 
-            var entity = _mapper.Map<Transaction>(transaction);
-            await  _transactionRepository.Add(entity);
+            var previousRest = lastAccountTransaction != null
+                ? lastAccountTransaction.AccountRest
+                : 0;
+
+            newTransaction.AccountRest = previousRest + newTransaction.Quantity;
+
+            newTransaction = await _transactionRepository.AddWithSave(newTransaction);
+
+            var account = await _accountRepository.GetById(newTransaction.Account.Id);
+
+            account.LastTransaction.Id = newTransaction.Id;
+
+            await _accountRepository.Update(account);
+
+            await _transactionRepository.Save();
         }
 
-        public async Task<List<TransactionDto>> GetLastTransactions(Paging paging)
+        public async Task<List<TransactionDto>> GetLastTransactions(Paging paging, string userId)
         {
-            var result = await _transactionRepository.GetQueriedTransactiones(new DbQueryRequest
+            var result = await _transactionRepository.GetQueriedTransactions(new DbQueryRequest
             {
                 Paging = paging,
                 Sorting = new Sorting
                 {
                     Direction = SortDirect.Desc,
                     PropName = nameof(Transaction.AddedDttm)
+                },
+                Filters = new List<Filter>
+                {
+                    new Filter
+                    {
+                        FilterOp = FilterOp.And,
+                        Operation = Operations.Eq,
+                        PropName = nameof(Transaction.Account)+"."+nameof(Account.User)+nameof(Account.User.Id),
+                        Value = userId
+                    }
                 }
             });
 
             return _mapper.Map<List<TransactionDto>>(result);
         }
 
-        public async Task<List<TransactionDto>> GetQueryTransactions(DbQueryRequest request)
+        public async Task<List<TransactionDto>> GetQueryTransactions(DbQueryRequest request, string userId)
         {
-            List<Transaction> transactions = await _transactionRepository.GetQueriedTransactiones(request);
+            request.Filters = request.Filters ?? new List<Filter>();
+            request.Filters.Add(new Filter
+            {
+                FilterOp = FilterOp.And,
+                Operation = Operations.Eq,
+                PropName = nameof(Transaction.Account) + "." + nameof(Account.User) + nameof(Account.User.Id),
+                Value = userId
+            });
+
+            List<Transaction> transactions = await _transactionRepository.GetQueriedTransactions(request);
 
             return _mapper.Map<List<TransactionDto>>(transactions);
         }
@@ -79,42 +158,85 @@ namespace MoneyTrack.Core.AppServices.Services
 
             if (transactionToUpdate != null)
             {
-                if (transaction.Account != null && transaction.Account.Id > 0 && transaction.Account.Id != transactionToUpdate.Account.Id)
-                {
-                    var transactionQuantity = transactionToUpdate.Quantity;
-
-                    var fromAcc = await _accountRepository.GetById(transactionToUpdate.Account.Id);
-                    var toAcc = await _accountRepository.GetById(transaction.Account.Id);
-
-                    fromAcc.Balance -= transactionQuantity;
-                    toAcc.Balance += transactionQuantity;
-
-                    await _accountRepository.Update(fromAcc);
-                    await _accountRepository.Update(toAcc);
-
-                    transactionToUpdate.Account.Id = transaction.Account.Id;
-                }
-
-                if (transaction.Quantity.HasValue && transaction.Quantity.Value != transactionToUpdate.Quantity)
-                {
-                    var diff = transaction.Quantity.Value - transactionToUpdate.Quantity;
-                    transactionToUpdate.Quantity = transaction.Quantity.Value;
-
-                    var acc = await _accountRepository.GetById(transaction.Account.Id);
-                    acc.Balance += diff;
-                    await _accountRepository.Update(acc);
-                }
-
                 if (!string.IsNullOrEmpty(transaction.Description))
                     transactionToUpdate.Description = transaction.Description;
 
                 if (transaction.Category != null && transaction.Category.Id > 0)
                     transactionToUpdate.Category.Id = transaction.Category.Id;
 
-                if (transaction.AddedDttm.HasValue && transaction.AddedDttm.Value > Transaction.CutOffDate)
-                    transactionToUpdate.AddedDttm = transaction.AddedDttm.Value;
+                var isDateTimeChange = false;
+                if (transaction.AddedDttm.HasValue && transaction.AddedDttm.Value > Transaction.CutOffDate
+                    && transaction.AddedDttm.Value != transactionToUpdate.AddedDttm)
+                {
+                    isDateTimeChange = true;
+
+                    var oldDate = transactionToUpdate.AddedDttm;
+                    var newDate = transaction.AddedDttm.Value;
+
+                    var oldQuantity = transactionToUpdate.Quantity;
+
+                    transactionToUpdate.Quantity = transaction.Quantity.HasValue && transaction.Quantity.Value != transactionToUpdate.Quantity
+                        ? transaction.Quantity.Value
+                        : transactionToUpdate.Quantity;
+
+                    transactionToUpdate.AddedDttm = newDate;
+
+                    await UpdateTransactionsRestSinceDate(transactionToUpdate.Account.Id, oldDate, -oldQuantity);
+                    await _transactionRepository.Save();
+
+                    var lastBeforeNew = (await _transactionRepository.GetQueriedTransactions(new DbQueryRequest
+                    {
+                        Filters = new List<Filter>
+                        {
+                            new Filter
+                            {
+                                PropName = $"{nameof(Transaction.Account)}.{nameof(Transaction.Account.Id)}",
+                                Operation = Operations.Eq,
+                                Value = transactionToUpdate.Account.Id.ToString(),
+                                FilterOp = FilterOp.And
+                            },
+                            new Filter
+                            {
+                                PropName = nameof(Transaction.AddedDttm),
+                                Operation = Operations.Less,
+                                Value = newDate.ToString("MM/dd/yyyy HH:mm:ss.fffffff"),
+                                FilterOp = FilterOp.And
+                            }
+                        },
+                        Sorting = new Sorting
+                        {
+                            Direction = SortDirect.Desc,
+                            PropName = nameof(Transaction.AddedDttm)
+                        }
+                    })).FirstOrDefault();
+
+                    if (lastBeforeNew != null)
+                    {
+                        transactionToUpdate.AccountRest = lastBeforeNew.AccountRest + transactionToUpdate.Quantity;
+                    }
+                    else
+                    {
+                        transactionToUpdate.AccountRest = transactionToUpdate.Quantity;
+                    }
+
+                    await _transactionRepository.Update(transactionToUpdate);
+                    await _transactionRepository.Save();
+
+                    await UpdateTransactionsRestSinceDate(transactionToUpdate.Account.Id, newDate, transactionToUpdate.Quantity);
+                }
+
+                if (transaction.Quantity.HasValue && transaction.Quantity.Value != transactionToUpdate.Quantity && !isDateTimeChange)
+                {
+                    var diff = transaction.Quantity.Value - transactionToUpdate.Quantity;
+                    transactionToUpdate.Quantity = transaction.Quantity.Value;
+                    transactionToUpdate.AccountRest += diff;
+
+                    await UpdateTransactionsRestSinceDate(transactionToUpdate.Account.Id, transactionToUpdate.AddedDttm, diff);
+                }
 
                 await _transactionRepository.Update(transactionToUpdate);
+
+                await _transactionRepository.Save();
             }
         }
 
@@ -122,11 +244,16 @@ namespace MoneyTrack.Core.AppServices.Services
         {
             var transaction = await _transactionRepository.GetById(id);
 
-            var account = await _accountRepository.GetById(transaction.Account.Id);
-            account.Balance -= transaction.Quantity;
-            await _accountRepository.Update(account);
+            if (transaction is null)
+            {
+                return;
+            }
 
-            await _transactionRepository.Remove(id);
+            await UpdateTransactionsRestSinceDate(transaction.Account.Id, transaction.AddedDttm, -transaction.Quantity);
+
+            await _transactionRepository.Delete(id);
+
+            await _transactionRepository.Save();
         }
 
         public async Task<decimal> CalculateTotalBalance(List<Filter> filters)
@@ -134,21 +261,34 @@ namespace MoneyTrack.Core.AppServices.Services
             return await _transactionRepository.CalculateSum(nameof(Transaction.Quantity), filters);
         }
 
-        public async Task ApprovePostponedTransaction(int id)
+        private async Task UpdateTransactionsRestSinceDate(int accountId, DateTime date, decimal quantity)
         {
-            var transaction = await _transactionRepository.GetById(id);
-
-            if(transaction != null)
+            var transactionsToUpdate = await _transactionRepository.GetQueriedTransactions(new DbQueryRequest
             {
-                if (transaction.IsPostponed)
+                Filters = new List<Filter>
                 {
-                    var account = await _accountRepository.GetById(transaction.Account.Id);
-                    account.Balance += transaction.Quantity;
-                    await _accountRepository.Update(account);
-
-                    transaction.IsPostponed = false;
-                    await _transactionRepository.Update(transaction);
+                    new Filter
+                    {
+                        PropName = $"{nameof(Transaction.Account)}.{nameof(Transaction.Account.Id)}",
+                        Operation = Operations.Eq,
+                        Value = accountId.ToString(),
+                        FilterOp = FilterOp.And
+                    },
+                    new Filter
+                    {
+                        PropName = nameof(Transaction.AddedDttm),
+                        Operation = Operations.Greater,
+                        Value = date.ToString("MM/dd/yyyy HH:mm:ss.fffffff"),
+                        FilterOp = FilterOp.And
+                    }
                 }
+            });
+
+            foreach (var transaction in transactionsToUpdate)
+            {
+                transaction.AccountRest += quantity;
+
+                await _transactionRepository.Update(transaction);
             }
         }
     }
