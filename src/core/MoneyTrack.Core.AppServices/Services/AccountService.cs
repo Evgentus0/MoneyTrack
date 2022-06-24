@@ -15,25 +15,20 @@ namespace MoneyTrack.Core.AppServices.Services
     {
         private readonly AccountRepository _accountRepository;
         private readonly IMapper _mapper;
-        private readonly TransactionRepository _transactionRepository;
-        private readonly CategoryRepository _categoryRepository;
 
         public AccountService(
             AccountRepository accountRepository, 
-            IMapper mapper,
-            TransactionRepository transactionRepository,
-            CategoryRepository categoryRepository
+            IMapper mapper
             )
         {
             _accountRepository = accountRepository;
             _mapper = mapper;
-            _transactionRepository = transactionRepository;
-            _categoryRepository = categoryRepository;
         }
 
         public async Task AddAccount(AccountDto account)
         {
             var accountEntity = _mapper.Map<Account>(account);
+            accountEntity.LastTransaction = null;
 
             await _accountRepository.Add(accountEntity);
 

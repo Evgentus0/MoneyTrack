@@ -13,10 +13,10 @@ namespace MoneyTrack.Data.MsSqlServer.Entites
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public bool IsSystem { get; set; }
         [ForeignKey(nameof(User))]
-        public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public string? UserId { get; set; }
+        public ApplicationUser? User { get; set; }
     }
 }

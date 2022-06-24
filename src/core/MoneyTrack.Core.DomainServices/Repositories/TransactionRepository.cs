@@ -1,4 +1,5 @@
 ﻿using MoneyTrack.Core.DomainServices.Data;
+using MoneyTrack.Core.DomainServices.Interfaces;
 using MoneyTrack.Core.Models;
 using MoneyTrack.Core.Models.Operational;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.DomainServices.Repositories
 {
-    public class TransactionRepository
+    public class TransactionRepository: ITransactionRepository
     {
 
         private readonly IDbProvider _dbProvider;
@@ -28,7 +29,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             return await _dbProvider.Transactions.AddWithSave(transaction);
         }
 
-        public async Task<Transaction> GetById(int id)
+        public async Task<Transaction?> GetById(int id)
         {
             var filter = new Filter
             {
@@ -102,15 +103,6 @@ namespace MoneyTrack.Core.DomainServices.Repositories
                 .First();
 
             return transaction;
-        }
-
-        public async Task<int> GetNewAvailableId()
-        {
-            var lastId = (await _dbProvider.Transactions.Query
-                .OrderByDesc(nameof(Transaction.Id))
-                .First())?.Id ?? 0;
-
-            return lastId + 1;
         }
 
         public async Task<decimal> CalculateSum(string propName, List<Filter> filters)

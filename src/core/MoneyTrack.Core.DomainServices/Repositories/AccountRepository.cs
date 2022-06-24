@@ -1,4 +1,5 @@
 ﻿using MoneyTrack.Core.DomainServices.Data;
+using MoneyTrack.Core.DomainServices.Interfaces;
 using MoneyTrack.Core.Models;
 using MoneyTrack.Core.Models.Operational;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MoneyTrack.Core.DomainServices.Repositories
 {
-    public class AccountRepository
+    public class AccountRepository: IAccountRepository
     {
         private readonly IDbProvider _dbProvider;
 
@@ -43,7 +44,7 @@ namespace MoneyTrack.Core.DomainServices.Repositories
             await _dbProvider.Accounts.Update(account);
         }
 
-        public async Task<Account> GetById(int id)
+        public async Task<Account?> GetById(int id)
         {
             return await _dbProvider.Accounts.Query.Where(new Models.Operational.Filter
             {

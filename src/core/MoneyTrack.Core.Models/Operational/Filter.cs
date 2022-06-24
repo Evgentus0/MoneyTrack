@@ -5,8 +5,8 @@ namespace MoneyTrack.Core.Models.Operational
 {
     public class Filter
     {
-        public string PropName { get; set; }
-        public string Value { get; set; }
+        public string? PropName { get; set; }
+        public string? Value { get; set; }
         public Operations Operation { get; set; }
         public FilterOp FilterOp { get; set; }
 
@@ -31,6 +31,27 @@ namespace MoneyTrack.Core.Models.Operational
             }
 
             return result;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if(obj is Filter f)
+            {
+                return PropName is not null ? PropName.Equals(f.PropName) : PropName == f.PropName
+                    && Value is not null ? Value.Equals(f.Value) : Value == f.Value
+                    && Operation == f.Operation
+                    && FilterOp == f.FilterOp;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return (PropName is not null ? PropName.GetHashCode() : 0)
+                ^ (Value is not null ? Value.GetHashCode() : 0)
+                ^ Operation.GetHashCode()
+                ^ FilterOp.GetHashCode();
         }
     }
 

@@ -23,6 +23,8 @@ namespace MoneyTrack.Core.AppServices.Services
         public async Task AddCategory(CategoryDto category)
         {
             var categoryEntity = _mapper.Map<Category>(category);
+            categoryEntity.IsSystem = false;
+
             await _categoryRepository.AddCategory(categoryEntity);
 
             await _categoryRepository.Save();

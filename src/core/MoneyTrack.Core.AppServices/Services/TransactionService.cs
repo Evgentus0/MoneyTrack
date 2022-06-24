@@ -2,6 +2,7 @@
 using MoneyTrack.Core.AppServices.DTOs;
 using MoneyTrack.Core.AppServices.Exceptions;
 using MoneyTrack.Core.AppServices.Interfaces;
+using MoneyTrack.Core.DomainServices.Interfaces;
 using MoneyTrack.Core.DomainServices.Repositories;
 using MoneyTrack.Core.Models;
 using MoneyTrack.Core.Models.Operational;
@@ -14,11 +15,11 @@ namespace MoneyTrack.Core.AppServices.Services
 {
     public class TransactionService : ITransactionService
     {
-        private readonly TransactionRepository _transactionRepository;
-        private readonly AccountRepository _accountRepository;
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
 
-        public TransactionService(TransactionRepository transactionRepository, AccountRepository accountRepository, IMapper mapper)
+        public TransactionService(ITransactionRepository transactionRepository, IAccountRepository accountRepository, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
             _accountRepository = accountRepository;
