@@ -177,6 +177,82 @@ namespace MoneyTrack.Core.AppServices.Tests.Data
                         }
                     }
                 };
+
+                yield return new object[]
+{
+                    new List<Transaction>
+                    {
+                        new Transaction
+                        {
+                            Id = 1,
+                            Quantity = 100,
+                            Description = "tran1",
+                            Account = acc,
+                            Category = ctg,
+                            AccountRest = 100,
+                            AddedDttm = startDate
+                        },
+                        new Transaction
+                        {
+                            Id = 2,
+                            Quantity = 200,
+                            Description = "tran2",
+                            Account = acc,
+                            Category = ctg,
+                            AccountRest = 300,
+                            AddedDttm = startDate.AddDays(1)
+                        },
+                        new Transaction
+                        {
+                            Id = 3,
+                            Quantity = 300,
+                            Description = "tran3",
+                            Account = acc,
+                            Category = ctg,
+                            AccountRest = 600,
+                            AddedDttm = startDate.AddDays(2)
+                        }
+                    },
+                    new TransactionDto
+                    {
+                        Id = 1,
+                        Quantity = 150,
+                        AddedDttm = startDate.AddDays(1).AddHours(2)
+                    },
+                    new List<Transaction>
+                    {
+                        new Transaction
+                        {
+                            Id = 1,
+                            Quantity = 150,
+                            Description = "tran1",
+                            Account = acc,
+                            Category = ctg,
+                            AccountRest = 350,
+                            AddedDttm = startDate.AddDays(1).AddHours(2)
+                        },
+                        new Transaction
+                        {
+                            Id = 2,
+                            Quantity = 200,
+                            Description = "tran2",
+                            Account = acc,
+                            Category = ctg,
+                            AccountRest = 200,
+                            AddedDttm = startDate.AddDays(1)
+                        },
+                        new Transaction
+                        {
+                            Id = 3,
+                            Quantity = 300,
+                            Description = "tran3",
+                            Account = acc,
+                            Category = ctg,
+                            AccountRest = 650,
+                            AddedDttm = startDate.AddDays(2)
+                        }
+                    }
+                };
             }
         }
     }
